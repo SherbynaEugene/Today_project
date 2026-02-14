@@ -1,157 +1,105 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <title>Реєстрація та Логін</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f9;
-            margin: 0;
-            padding: 0;
-        }
+<meta charset="UTF-8">
+<title>ToDay</title>
 
+<style>
+body{
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+    background:#f4f5f7;
+    color:#333;
+}
 
-        .navbar {
-            background-color: #333;
-            overflow: hidden;
-        }
+.container{
+    text-align:center;
+    padding-top:60px;
+}
 
-        .navbar a {
-            float: left;
-            display: block;
-            color: #fff;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-        }
+.top{
+    color:#e68a00;
+    font-weight:700;
+    letter-spacing:3px;
+    margin-bottom:20px;
+}
 
-        .navbar a:hover {
-            background-color: #5757d1;
-        }
+.logo{
+    font-size:120px;
+    font-weight:900;
+    color:#1f4d2b;
+    margin:0;
+}
 
-        .dropdown {
-            float: left;
-            overflow: hidden;
-        }
+.subtitle{
+    margin-top:30px;
+    font-size:26px;
+    color:#8a94a3;
+    line-height:1.4;
+}
 
-        .dropdown .dropbtn {
-            font-size: 16px;
-            border: none;
-            outline: none;
-            color: white;
-            padding: 14px 20px;
-            background-color: inherit;
-            cursor: pointer;
-        }
+.subtitle span{
+    color:#1f4d2b;
+    font-weight:600;
+}
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #444;
-            min-width: 160px;
-            z-index: 1;
-        }
+.buttons{
+    margin-top:50px;
+}
 
-        .dropdown-content a {
-            float: none;
-            color: white;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-        }
+.btn{
+    border:none;
+    padding:18px 40px;
+    font-size:22px;
+    border-radius:16px;
+    cursor:pointer;
+    margin:0 10px;
+}
 
-        .dropdown-content a:hover {
-            background-color: #5757d1;
-        }
+.btn-primary{
+    background:#4b1434;
+    color:white;
+}
 
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
+.btn-secondary{
+    background:#e6921a;
+    color:white;
+}
 
-
-        .container {
-            max-width: 400px;
-            margin: 50px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        .container h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        input[type=text], input[type=password], input[type=email] {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0 16px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #333;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #5757d1;
-        }
-
-        .switch {
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .switch a {
-            color: #333;
-            text-decoration: none;
-        }
-
-        .switch a:hover {
-            text-decoration: underline;
-        }
-    </style>
+.footer{
+    margin-top:120px;
+    padding:40px 0;
+    border-top:1px solid #ddd;
+    color:#8a94a3;
+    font-size:18px;
+}
+</style>
 </head>
+
 <body>
 
+<div class="container">
+    <div class="top">ВАШ ЧАС — ВАША СИЛА</div>
 
-    <div class="navbar">
-        <a href="#">Головна</a>
-        <div class="dropdown">
-            <button class="dropbtn">Меню
-            </button>
-            <div class="dropdown-content">
-                <a href="#">Профіль</a>
-                <a href="#">Завдання</a>
-                <a href="#">Календар</a>
-            </div>
-        </div>
-        <a href="#">Контакти</a>
+    <h1 class="logo">ToDay</h1>
+
+    <div class="subtitle">
+        Простір для боротьби з прокрастинацією та
+        <span>ефективного</span><br>
+        вирішення завдань без стресу.
     </div>
 
-
-    <div class="container">
-        <h2>Реєстрація</h2>
-        <form method="POST" action="/register/">
-            <input type="text" name="username" placeholder="Ім'я користувача" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Пароль" required>
-            <button type="submit">Зареєструватися</button>
-        </form>
-        <div class="switch">
-            Вже є акаунт? <a href="/login/">Увійти</a>
-        </div>
+    <div class="buttons">
+        <button class="btn btn-primary">Зареєструватися</button>
+        <button class="btn btn-secondary">Увійти</button>
     </div>
+
+    <div class="footer">
+        Творці застосунку: Щербина Євгеній, Рошко Назар, Іванченко Юліана і Загарюк Марія-Дарина<br>
+        Подяка: 444111113458308<br>
+        Усі права захищені • З УКУ з любов'ю
+    </div>
+</div>
 
 </body>
 </html>
