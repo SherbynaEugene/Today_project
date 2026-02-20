@@ -23,7 +23,7 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        /* Контейнер для візерунків з ефектом маски */
+        /* Контейнер для візерунків */
         .floral-wrapper {
             position: relative;
             width: 570px;
@@ -38,7 +38,7 @@
             inset: 0;
             z-index: 0;
             pointer-events: none;
-            /* Ефект розмиття візерунків по колу (той самий maskImage з React) */
+            /* Ефект розмиття візерунків по колу  */
             -webkit-mask-image: radial-gradient(circle, black 40%, transparent 72%);
             mask-image: radial-gradient(circle, black 40%, transparent 72%);
         }
@@ -50,14 +50,14 @@
             transform: scaleX(1.15) scaleY(1.1);
         }
 
-        /* Біла картка (Core) */
+        /* Білий круг */
         .content-area {
             position: relative;
             z-index: 10;
             width: 270px;
             height: 270px;
             background: rgb(255, 255, 255);
-            border-radius: 50%; /* Робимо її круглою або дуже закругленою */
+            border-radius: 50%; /* робимо круглою або дуже закругленою */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -80,11 +80,16 @@
             font-size: 18px;
         } */
         .close-btn {
-        margin-bottom: 10px; /* <--- Збільш, щоб хрестик був вище */
+        margin-bottom: 10px; /*Збільшити, щоб хрестик був вище */
         background: none;
         border: none;
         color: #ccc;
         font-size: 20px;
+        transition: transform 0.2s;
+    }
+        .close-btn:hover {
+        color: var(--brand-purple);
+        transform: scale(1.2);
     }
 
         .sparkle-icon {
@@ -154,7 +159,7 @@
         }
 
         .switch-link {
-        margin-top: 25px; /* <--- Збільш, щоб напис був нижче */
+        margin-top: 25px; /* Збільшити, щоб напис був нижче */
         background: none;
         border: none;
         color: rgba(26, 58, 52, 0.6);
@@ -164,6 +169,17 @@
         font-weight: 700;
         letter-spacing: 1.2px;
         cursor: pointer;
+        display: inline-block; /* без цього transform не працюватиме на посиланнях */
+        transition: all 0.2s;
+    }
+
+        .switch-link:hover {
+        color: var(--brand-green);
+        transform: translateY(-2px); /* Підстрибне на 2 пікселі вгору */
+    }
+
+        .switch-link:active {
+        transform: translateY(-1px) scale(0.98); /* При кліку кнопка стає трохи меншою */
     }
 
         /* .switch-link {
@@ -188,13 +204,13 @@
         </div>
 
         <div class="content-area">
-            <button class="close-btn">✕</button>
+            <a href="{% url 'index' %}" class="close-btn" style="text-decoration: none;">✕</a>
 
             <div class="sparkle-icon">✦♥</div>
 
             <h2>Реєстрація</h2>
 
-            <form method="POST">
+            <form method="POST" id="registerForm">
                 {% csrf_token %}
                 <input type="email" placeholder="Електронна пошта" required>
 
@@ -215,6 +231,7 @@
         </div>
     </div>
 <script>
+// показати/приховати пароль
 function togglePass(id) {
     const input = document.getElementById(id);
     if (input.type === "password") {
@@ -223,6 +240,23 @@ function togglePass(id) {
         input.type = "password";
     }
 }
+
+// Перевірка при натисканні на кнопку
+document.getElementById('registerForm').onsubmit = function(event) {
+    const pass1 = document.getElementById('pass1').value;
+    const pass2 = document.getElementById('pass2').value;
+
+    if (pass1 !== pass2) {
+        // 1. Зупиняємо відправку форми на сервер
+        event.preventDefault();
+
+        // 2. Показуємо повідомлення
+        alert("Паролі не збігаються! Перевірте правильність введення.");
+
+        // 3. Підсвічуємо поле з помилкою червоним
+        document.getElementById('pass2').style.borderColor = "red";
+    }
+};
 </script>
 </body>
 </html>

@@ -85,6 +85,11 @@
         border: none;
         color: #ccc;
         font-size: 20px;
+        transition: transform 0.2s;
+    }
+        .close-btn:hover {
+        color: var(--brand-purple);
+        transform: scale(1.2);
     }
 
         .sparkle-icon {
@@ -164,6 +169,17 @@
         font-weight: 700;
         letter-spacing: 1.2px;
         cursor: pointer;
+        display: inline-block; /* без цього transform не працюватиме на посиланнях */
+        transition: all 0.2s;
+    }
+
+        .switch-link:hover {
+        color: var(--brand-green);
+        transform: translateY(-2px); /* Підстрибне на 2 пікселі вгору */
+    }
+
+        .switch-link:active {
+        transform: translateY(-1px) scale(0.98); /* При кліку кнопка стає трохи меншою */
     }
 
         /* .switch-link {
@@ -188,7 +204,8 @@
         </div>
 
         <div class="content-area">
-            <button class="close-btn">✕</button>
+            <a href="{% url 'index' %}" class="close-btn" style="text-decoration: none;">✕</a>
+            <!-- <button class="close-btn">✕</button> -->
 
             <div class="sparkle-icon">✦♥</div>
 
