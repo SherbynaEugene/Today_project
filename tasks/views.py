@@ -69,7 +69,7 @@ def complete_task(request, task_id):
     task.is_completed = True
     task.save()
 
-    # Award points and coins
+# award points and coins
     points = calculate_points(task, request.user)
     request.user.total_points += int(points)
     request.user.coins += int(points)
