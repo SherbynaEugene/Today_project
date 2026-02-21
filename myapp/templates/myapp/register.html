@@ -204,13 +204,13 @@
         </div>
 
         <div class="content-area">
-            <a href="{% url 'index' %}" class="close-btn" style="text-decoration: none;">✕</a>
+            <a href="{% url 'myapp:index' %}" class="close-btn" style="text-decoration: none;">✕</a>
 
             <div class="sparkle-icon">✦♥</div>
 
             <h2>Реєстрація</h2>
 
-            <form method="POST" id="registerForm" action="{% url 'user_desktop' %}">
+            <form method="POST" id="registerForm" action="{% url 'myapp:user_desktop' %}">
                 {% csrf_token %}
                 <input type="email" placeholder="Електронна пошта" required>
 
