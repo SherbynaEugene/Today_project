@@ -1,570 +1,911 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ToDaY</title>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --green-dark: #1a3a1a;
-    --green-mid: #2d5a2d;
-    --green-accent: #3d7a3d;
-    --orange: #f07c00;
-    --orange-light: #ff9a1f;
-    --purple: #6b0f4e;
-    --bg: #f4f6f4;
-    --card-bg: #ffffff;
-    --text-dark: #1a1a1a;
-    --text-muted: #888;
-    --border: #e8e8e8;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Manrope', sans-serif;
-    background: var(--bg);
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-    color: var(--text-dark);
-  }
-
-  /* ── SIDEBAR ── */
-  .sidebar {
-    width: 280px;
-    flex-shrink: 0;
-    background: #ffffff;
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    padding: 28px 20px;
-    gap: 4px;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0 8px;
-    margin-bottom: 28px;
-  }
-
-  .logo-icon {
-    width: 40px; height: 40px;
-    background: var(--green-dark);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    color: white;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 900;
-    font-size: 16px;
-  }
-
-  .logo-text {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 700;
-    font-size: 20px;
-    color: var(--green-dark);
-    letter-spacing: -0.5px;
-  }
-
-  /* Nav uses hidden radio inputs + labels */
-  .nav-radio { display: none; }
-
-  .nav-label {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    border-radius: 14px;
-    cursor: pointer;
-    color: #888;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    transition: all 0.2s;
-    position: relative;
-    user-select: none;
-  }
-
-  .nav-label:hover { background: #eee; color: var(--text-dark); }
-
-  .nav-radio:checked + .nav-label {
-    background: var(--green-dark);
-    color: white;
-  }
-
-  .nav-radio:checked + .nav-label .nav-dot {
-    display: block;
-  }
-
-  .nav-dot {
-    display: none;
-    width: 6px; height: 6px;
-    background: #7fff7f;
-    border-radius: 50%;
-    position: absolute;
-    right: 14px;
-  }
-
-  .nav-label svg { width: 18px; height: 18px; flex-shrink: 0; }
-
-  .sidebar-spacer { flex: 1; }
-
-  .profile-card {
-    background: white;
-    border-radius: 16px;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border: 1px solid var(--border);
-  }
-
-    .profile-card:hover {
-    background: #f9f9f9;
-    cursor: pointer;
-  }
-
-  .profile-avatar {
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    background: #fde8c0;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--orange);
-    flex-shrink: 0;
-  }
-
-  .profile-info { flex: 1; }
-  .profile-label { font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
-  .profile-name { font-size: 14px; font-weight: 700; color: var(--text-dark); }
-
-  .coins {
-    display: flex; align-items: center; gap: 5px;
-    font-weight: 700; font-size: 14px; color: var(--text-dark);
-  }
-  .coins svg { color: var(--orange); }
-
-  /* ── MAIN ── */
-  .main {
-    flex: 1;
-    display: flex;
-    gap: 20px;
-    padding: 28px;
-    overflow: hidden;
-  }
-
-  .center-panel {
-    flex: 1.2;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    overflow-y: auto;
-  }
-
-  /* ── TODAY CARD ── */
-  .today-card {
-    background: white;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    animation: slideUp 0.4s ease;
-  }
-
-  .today-header {
-    background: linear-gradient(135deg, #f0f8f0 0%, #e0f0e0 100%);
-    padding: 28px 28px 20px;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .today-header::after {
-    content: '';
-    position: absolute;
-    right: -20px; top: -20px;
-    width: 120px; height: 120px;
-    border-radius: 50%;
-    border: 24px solid rgba(255,255,255,0.4);
-  }
-
-  .today-icon {
-    width: 58px; height: 58px;
-    background: linear-gradient(135deg, var(--orange), var(--orange-light));
-    border-radius: 16px;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 16px rgba(240,124,0,0.35);
-    flex-shrink: 0;
-  }
-
-  .today-icon svg { width: 28px; height: 28px; color: white; }
-
-  .today-title-block { flex: 1; }
-
-  .today-title {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 30px;
-    font-weight: 900;
-    color: var(--green-dark);
-    letter-spacing: -1px;
-    line-height: 1;
-  }
-
-  /* ── TASKS – checkbox hack ── */
-  .task-cb { display: none; }
-
-  .task-label {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 16px 20px;
-    background: #f5f8ff;
-    border-radius: 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 2px solid transparent;
-    user-select: none;
-  }
-
-  .task-label:hover { border-color: var(--green-accent); background: #f0f8f0; }
-
-  .task-checkbox-ui {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    border: 2px solid #ccc;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s;
-    position: relative;
-  }
-
-  .task-cb:checked + .task-label { opacity: 0.7; }
-
-  .task-cb:checked + .task-label .task-checkbox-ui {
-    background: var(--green-dark);
-    border-color: var(--green-dark);
-  }
-
-  .task-cb:checked + .task-label .task-checkbox-ui::after {
-    content: '';
-    display: block;
-    width: 6px; height: 10px;
-    border: 2.5px solid white;
-    border-top: none;
-    border-left: none;
-    transform: rotate(45deg) translate(-1px,-1px);
-  }
-
-  .task-cb:checked + .task-label .task-name {
-    text-decoration: line-through;
-    color: var(--text-muted);
-  }
-
-  .task-info { flex: 1; }
-  .task-name { font-size: 14px; font-weight: 600; color: var(--text-dark); }
-
-  .task-tag {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    margin-top: 3px;
-  }
-
-  .tag-соціалізація { color: #7b35c8; }
-  .tag-робота { color: rgb(189, 19, 19); }
-  .tag-хобі { color: var(--orange); }
-  .tag-відпочинок { color: var(--green-mid); }
-
-  .today-tasks { padding: 20px 28px 28px; display: flex; flex-direction: column; gap: 10px; }
-
-  /* ── RIGHT PANEL ── */
-  .right-panel {
-    width: 320px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    overflow-y: auto;
-  }
-
-  /* ── IDEA CARD (add task via modal) ── */
-  .idea-card {
-    background: white;
-    border-radius: 24px;
-    padding: 20px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    animation: slideUp 0.4s ease 0.1s both;
-  }
-
-  .idea-input {
-    width: 100%;
-    border: none;
-    outline: none;
-    font-family: 'Manrope', sans-serif;
-    font-size: 14px;
-    color: var(--text-dark);
-    background: transparent;
-    resize: none;
-    height: 36px;
-  }
-
-  .idea-input::placeholder { color: #bbb; }
-  .idea-divider { height: 1px; background: var(--border); margin: 14px 0; }
-
-  .idea-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .idea-action-btn {
-    width: 34px; height: 34px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: #f5f5f5;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    color: #999;
-    transition: all 0.2s;
-  }
-
-  .idea-action-btn:hover { background: #eee; color: var(--text-dark); }
-  .idea-action-btn svg { width: 16px; height: 16px; }
-
-  /* Open modal trigger */
-  #modal-toggle { display: none; }
-
-  .idea-add-btn {
-    width: 42px; height: 42px;
-    border-radius: 14px;
-    background: var(--green-dark);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    color: white;
-    margin-left: auto;
-    transition: all 0.2s;
-    box-shadow: 0 4px 12px rgba(26,58,26,0.3);
-    border: none;
-  }
-
-  .idea-add-btn:hover { background: var(--green-mid); transform: scale(1.05); }
-  .idea-add-btn svg { width: 20px; height: 20px; }
-
-  /* ── GENERAL CARD with details/summary collapse ── */
-  .general-card {
-    background: white;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    animation: slideUp 0.4s ease 0.2s both;
-  }
-
-  .general-details { padding: 0; }
-
-  .general-summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 20px 16px;
-    cursor: pointer;
-    list-style: none;
-    user-select: none;
-  }
-
-  .general-summary::-webkit-details-marker { display: none; }
-
-  .general-title {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--green-dark);
-    letter-spacing: 0.5px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .count-badge {
-    width: 22px; height: 22px;
-    background: var(--green-dark);
-    color: white;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-  }
-
-  .collapse-icon {
-    width: 28px; height: 28px;
-    border-radius: 8px;
-    background: #f5f5f5;
-    display: flex; align-items: center; justify-content: center;
-    color: #666;
-    flex-shrink: 0;
-    transition: transform 0.2s;
-  }
-
-  .collapse-icon svg { width: 14px; height: 14px; }
-
-  details[open] .collapse-icon { transform: rotate(180deg); }
-
-  .general-tasks { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 10px; }
-
-  .task-meta { display: flex; align-items: center; gap: 8px; margin-top: 3px; }
-  .task-time { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
-  .task-time svg { width: 12px; height: 12px; }
-
-  /* ── MODAL (CSS only, :target trick) ── */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.3);
-    backdrop-filter: blur(4px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-  }
-
-  .modal-overlay:target { display: flex; }
-
-  .modal {
-    background: white;
-    border-radius: 24px;
-    padding: 28px;
-    width: 400px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    animation: slideUp 0.3s ease;
-  }
-
-  .modal-title {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--green-dark);
-    margin-bottom: 20px;
-  }
-
-  .modal-input {
-    width: 100%;
-    border: 2px solid var(--border);
-    outline: none;
-    font-family: 'Manrope', sans-serif;
-    font-size: 14px;
-    padding: 12px 16px;
-    border-radius: 12px;
-    margin-bottom: 12px;
-    transition: border-color 0.2s;
-    display: block;
-  }
-
-  .modal-input:focus { border-color: var(--green-accent); }
-
-  .modal-row { display: flex; gap: 10px; margin-bottom: 12px; }
-
-  .modal-select {
-    flex: 1;
-    border: 2px solid var(--border);
-    outline: none;
-    font-family: 'Manrope', sans-serif;
-    font-size: 13px;
-    padding: 10px 14px;
-    border-radius: 12px;
-    background: white;
-    transition: border-color 0.2s;
-    cursor: pointer;
-  }
-
-  .modal-select:focus { border-color: var(--green-accent); }
-
-  .modal-note {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-bottom: 12px;
-    line-height: 1.5;
-    padding: 10px 14px;
-    background: #f5f8ff;
-    border-radius: 10px;
-  }
-
-  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-
-  .btn-cancel {
-    flex: 1; padding: 12px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    background: white;
-    font-family: 'Manrope', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    text-decoration: none;
-    color: var(--text-dark);
-    text-align: center;
-    display: block;
-    transition: all 0.2s;
-  }
-
-  .btn-cancel:hover { background: #f5f5f5; }
-
-  /* ── HELP BTN ── */
-  .help-btn {
-    position: fixed;
-    bottom: 24px; right: 24px;
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: white;
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    color: var(--text-muted);
-    font-size: 14px;
-    font-weight: 700;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: all 0.2s;
-    text-decoration: none;
-  }
-
-  .help-btn:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
-  /* нове */
-  .task-checkbox-ui {
-    display: inline-flex;
-    width: 22px;
-    height: 22px;
-    border: 2px solid #ccc;
-    border-radius: 50%;
-    transition: all 0.2s;
-    cursor: pointer;
-}
-
-.task-checkbox-ui:hover {
-    background: var(--green-dark);
-    border-color: var(--green-dark);
-}
-
-/* галочку при наведенні  */
-.task-checkbox-ui:hover::after {
-    content: '✓';
-    color: white;
-    font-size: 14px;
-    margin: auto;
-}
-
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* scrollbar */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToDaY</title>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-dark: #1a3a1a;
+      --green-mid: #2d5a2d;
+      --green-accent: #3d7a3d;
+      --orange: #f07c00;
+      --orange-light: #ff9a1f;
+      --purple: #6b0f4e;
+      --bg: #f4f6f4;
+      --card-bg: #ffffff;
+      --text-dark: #1a1a1a;
+      --text-muted: #888;
+      --border: #e8e8e8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--bg);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      color: var(--text-dark);
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      background: #ffffff;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 28px 20px;
+      gap: 4px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 8px;
+      margin-bottom: 28px;
+    }
+
+    .logo-icon {
+      width: 40px; height: 40px;
+      background: var(--green-dark);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 16px;
+    }
+
+    .logo-text {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--green-dark);
+      letter-spacing: -0.5px;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      color: #888;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      position: relative;
+      user-select: none;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-btn:hover { background: #eee; color: var(--text-dark); }
+
+    .nav-btn.active {
+      background: var(--green-dark);
+      color: white;
+    }
+
+    .nav-dot {
+      display: none;
+      width: 6px; height: 6px;
+      background: #7fff7f;
+      border-radius: 50%;
+      position: absolute;
+      right: 14px;
+    }
+
+    .nav-btn.active .nav-dot { display: block; }
+    .nav-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    .sidebar-spacer { flex: 1; }
+
+    .profile-card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .profile-card:hover { background: #f9f9f9; cursor: pointer; }
+
+    .profile-avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: #fde8c0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--orange);
+      flex-shrink: 0;
+    }
+
+    .profile-info { flex: 1; }
+    .profile-label { font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
+    .profile-name { font-size: 14px; font-weight: 700; color: var(--text-dark); }
+
+    .coins {
+      display: flex; align-items: center; gap: 5px;
+      font-weight: 700; font-size: 14px; color: var(--text-dark);
+    }
+
+    /* ── MAIN ── */
+    .main {
+      flex: 1;
+      display: flex;
+      gap: 20px;
+      padding: 28px;
+      overflow: hidden;
+    }
+
+    /* ── PAGES ── */
+    .page { display: none; width: 100%; }
+    .page.active { display: flex; gap: 20px; }
+
+    .center-panel {
+      flex: 1.2;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+    }
+
+    /* ── TODAY HEADER BLOCK ── */
+    .today-hero {
+      background: #f0f0ec;
+      border-radius: 24px;
+      padding: 28px 28px 24px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .today-hero-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 6px;
+    }
+
+    .today-hero-icon {
+      width: 62px; height: 62px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-light));
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(240,124,0,0.35);
+      flex-shrink: 0;
+    }
+
+    .today-hero-icon svg { width: 30px; height: 30px; color: white; }
+
+    .today-hero-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--green-dark);
+      letter-spacing: -2px;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .today-hero-circle {
+      position: absolute;
+      right: -10px; top: -10px;
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      border: 18px solid rgba(240,200,120,0.25);
+      pointer-events: none;
+    }
+
+    .today-settings-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--orange);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 7px 16px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-left: 80px;
+      margin-top: 6px;
+      transition: opacity 0.2s;
+    }
+
+    .today-settings-btn:hover { opacity: 0.85; }
+    .today-settings-btn svg { width: 13px; height: 13px; }
+
+    .today-drop-zone {
+      border: 2px dashed #ccc;
+      border-radius: 16px;
+      padding: 36px 20px;
+      text-align: center;
+      margin-top: 20px;
+      color: #bbb;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .today-drop-zone.dragover {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      animation: slideUp 0.4s ease;
+    }
+
+    .today-header {
+      background: linear-gradient(135deg, #f0f8f0 0%, #e0f0e0 100%);
+      padding: 28px 28px 20px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .today-header::after {
+      content: '';
+      position: absolute;
+      right: -20px; top: -20px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      border: 24px solid rgba(255,255,255,0.4);
+    }
+
+    .today-icon {
+      width: 58px; height: 58px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-light));
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(240,124,0,0.35);
+      flex-shrink: 0;
+    }
+
+    .today-icon svg { width: 28px; height: 28px; color: white; }
+
+    .today-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 30px;
+      font-weight: 900;
+      color: var(--green-dark);
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .today-tasks { padding: 20px 28px 28px; display: flex; flex-direction: column; gap: 10px; }
+
+    /* ── TASKS ── */
+    .task-label {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: #f5f8ff;
+      border-radius: 16px;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .task-label:hover { border-color: var(--green-accent); background: #f0f8f0; }
+
+    .task-checkbox-ui {
+      display: inline-flex;
+      width: 22px; height: 22px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: all 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .task-checkbox-ui:hover {
+      background: var(--green-dark);
+      border-color: var(--green-dark);
+    }
+
+    .task-info { flex: 1; }
+    .task-name { font-size: 14px; font-weight: 600; color: var(--text-dark); }
+
+    .task-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .tag-соціалізація, .tag-Соціалізація { color: #7b35c8; }
+    .tag-робота, .tag-Робота { color: rgb(189, 19, 19); }
+    .tag-хобі, .tag-Хобі { color: var(--orange); }
+    .tag-відпочинок, .tag-Відпочинок { color: var(--green-mid); }
+
+    /* ── RIGHT PANEL ── */
+    .right-panel {
+      width: 320px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+    }
+
+    /* ── ADD TASK CARD ── */
+    .idea-card {
+      background: white;
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      animation: slideUp 0.4s ease 0.1s both;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      min-height: 120px;
+    }
+
+    .idea-add-btn {
+      width: 50px; height: 50px;
+      border-radius: 14px;
+      background: var(--green-dark);
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(26,58,26,0.3);
+      border: none;
+      cursor: pointer;
+    }
+
+    .idea-add-btn:hover { background: var(--green-mid); transform: scale(1.05); }
+    .idea-add-btn svg { width: 24px; height: 24px; }
+
+    /* ── GENERAL CARD ── */
+    .general-card {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      animation: slideUp 0.4s ease 0.2s both;
+    }
+
+    .general-details { padding: 0; }
+
+    .general-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 20px 16px;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+
+    .general-summary::-webkit-details-marker { display: none; }
+
+    .general-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green-dark);
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .count-badge {
+      width: 22px; height: 22px;
+      background: var(--green-dark);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .collapse-icon {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: #f5f5f5;
+      display: flex; align-items: center; justify-content: center;
+      color: #666;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    .collapse-icon svg { width: 14px; height: 14px; }
+    details[open] .collapse-icon { transform: rotate(180deg); }
+
+    .general-tasks { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 10px; }
+
+    .task-meta { display: flex; align-items: center; gap: 8px; margin-top: 3px; }
+    .task-time { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+    .task-time svg { width: 12px; height: 12px; }
+
+    /* ─── ALL TASKS PAGE (Загальні) ─── */
+    .all-tasks-card {
+      background: white;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      flex: 1;
+      overflow-y: auto;
+      animation: slideUp 0.4s ease;
+    }
+
+    .page-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--green-dark);
+      letter-spacing: -1px;
+      margin-bottom: 24px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      margin-top: 20px;
+    }
+
+    .section-label:first-of-type { margin-top: 0; }
+
+    /* General task rows — matches screenshot 1 */
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      background: #fff;
+      border-radius: 18px;
+      border: 1.5px solid var(--border);
+      margin-bottom: 12px;
+      transition: all 0.2s;
+    }
+
+    .task-row:hover { border-color: #ddd; background: #fafafa; }
+    .task-row.done .task-name { text-decoration: line-through; color: var(--text-muted); }
+    .task-row.done .task-tag { color: var(--text-muted) !important; }
+
+    .check-circle {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      text-decoration: none;
+      cursor: pointer;
+      background: white;
+    }
+
+    .check-circle:hover { background: #f0f0f0; }
+
+    .check-circle.checked {
+      border-color: #aaa;
+      background: white;
+    }
+
+    .check-circle svg { width: 13px; height: 13px; color: #aaa; }
+
+    .task-row .task-name { font-size: 16px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+    .task-row .task-meta { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+    .task-row .task-time { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+    .task-row .task-time svg { width: 13px; height: 13px; }
+    .task-row .task-tag { font-size: 12px; font-weight: 700; letter-spacing: 0.3px; text-transform: uppercase; }
+
+    /* Today page — "Нова ідея" card with inputs, like screenshot 2 */
+    .idea-input-card {
+      background: white;
+      border-radius: 24px;
+      padding: 20px 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      animation: slideUp 0.4s ease 0.1s both;
+    }
+
+    .idea-input-field {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-family: 'Manrope', sans-serif;
+      font-size: 15px;
+      color: var(--text-dark);
+      background: transparent;
+      margin-bottom: 14px;
+    }
+
+    .idea-input-field::placeholder { color: #bbb; }
+
+    .idea-divider { height: 1px; background: var(--border); margin-bottom: 14px; }
+
+    .idea-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .idea-action-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: #f9f9f9;
+      font-size: 12px;
+      font-weight: 600;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .idea-action-chip:hover { border-color: #bbb; color: var(--text-dark); background: #f0f0f0; }
+    .idea-action-chip svg { width: 14px; height: 14px; }
+
+    .idea-icon-btn {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: #f9f9f9;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: #999;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .idea-icon-btn:hover { background: #eee; color: var(--text-dark); }
+    .idea-icon-btn svg { width: 15px; height: 15px; }
+
+    .idea-submit-btn {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      background: var(--purple);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: white;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(107,15,78,0.3);
+      border: none;
+      flex-shrink: 0;
+    }
+
+    .idea-submit-btn:hover { opacity: 0.85; transform: scale(1.05); }
+    .idea-submit-btn svg { width: 20px; height: 20px; }
+
+    /* General card on today page — dark title like screenshot 2 */
+    .general-card-today {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      animation: slideUp 0.4s ease 0.2s both;
+    }
+
+    .general-summary-today {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 22px;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+
+    .general-summary-today::-webkit-details-marker { display: none; }
+
+    .general-title-today {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--purple);
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .count-badge-today {
+      width: 22px; height: 22px;
+      background: var(--purple);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .collapse-icon-today {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: #f5f5f5;
+      display: flex; align-items: center; justify-content: center;
+      color: #666;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    details[open] .collapse-icon-today { transform: rotate(180deg); }
+    .collapse-icon-today svg { width: 14px; height: 14px; }
+
+    /* ─── CALENDAR PAGE ─── */
+    .calendar-card {
+      background: white;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      flex: 1.4;
+      animation: slideUp 0.4s ease;
+    }
+
+    .calendar-planning {
+      width: 280px;
+      flex-shrink: 0;
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      animation: slideUp 0.4s ease 0.1s both;
+    }
+
+    .cal-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--green-dark);
+      letter-spacing: -0.5px;
+      margin-bottom: 24px;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .cal-header {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 8px 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .cal-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .cal-day:hover { background: #f0f8f0; color: var(--text-dark); }
+
+    .cal-day.today {
+      background: #e8f0e8;
+      color: var(--green-dark);
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .cal-day.selected {
+      background: var(--green-dark);
+      color: white;
+      font-weight: 700;
+    }
+
+    .cal-day.selected:hover {
+      background: var(--green-mid);
+      color: white;
+    }
+
+    .cal-day.has-task::after {
+      content: '';
+      display: block;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--green-accent);
+      position: absolute;
+      bottom: 4px;
+    }
+
+    .cal-day { position: relative; }
+
+    .planning-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--purple);
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .planning-hint {
+      font-size: 10px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .planning-task {
+      background: #f5f5f5;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .planning-task:hover { background: #ece8f5; }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: white;
+      border-radius: 24px;
+      padding: 28px;
+      width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      animation: slideUp 0.3s ease;
+    }
+
+    .modal-title {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--green-dark);
+      margin-bottom: 20px;
+    }
+
+    .modal-input {
+      width: 100%;
+      border: 2px solid var(--border);
+      outline: none;
+      font-family: 'Manrope', sans-serif;
+      font-size: 14px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      transition: border-color 0.2s;
+      display: block;
+    }
+
+    .modal-input:focus { border-color: var(--green-accent); }
+
+    .modal-row { display: flex; gap: 10px; margin-bottom: 12px; }
+
+    .modal-select {
+      flex: 1;
+      border: 2px solid var(--border);
+      outline: none;
+      font-family: 'Manrope', sans-serif;
+      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: white;
+      transition: border-color 0.2s;
+      cursor: pointer;
+    }
+
+    .modal-select:focus { border-color: var(--green-accent); }
+
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+    .btn-cancel {
+      flex: 1; padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      font-family: 'Manrope', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text-dark);
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .btn-cancel:hover { background: #f5f5f5; }
+
+    .btn-ok {
+      width: 60px;
+      border-radius: 12px;
+      background: var(--green-dark);
+      border: none;
+      font-family: 'Manrope', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(26,58,26,0.3);
+    }
+
+    .btn-ok:hover { background: var(--green-mid); }
+
+    /* ── HELP BTN ── */
+    .help-btn {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: white;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .help-btn:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+  </style>
 </head>
 <body>
 
@@ -575,27 +916,23 @@
     <div class="logo-text">ToDaY</div>
   </div>
 
-  <!-- Nav using radio buttons -->
-  <input class="nav-radio" type="radio" name="nav" id="nav1" checked>
-  <label class="nav-label" for="nav1">
+  <button class="nav-btn active" onclick="showPage('today', this)">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
       <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
     </svg>
     СЬОГОДНІ
     <span class="nav-dot"></span>
-  </label>
+  </button>
 
-  <input class="nav-radio" type="radio" name="nav" id="nav2">
-  <label class="nav-label" for="nav2">
+  <button class="nav-btn" onclick="showPage('general', this)">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
     </svg>
     ЗАГАЛЬНІ
     <span class="nav-dot"></span>
-  </label>
+  </button>
 
-  <input class="nav-radio" type="radio" name="nav" id="nav3">
-  <label class="nav-label" for="nav3">
+  <button class="nav-btn" onclick="showPage('calendar', this)">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
       <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
@@ -603,29 +940,27 @@
     </svg>
     КАЛЕНДАР
     <span class="nav-dot"></span>
-  </label>
+  </button>
 
-  <input class="nav-radio" type="radio" name="nav" id="nav4">
-  <label class="nav-label" for="nav4">
+  <button class="nav-btn" onclick="showPage('fun', this)">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
     </svg>
     ЦІКАВЕНЬКО
     <span class="nav-dot"></span>
-  </label>
+  </button>
 
-  <input class="nav-radio" type="radio" name="nav" id="nav5">
-  <label class="nav-label" for="nav5">
+  <button class="nav-btn" onclick="showPage('rating', this)">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
     </svg>
     РЕЙТИНГ
     <span class="nav-dot"></span>
-  </label>
+  </button>
 
   <div class="sidebar-spacer"></div>
 
-  <a href="{% url 'myapp:profile' %}" class="profile-card" style="text-decoration: none; color: inherit; display: flex;">
+  <a href="/profile/" class="profile-card">
     <div class="profile-avatar">
       <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
@@ -634,13 +969,13 @@
     </div>
     <div class="profile-info">
       <div class="profile-label">Профіль</div>
-      <div class="profile-name">{{ request.user.username }}</div>
+      <div class="profile-name">Корис...</div>
     </div>
     <div class="coins">
       <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="color:var(--orange)">
         <circle cx="12" cy="12" r="10"/>
       </svg>
-      {{ request.user.coins|default:0 }}
+      100
     </div>
   </a>
 </aside>
@@ -648,300 +983,346 @@
 <!-- ─────────────── MAIN ─────────────── -->
 <main class="main">
 
-  <!-- CENTER -->
-  <div class="center-panel">
-    <div class="today-card">
-      <div class="today-header">
-        <div class="today-icon">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-        </div>
-        <div class="today-title-block">
-          <div class="today-title">СЬОГОДНІ</div>
-        </div>
-      </div>
+  <!-- ══════════ СЬОГОДНІ ══════════ -->
+  <div class="page active" id="page-today">
+    <div class="center-panel">
+      <div class="today-hero">
+        <!-- Decorative circle -->
+        <div class="today-hero-circle"></div>
 
-      <div class="today-tasks">
-          {% for task in today_tasks %}
-            <div class="task-label">
-              <a href="{% url 'tasks:complete_task' task.id %}" class="task-checkbox-ui" style="text-decoration: none;"></a>
-
-              <div class="task-info">
-                <div class="task-name">{{ task.title }}</div>
-                <div class="task-tag tag-{{ task.category.name|lower }}">{{ task.category.name|default:"Без категорії" }}</div>
-              </div>
-            </div>
-          {% empty %}
-            <p style="color: #888; text-align: center; padding: 20px;">На сьогодні завдань немає 🙌</p>
-          {% endfor %}
-        <!-- Task 1
-        <input class="task-cb" type="checkbox" id="t1">
-        <label class="task-label" for="t1">
-          <span class="task-checkbox-ui"></span>
-          <div class="task-info">
-            {% for task in today_tasks %}
-              <div class="task-name">{{ task.title }}</div>
-            {% endfor %}
-            <div class="task-tag tag-social">Соціалізація</div>
-          </div>
-        </label>
-
-        Task 2
-        <input class="task-cb" type="checkbox" id="t2">
-        <label class="task-label" for="t2">
-          <span class="task-checkbox-ui"></span>
-          <div class="task-info">
-            <div class="task-name">Прочитати 20 сторінок книги</div>
-            <div class="task-tag tag-personal">Особисте</div>
-          </div>
-        </label>
-
-        Task 3
-        <input class="task-cb" type="checkbox" id="t3">
-        <label class="task-label" for="t3">
-          <span class="task-checkbox-ui"></span>
-          <div class="task-info">
-            <div class="task-name">Написати звіт для команди</div>
-            <div class="task-meta">
-              <span class="task-time">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-                </svg>
-                1ГОД
-              </span>
-              <span class="task-tag tag-work">РОБОТА</span>
-            </div>
-          </div>
-        </label>
-
-        Task 4
-        <input class="task-cb" type="checkbox" id="t4">
-        <label class="task-label" for="t4">
-          <span class="task-checkbox-ui"></span>
-          <div class="task-info">
-            <div class="task-name">Ранкова зарядка</div>
-            <div class="task-tag tag-personal">Особисте</div>
-          </div>
-        </label>-->
-
-      </div>
-    </div>
-  </div>
-
-  <!-- RIGHT PANEL -->
-  <div class="right-panel">
-
-    <!-- Idea / Add card -->
-    <div class="idea-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; min-height: 120px;" onclick="location.href='#addModal'">
-
-      <div class="idea-add-btn" style="margin: 0; width: 50px; height: 50px;">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-      </div>
-
-      <span style="font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 700; color: var(--green-dark); letter-spacing: 0.5px;">
-          ДОДАТИ ЗАВДАННЯ
-      </span>
-    </div>
-<!-- </div>
-    <div class="idea-card">
-      <textarea class="idea-input" placeholder="Нова ідея..."></textarea>
-      <div class="idea-divider"></div>
-      <div class="idea-actions">
-
-        <div class="idea-action-btn" title="Час">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-          </svg>
-        </div>
-        <div class="idea-action-btn" title="Робота">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
-            <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
-          </svg>
-        </div>
-        <div class="idea-action-btn" title="Кава">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path d="M17 8h1a4 4 0 010 8h-1M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/>
-          </svg>
-        </div>
-        <div class="idea-action-btn" title="Люди">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
-          </svg>
-        </div>
-        <div class="idea-action-btn" title="Колір">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/>
-            <circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/>
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c1.66 0 3-.34 3-1 0-.39-.15-.74-.39-1.01A1.01 1.01 0 0115 19c0-.55.45-1 1-1h1c3.31 0 6-2.69 6-6C23 6.48 17.99 2 12 2z"/>
-          </svg>
-        </div> -->
-
-        <!-- Open modal with :target -->
-        <!-- <a href="#addModal" class="idea-add-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-        </a> -->
-
-
-    <!-- General tasks with details/summary collapse -->
-    <div class="general-card">
-      <details class="general-details" open>
-        <summary class="general-summary">
-          <div class="general-title">
-            ТВОЇ СПРАВИ
-            <span class="count-badge">{{ other_tasks|length }}</span>
-          </div>
-          <span class="collapse-icon">
+        <!-- Top row: icon + title -->
+        <div class="today-hero-top">
+          <div class="today-hero-icon">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
             </svg>
-          </span>
-        </summary>
-
-        <div class="general-tasks">
-          {% for task in other_tasks %}
-            <div class="task-label">
-              <a href="{% url 'tasks:complete_task' task.id %}" class="task-checkbox-ui" style="text-decoration: none;"></a>
-              <div class="task-info">
-                <div class="task-name">{{ task.title }}</div>
-                <div class="task-tag">{{ task.category.name|default:"Загальне" }}</div>
-              </div>
-            </div>
-          {% empty %}
-            <p style="color: #888; text-align: center; padding: 20px;">Наповни мене</p>
-          {% endfor %}
+          </div>
+          <div class="today-hero-title">СЬОГОДНІ</div>
         </div>
 
-        <!-- <div class="general-tasks"> -->
+        <!-- Settings button -->
+        <button class="today-settings-btn">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0110 0v4"/>
+          </svg>
+          НАЛАШТУВАННЯ
+        </button>
 
-          <!-- General Task 1
-          <input class="task-cb" type="checkbox" id="g1">
-          <label class="task-label" for="g1">
-            <span class="task-checkbox-ui"></span>
-            <div class="task-info">
-              {% for task in other_tasks %}
-                <div class="task-name">{{ task.title }}</div>
-              {% endfor %}
-              <div class="task-meta">
-                <span class="task-time">
-                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-                  </svg>
-                  2ГОД
-                </span>
-                <span class="task-tag tag-work">РОБОТА</span>
-              </div>
-            </div>
-          </label>
+        <!-- Dashed drop zone -->
+        <div class="today-drop-zone">
+          ВИБЕРІТЬ ЗАВДАННЯ ІЗ ЗАГАЛЬНОГО СПИСКУ
+        </div>
 
-          General Task 2
-          <input class="task-cb" type="checkbox" id="g2">
-          <label class="task-label" for="g2">
-            <span class="task-checkbox-ui"></span>
-            <div class="task-info">
-              <div class="task-name">Купити продукти</div>
-              <div class="task-tag tag-personal">Особисте</div>
-            </div>
-          </label>
-
-          General Task 3
-          <input class="task-cb" type="checkbox" id="g3">
-          <label class="task-label" for="g3">
-            <span class="task-checkbox-ui"></span>
-            <div class="task-info">
-              <div class="task-name">Зустріч з командою</div>
-              <div class="task-meta">
-                <span class="task-time">
-                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-                  </svg>
-                  45ХВ
-                </span>
-                <span class="task-tag tag-social">СОЦІАЛІЗАЦІЯ</span>
-              </div>
-            </div>
-          </label>-->
-
-        <!-- </div> -->
-      </details>
+        <!-- Tasks (when filled from Django) -->
+        <div class="today-tasks" style="margin-top: 12px; padding: 0;">
+          <!-- Django: {% for task in today_tasks %} -->
+          <!-- Django: {% empty %} -->
+          <!-- Django: {% endfor %} -->
+        </div>
+      </div>
     </div>
 
+    <div class="right-panel">
+      <!-- Нова ідея card -->
+      <div class="idea-input-card">
+        <input class="idea-input-field" id="idea-input" placeholder="Нова ідея...">
+        <div class="idea-divider"></div>
+        <div class="idea-actions-row">
+          <div class="idea-action-chip">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Години
+          </div>
+          <div class="idea-icon-btn" title="Робота">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+          </div>
+          <div class="idea-icon-btn" title="Кава">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 8h1a4 4 0 010 8h-1M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/></svg>
+          </div>
+          <div class="idea-icon-btn" title="Люди">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div class="idea-icon-btn" title="Колір">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c1.66 0 3-.34 3-1 0-.39-.15-.74-.39-1.01A1.01 1.01 0 0115 19c0-.55.45-1 1-1h1c3.31 0 6-2.69 6-6C23 6.48 17.99 2 12 2z"/></svg>
+          </div>
+          <button class="idea-submit-btn" id="add-task-btn" onclick="addTask()">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Загальні card — purple style -->
+      <div class="general-card-today">
+        <details open>
+          <summary class="general-summary-today">
+            <div class="general-title-today">
+              ЗАГАЛЬНІ
+              <span class="count-badge-today" id="general-count">0</span>
+            </div>
+            <span class="collapse-icon-today">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+              </svg>
+            </span>
+          </summary>
+          <div id="general-task-list" style="padding: 0 20px 20px; display:flex; flex-direction:column; gap:10px;">
+          </div>
+        </details>
+      </div>
+    </div>
   </div>
+
+  <!-- ══════════ ЗАГАЛЬНІ ══════════ -->
+  <div class="page" id="page-general">
+    <div class="all-tasks-card">
+      <div class="page-title">УСІ СПРАВИ</div>
+
+      <div class="section-label">НЕВИКОНАНІ</div>
+
+      <div class="task-row">
+        <a href="#" class="check-circle">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+        </a>
+        <div class="task-info">
+          <div class="task-name">Завершити проектний план</div>
+          <div class="task-meta">
+            <span class="task-time">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              2 ГОД
+            </span>
+            <span class="task-tag tag-робота">РОБОТА</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-row">
+        <a href="#" class="check-circle">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+        </a>
+        <div class="task-info">
+          <div class="task-name">Зателефонувати клієнту</div>
+          <div class="task-meta">
+            <span class="task-tag tag-соціалізація">СОЦІАЛІЗАЦІЯ</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-top:28px;">ВИКОНАНІ</div>
+
+      <div class="task-row done">
+        <a href="#" class="check-circle checked">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+        </a>
+        <div class="task-info">
+          <div class="task-name">Купити продукти</div>
+          <div class="task-meta">
+            <span class="task-time">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              0.5 ГОД
+            </span>
+            <span class="task-tag tag-відпочинок">ВІДПОЧИНОК</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ КАЛЕНДАР ══════════ -->
+  <div class="page" id="page-calendar">
+    <div class="calendar-card">
+      <div class="cal-title">ЛЮТИЙ 2026</div>
+      <div class="cal-grid">
+        <!-- Headers -->
+        <div class="cal-header">ПН</div>
+        <div class="cal-header">ВТ</div>
+        <div class="cal-header">СР</div>
+        <div class="cal-header">ЧТ</div>
+        <div class="cal-header">ПТ</div>
+        <div class="cal-header">СБ</div>
+        <div class="cal-header">НД</div>
+
+        <!-- Week 1: starts Monday Feb 2 (Feb 1 = Sunday) -->
+        <div class="cal-day">1</div>
+        <div class="cal-day">2</div>
+        <div class="cal-day">3</div>
+        <div class="cal-day">4</div>
+        <div class="cal-day">5</div>
+        <div class="cal-day">6</div>
+        <div class="cal-day">7</div>
+
+        <div class="cal-day">8</div>
+        <div class="cal-day">9</div>
+        <div class="cal-day">10</div>
+        <div class="cal-day">11</div>
+        <div class="cal-day">12</div>
+        <div class="cal-day">13</div>
+        <div class="cal-day">14</div>
+
+        <div class="cal-day">15</div>
+        <div class="cal-day">16</div>
+        <div class="cal-day">17</div>
+        <div class="cal-day">18</div>
+        <div class="cal-day">19</div>
+        <div class="cal-day">20</div>
+        <div class="cal-day">21</div>
+
+        <div class="cal-day">22</div>
+        <div class="cal-day">23</div>
+        <div class="cal-day">24</div>
+        <div class="cal-day">25</div>
+        <div class="cal-day">26</div>
+        <div class="cal-day">27</div>
+        <div class="cal-day">28</div>
+      </div>
+    </div>
+
+    <div class="calendar-planning">
+      <div class="planning-title">ПЛАНУВАННЯ</div>
+      <div class="planning-hint">Двічі клікніть на справу:</div>
+      <div class="planning-task">Завершити проектний план</div>
+      <div class="planning-task">Зателефонувати клієнту</div>
+    </div>
+  </div>
+
+  <!-- ══════════ ЦІКАВЕНЬКО ══════════ -->
+  <div class="page" id="page-fun">
+    <div class="all-tasks-card" style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text-muted);">
+      <span style="font-size:48px;">⭐</span>
+      <div style="font-family:'Unbounded',sans-serif;font-size:16px;color:var(--green-dark);">ЦІКАВЕНЬКО</div>
+      <p style="font-size:14px;">Тут буде щось цікаве!</p>
+    </div>
+  </div>
+
+  <!-- ══════════ РЕЙТИНГ ══════════ -->
+  <div class="page" id="page-rating">
+    <div class="all-tasks-card" style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text-muted);">
+      <span style="font-size:48px;">🏆</span>
+      <div style="font-family:'Unbounded',sans-serif;font-size:16px;color:var(--green-dark);">РЕЙТИНГ</div>
+      <p style="font-size:14px;">Тут буде рейтинг гравців!</p>
+    </div>
+  </div>
+
 </main>
 
 <!-- HELP -->
 <a href="#" class="help-btn">?</a>
 
-<!-- ─────────────── MODAL (:target) ─────────────── -->
+<!-- ─────────────── MODAL ─────────────── -->
 <div class="modal-overlay" id="addModal">
   <div class="modal">
     <div class="modal-title">Нове завдання</div>
-
-    <form action="{% url 'tasks:add_task' %}" method="POST">
-      {% csrf_token %}
+    <form action="/tasks/add/" method="POST">
+      <!-- Django: {% csrf_token %} -->
       <input type="text" name="title" class="modal-input" placeholder="Назва завдання..." required>
-
       <div class="modal-row">
         <select name="category" class="modal-select">
-            <option value="">Без категорії</option>
-            <option value="Соціалізація">Соціалізація</option>
-            <option value="Робота">Робота</option>
-            <option value="Хобі">Хобі</option>
-            <option value="Відпочинок">Відпочинок</option>
-<!--
-            {% for cat in categories %}
-                <option value="{{ cat.id }}">{{ cat.name }}</option>
-            {% endfor %} -->
+          <option value="">Без категорії</option>
+          <option value="Соціалізація">Соціалізація</option>
+          <option value="Робота">Робота</option>
+          <option value="Хобі">Хобі</option>
+          <option value="Відпочинок">Відпочинок</option>
         </select>
-            <select name="is_for_today" class="modal-select">
-                <option value="true">Виконати сьогодні ⚡</option>
-                <option value="false">В загальний список</option>
-            </select>
+        <select name="is_for_today" class="modal-select">
+          <option value="true">Виконати сьогодні ⚡</option>
+          <option value="false">В загальний список</option>
+        </select>
       </div>
-
       <div class="modal-actions">
-        <a href="#" class="btn-cancel">Скасувати</a>
-        <button type="submit" class="idea-add-btn" style="border:none; width: 60px;">OK</button>
+        <button type="button" class="btn-cancel" onclick="closeModal()">Скасувати</button>
+        <button type="submit" class="btn-ok">OK</button>
       </div>
     </form>
   </div>
 </div>
 
-<!--<div class="modal-overlay" id="addModal">
-  <div class="modal">
-    <div class="modal-title">Нове завдання</div>
+<script>
+  // ── Tab switching ──
+  const pages = {
+    today: 'page-today',
+    general: 'page-general',
+    calendar: 'page-calendar',
+    fun: 'page-fun',
+    rating: 'page-rating',
+  };
 
-    <p class="modal-note">
-    </p>
+  function showPage(name, btn) {
+    Object.values(pages).forEach(id => {
+      document.getElementById(id).classList.remove('active');
+    });
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(pages[name]).classList.add('active');
+    btn.classList.add('active');
+  }
 
-    <input class="modal-input" placeholder="Назва завдання..." />
-    <div class="modal-row">
-      <select class="modal-select">
-        <option value="">Категорія</option>
-        <option value="social">Соціалізація</option>
-        <option value="work">Робота</option>
-        <option value="personal">Особисте</option>
-      </select>
-      <select class="modal-select">
-        <option value="today">Сьогодні</option>
-        <option value="general">Загальні</option>
-      </select>
-    </div>
-    <input class="modal-input" placeholder="Час (наприклад: 2год)" />
+  // ── Calendar day click — highlight green ──
+  document.querySelectorAll('.cal-day').forEach(day => {
+    day.addEventListener('click', function() {
+      // Remove selected from all days
+      document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected'));
+      // Add to clicked
+      this.classList.add('selected');
+    });
+  });
 
-    <div class="modal-actions">
-      Close modal by navigating away from #addModal
-      <a href="#" class="btn-cancel">Скасувати</a>
-    </div>
-  </div>
-</div>-->
+  // ── Modal ──
+  function openModal() {
+    document.getElementById('addModal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('addModal').classList.remove('open');
+  }
+
+  document.getElementById('addModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // ── Add task dynamically ──
+  function addTask() {
+    const input = document.getElementById('idea-input');
+    const title = input.value.trim();
+    if (!title) return;
+
+    const list = document.getElementById('general-task-list');
+    const countBadge = document.getElementById('general-count');
+
+    const taskEl = document.createElement('div');
+    taskEl.className = 'task-label';
+    taskEl.innerHTML = `
+      <span class="task-checkbox-ui"></span>
+      <div class="task-info">
+        <div class="task-name">${title}</div>
+        <div class="task-tag" style="color:#888">ЗАГАЛЬНЕ</div>
+      </div>
+    `;
+    list.appendChild(taskEl);
+
+    const current = parseInt(countBadge.textContent) || 0;
+    countBadge.textContent = current + 1;
+
+    input.value = '';
+    input.focus();
+  }
+
+  // Allow Enter key to add task
+  document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('idea-input');
+    if (input) {
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') addTask();
+      });
+    }
+  });
+
+</script>
 
 </body>
 </html>
