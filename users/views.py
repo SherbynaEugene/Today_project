@@ -15,11 +15,17 @@ def register(request):
 
         if password1 != password2:
             messages.error(request, 'Паролі не співпадають')
-            return redirect('users:register')
+            return render(request, 'myapp/register.html', {
+                'email': email,
+                'username': username
+            })
 
         if User.objects.filter(email=email).exists():
             messages.error(request, 'На цьому email вже є акаунт')
-            return redirect('users:register')
+            return render(request, 'myapp/register.html', {
+                'username': username
+                # email зайнятий, нехай вводять інший
+            })
 
         user = User.objects.create_user(
             username=username,
@@ -32,7 +38,7 @@ def register(request):
         login(request, user)
         return redirect('tasks:today_tasks')
 
-    return render(request, 'users/register.html')
+    return render(request, 'myapp/register.html')
 
 
 def sign_in(request):
@@ -46,9 +52,9 @@ def sign_in(request):
             return redirect('tasks:today_tasks')
         else:
             messages.error(request, 'Неправильний email або пароль')
-            return redirect('users:sign_in')
+            return render(request, 'myapp/sign_in.html', {'email': email})
 
-    return render(request, 'users/sign_in.html')
+    return render(request, 'myapp/sign_in.html')
 
 
 def sign_out(request):
@@ -59,7 +65,7 @@ def sign_out(request):
 @login_required
 def profile(request):
     character = Character.objects.get(user=request.user)
-    return render(request, 'users/profile.html', {
+    return render(request, 'myapp/profile.html', {
         'user': request.user,
         'character': character,
     })
