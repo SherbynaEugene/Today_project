@@ -32,9 +32,13 @@ def today_tasks(request):
     other_incomplete = Task.objects.filter(
         user=request.user, is_for_today=False, is_completed=False
     ).order_by('order')
-    return render(request, 'tasks/today_tasks.html', {
+
+    categories = Category.objects.filter(user=request.user)
+
+    return render(request, 'myapp/user_desktop.html', {
         'today_tasks': today_incomplete,
         'other_tasks': other_incomplete,
+        'categories': categories,
     })
 
 
@@ -44,9 +48,17 @@ def add_task(request):
         title = request.POST.get('title')
         estimated_hours = request.POST.get('estimated_hours', 1)
         planned_date = request.POST.get('planned_date') or None
-        is_for_today = request.POST.get('is_for_today') == 'on'
-        category_id = request.POST.get('category') or None
+        is_for_today = request.POST.get('is_for_today') == 'true'
+        category_name = request.POST.get('category') or None
         deadline_time = request.POST.get('deadline_time', '12:00')
+
+        category_id = None
+        if category_name:
+            # get_or_create шукає категорію, а якщо її немає створює
+            category_id, created = Category.objects.get_or_create(
+                name=category_name,
+                user=request.user
+            )
 
         task = Task.objects.create(
             user=request.user,
@@ -55,7 +67,7 @@ def add_task(request):
             planned_date=planned_date,
             is_for_today=is_for_today,
             deadline_time=deadline_time,
-            category_id=category_id,
+            category=category_id,
         )
         return redirect('tasks:today_tasks')
 
@@ -75,7 +87,7 @@ def complete_task(request, task_id):
     request.user.coins += int(points)
     request.user.save()
 
-    return redirect(request.META.get('HTTP_REFERER', 'tasks:today_tasks'))
+    return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
 
 
 @login_required

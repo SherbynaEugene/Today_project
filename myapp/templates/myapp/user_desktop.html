@@ -276,9 +276,10 @@
     margin-top: 3px;
   }
 
-  .tag-social { color: #7b35c8; }
-  .tag-work { color: var(--purple); }
-  .tag-personal { color: var(--orange); }
+  .tag-соціалізація { color: #7b35c8; }
+  .tag-робота { color: rgb(189, 19, 19); }
+  .tag-хобі { color: var(--orange); }
+  .tag-відпочинок { color: var(--green-mid); }
 
   .today-tasks { padding: 20px 28px 28px; display: flex; flex-direction: column; gap: 10px; }
 
@@ -530,6 +531,29 @@
   }
 
   .help-btn:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+  /* нове */
+  .task-checkbox-ui {
+    display: inline-flex;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.task-checkbox-ui:hover {
+    background: var(--green-dark);
+    border-color: var(--green-dark);
+}
+
+/* галочку при наведенні  */
+.task-checkbox-ui:hover::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    margin: auto;
+}
 
   @keyframes slideUp {
     from { opacity: 0; transform: translateY(16px); }
@@ -610,13 +634,13 @@
     </div>
     <div class="profile-info">
       <div class="profile-label">Профіль</div>
-      <div class="profile-name">Корис...</div>
+      <div class="profile-name">{{ request.user.username }}</div>
     </div>
     <div class="coins">
       <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="color:var(--orange)">
         <circle cx="12" cy="12" r="10"/>
       </svg>
-      100
+      {{ request.user.coins|default:0 }}
     </div>
   </a>
 </aside>
@@ -639,18 +663,31 @@
       </div>
 
       <div class="today-tasks">
+          {% for task in today_tasks %}
+            <div class="task-label">
+              <a href="{% url 'tasks:complete_task' task.id %}" class="task-checkbox-ui" style="text-decoration: none;"></a>
 
-        <!-- Task 1 -->
+              <div class="task-info">
+                <div class="task-name">{{ task.title }}</div>
+                <div class="task-tag tag-{{ task.category.name|lower }}">{{ task.category.name|default:"Без категорії" }}</div>
+              </div>
+            </div>
+          {% empty %}
+            <p style="color: #888; text-align: center; padding: 20px;">На сьогодні завдань немає 🙌</p>
+          {% endfor %}
+        <!-- Task 1
         <input class="task-cb" type="checkbox" id="t1">
         <label class="task-label" for="t1">
           <span class="task-checkbox-ui"></span>
           <div class="task-info">
-            <div class="task-name">Зателефонувати другу</div>
+            {% for task in today_tasks %}
+              <div class="task-name">{{ task.title }}</div>
+            {% endfor %}
             <div class="task-tag tag-social">Соціалізація</div>
           </div>
         </label>
 
-        <!-- Task 2 -->
+        Task 2
         <input class="task-cb" type="checkbox" id="t2">
         <label class="task-label" for="t2">
           <span class="task-checkbox-ui"></span>
@@ -660,7 +697,7 @@
           </div>
         </label>
 
-        <!-- Task 3 -->
+        Task 3
         <input class="task-cb" type="checkbox" id="t3">
         <label class="task-label" for="t3">
           <span class="task-checkbox-ui"></span>
@@ -678,7 +715,7 @@
           </div>
         </label>
 
-        <!-- Task 4 -->
+        Task 4
         <input class="task-cb" type="checkbox" id="t4">
         <label class="task-label" for="t4">
           <span class="task-checkbox-ui"></span>
@@ -686,7 +723,7 @@
             <div class="task-name">Ранкова зарядка</div>
             <div class="task-tag tag-personal">Особисте</div>
           </div>
-        </label>
+        </label>-->
 
       </div>
     </div>
@@ -696,6 +733,19 @@
   <div class="right-panel">
 
     <!-- Idea / Add card -->
+    <div class="idea-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; min-height: 120px;" onclick="location.href='#addModal'">
+
+      <div class="idea-add-btn" style="margin: 0; width: 50px; height: 50px;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+      </div>
+
+      <span style="font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 700; color: var(--green-dark); letter-spacing: 0.5px;">
+          ДОДАТИ ЗАВДАННЯ
+      </span>
+    </div>
+<!-- </div>
     <div class="idea-card">
       <textarea class="idea-input" placeholder="Нова ідея..."></textarea>
       <div class="idea-divider"></div>
@@ -730,24 +780,23 @@
             <circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/>
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c1.66 0 3-.34 3-1 0-.39-.15-.74-.39-1.01A1.01 1.01 0 0115 19c0-.55.45-1 1-1h1c3.31 0 6-2.69 6-6C23 6.48 17.99 2 12 2z"/>
           </svg>
-        </div>
+        </div> -->
 
         <!-- Open modal with :target -->
-        <a href="#addModal" class="idea-add-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">
+        <!-- <a href="#addModal" class="idea-add-btn" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
             <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
-        </a>
-      </div>
-    </div>
+        </a> -->
+
 
     <!-- General tasks with details/summary collapse -->
     <div class="general-card">
       <details class="general-details" open>
         <summary class="general-summary">
           <div class="general-title">
-            ЗАГАЛЬНІ
-            <span class="count-badge">3</span>
+            ТВОЇ СПРАВИ
+            <span class="count-badge">{{ other_tasks|length }}</span>
           </div>
           <span class="collapse-icon">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -757,13 +806,29 @@
         </summary>
 
         <div class="general-tasks">
+          {% for task in other_tasks %}
+            <div class="task-label">
+              <a href="{% url 'tasks:complete_task' task.id %}" class="task-checkbox-ui" style="text-decoration: none;"></a>
+              <div class="task-info">
+                <div class="task-name">{{ task.title }}</div>
+                <div class="task-tag">{{ task.category.name|default:"Загальне" }}</div>
+              </div>
+            </div>
+          {% empty %}
+            <p style="color: #888; text-align: center; padding: 20px;">Наповни мене</p>
+          {% endfor %}
+        </div>
 
-          <!-- General Task 1 -->
+        <!-- <div class="general-tasks"> -->
+
+          <!-- General Task 1
           <input class="task-cb" type="checkbox" id="g1">
           <label class="task-label" for="g1">
             <span class="task-checkbox-ui"></span>
             <div class="task-info">
-              <div class="task-name">Завершити проект</div>
+              {% for task in other_tasks %}
+                <div class="task-name">{{ task.title }}</div>
+              {% endfor %}
               <div class="task-meta">
                 <span class="task-time">
                   <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -776,7 +841,7 @@
             </div>
           </label>
 
-          <!-- General Task 2 -->
+          General Task 2
           <input class="task-cb" type="checkbox" id="g2">
           <label class="task-label" for="g2">
             <span class="task-checkbox-ui"></span>
@@ -786,7 +851,7 @@
             </div>
           </label>
 
-          <!-- General Task 3 -->
+          General Task 3
           <input class="task-cb" type="checkbox" id="g3">
           <label class="task-label" for="g3">
             <span class="task-checkbox-ui"></span>
@@ -802,9 +867,9 @@
                 <span class="task-tag tag-social">СОЦІАЛІЗАЦІЯ</span>
               </div>
             </div>
-          </label>
+          </label>-->
 
-        </div>
+        <!-- </div> -->
       </details>
     </div>
 
@@ -816,6 +881,40 @@
 
 <!-- ─────────────── MODAL (:target) ─────────────── -->
 <div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-title">Нове завдання</div>
+
+    <form action="{% url 'tasks:add_task' %}" method="POST">
+      {% csrf_token %}
+      <input type="text" name="title" class="modal-input" placeholder="Назва завдання..." required>
+
+      <div class="modal-row">
+        <select name="category" class="modal-select">
+            <option value="">Без категорії</option>
+            <option value="Соціалізація">Соціалізація</option>
+            <option value="Робота">Робота</option>
+            <option value="Хобі">Хобі</option>
+            <option value="Відпочинок">Відпочинок</option>
+<!--
+            {% for cat in categories %}
+                <option value="{{ cat.id }}">{{ cat.name }}</option>
+            {% endfor %} -->
+        </select>
+            <select name="is_for_today" class="modal-select">
+                <option value="true">Виконати сьогодні ⚡</option>
+                <option value="false">В загальний список</option>
+            </select>
+      </div>
+
+      <div class="modal-actions">
+        <a href="#" class="btn-cancel">Скасувати</a>
+        <button type="submit" class="idea-add-btn" style="border:none; width: 60px;">OK</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!--<div class="modal-overlay" id="addModal">
   <div class="modal">
     <div class="modal-title">Нове завдання</div>
 
@@ -838,11 +937,11 @@
     <input class="modal-input" placeholder="Час (наприклад: 2год)" />
 
     <div class="modal-actions">
-      <!-- Close modal by navigating away from #addModal -->
+      Close modal by navigating away from #addModal
       <a href="#" class="btn-cancel">Скасувати</a>
     </div>
   </div>
-</div>
+</div>-->
 
 </body>
 </html>

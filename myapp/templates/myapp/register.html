@@ -80,7 +80,7 @@
             font-size: 18px;
         } */
         .close-btn {
-        margin-bottom: 8px; /*Збільшити, щоб хрестик був вище */
+        margin-bottom: 2px; /*Збільшити, щоб хрестик був вище */
         background: none;
         border: none;
         color: #ccc;
@@ -101,7 +101,7 @@
             align-items: center;
             justify-content: center;
             color: #e6921a;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
         }
 
         h2 {
@@ -110,7 +110,7 @@
             font-weight: 900;
             font-size: 28px;
             letter-spacing: -1px;
-            margin: 0 0 20px 0;
+            margin: 0 0 5px 0;
         }
 
         form {
@@ -159,7 +159,7 @@
         }
 
         .switch-link {
-        margin-top: 20px; /* Збільшити, щоб напис був нижче */
+        margin-top: 5px; /* Збільшити, щоб напис був нижче */
         background: none;
         border: none;
         color: rgba(26, 58, 52, 0.6);
@@ -210,22 +210,30 @@
 
             <h2>Реєстрація</h2>
 
-            <form method="POST" id="registerForm" action="{% url 'myapp:user_desktop' %}">
-                {% csrf_token %}
-                <input type="email" placeholder="Електронна пошта" required>
+        <form method="POST" id="registerForm" action="{% url 'users:register' %}">
+            {% csrf_token %}
 
-                <div style="position: relative; width: 100%;">
-                    <input type="password" id="pass1" placeholder="Пароль" required>
-                    <span onclick="togglePass('pass1')" style="position: absolute; right: 15px; top: 10px; cursor: pointer; font-size: 12px; color: #aaa;">👁️</span>
-                </div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div style="color: red; font-size: 11px; margin-bottom: 5px; text-align: center;">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
 
-                <div style="position: relative; width: 100%;">
-                    <input type="password" id="pass2" placeholder="Повторіть пароль" required>
-                    <span onclick="togglePass('pass2')" style="position: absolute; right: 15px; top: 10px; cursor: pointer; font-size: 12px; color: #aaa;">👁️</span>
-                </div>
+            <input type="text" name="username" placeholder="Ім'я користувача" value="{{ username }}" required>
+            <input type="email" name="email" placeholder="Електронна пошта" value="{{ email }}" required>
 
-                <button type="submit" class="btn-submit">Зареєструватися</button>
-            </form>
+            <div style="position: relative; width: 100%;">
+                <input type="password" name="password1" id="pass1" placeholder="Пароль" required>
+                <span onclick="togglePass('pass1')" style="position: absolute; right: 15px; top: 10px; cursor: pointer; font-size: 12px; color: #aaa;">👁️</span>
+            </div>
+
+            <div style="position: relative; width: 100%;">
+                <input type="password" name="password2" id="pass2" placeholder="Повторіть пароль" required>
+                <span onclick="togglePass('pass2')" style="position: absolute; right: 15px; top: 10px; cursor: pointer; font-size: 12px; color: #aaa;">👁️</span>
+            </div>
+
+            <button type="submit" class="btn-submit">Зареєструватися</button>
+        </form>
 
 
             <!-- <button class="switch-link">Вже є акаунт?</button> -->
@@ -243,22 +251,22 @@ function togglePass(id) {
     }
 }
 
-// Перевірка при натисканні на кнопку
-document.getElementById('registerForm').onsubmit = function(event) {
-    const pass1 = document.getElementById('pass1').value;
-    const pass2 = document.getElementById('pass2').value;
+// // Перевірка при натисканні на кнопку
+// document.getElementById('registerForm').onsubmit = function(event) {
+//     const pass1 = document.getElementById('pass1').value;
+//     const pass2 = document.getElementById('pass2').value;
 
-    if (pass1 !== pass2) {
-        // 1. Зупиняємо відправку форми на сервер
-        event.preventDefault();
+//     if (pass1 !== pass2) {
+//         // 1. Зупиняємо відправку форми на сервер
+//         event.preventDefault();
 
-        // 2. Показуємо повідомлення
-        alert("Паролі не збігаються! Перевірте правильність введення.");
+//         // 2. Показуємо повідомлення
+//         alert("Паролі не збігаються! Перевірте правильність введення.");
 
-        // 3. Підсвічуємо поле з помилкою червоним
-        document.getElementById('pass2').style.borderColor = "red";
-    }
-};
+//         // 3. Підсвічуємо поле з помилкою червоним
+//         document.getElementById('pass2').style.borderColor = "red";
+//     }
+// };
 </script>
 </body>
 </html>
