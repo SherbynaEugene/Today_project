@@ -13,8 +13,7 @@
     --orange: #f07c00;
     --orange-light: #ff9a1f;
     --purple: #6b0f4e;
-    --purple-light: #8b1a6b;
-    --bg: #ffffff;
+    --bg: #f4f6f4;
     --card-bg: #ffffff;
     --text-dark: #1a1a1a;
     --text-muted: #888;
@@ -32,7 +31,7 @@
     color: var(--text-dark);
   }
 
-  /* SIDEBAR */
+  /* ── SIDEBAR ── */
   .sidebar {
     width: 280px;
     flex-shrink: 0;
@@ -71,7 +70,9 @@
     letter-spacing: -0.5px;
   }
 
-  .nav-item {
+  .nav-radio { display: none; }
+
+  .nav-label {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -85,16 +86,20 @@
     text-transform: uppercase;
     transition: all 0.2s;
     position: relative;
+    user-select: none;
   }
 
-  .nav-item:hover { background: #eee; color: var(--text-dark); }
+  .nav-label:hover { background: #eee; color: var(--text-dark); }
 
-  .nav-item.active {
+  .nav-radio:checked + .nav-label {
     background: var(--green-dark);
     color: white;
   }
 
-  .nav-item.active .nav-dot {
+  .nav-radio:checked + .nav-label .nav-dot { display: block; }
+
+  .nav-dot {
+    display: none;
     width: 6px; height: 6px;
     background: #7fff7f;
     border-radius: 50%;
@@ -102,7 +107,7 @@
     right: 14px;
   }
 
-  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .nav-label svg { width: 18px; height: 18px; flex-shrink: 0; }
 
   .sidebar-spacer { flex: 1; }
 
@@ -116,12 +121,15 @@
     border: 1px solid var(--border);
   }
 
+  .profile-card:hover { background: #f9f9f9; cursor: pointer; }
+
   .profile-avatar {
     width: 38px; height: 38px;
     border-radius: 50%;
     background: #fde8c0;
     display: flex; align-items: center; justify-content: center;
     color: var(--orange);
+    flex-shrink: 0;
   }
 
   .profile-info { flex: 1; }
@@ -132,9 +140,8 @@
     display: flex; align-items: center; gap: 5px;
     font-weight: 700; font-size: 14px; color: var(--text-dark);
   }
-  .coins svg { color: var(--orange); }
 
-  /* MAIN CONTENT */
+  /* ── MAIN ── */
   .main {
     flex: 1;
     display: flex;
@@ -143,7 +150,22 @@
     overflow: hidden;
   }
 
-  /* CENTER PANEL */
+  /* ── PANELS (show/hide via CSS) ── */
+  /* За замовчуванням показуємо "сьогодні" панель */
+  .panel-today,
+  .panel-general,
+  .panel-calendar,
+  .panel-interesting,
+  .panel-rating { display: none; }
+
+  /* Коли активна відповідна radio — показуємо панель */
+  #nav1:checked ~ .main .panel-today     { display: flex; gap: 20px; flex: 1; overflow: hidden; }
+  #nav2:checked ~ .main .panel-general   { display: flex; gap: 20px; flex: 1; overflow: hidden; }
+  #nav3:checked ~ .main .panel-calendar  { display: flex; gap: 20px; flex: 1; overflow: hidden; }
+  #nav4:checked ~ .main .panel-interesting { display: flex; gap: 20px; flex: 1; overflow: hidden; }
+  #nav5:checked ~ .main .panel-rating    { display: flex; gap: 20px; flex: 1; overflow: hidden; }
+
+  /* ── TODAY CARD ── */
   .center-panel {
     flex: 1.2;
     display: flex;
@@ -201,27 +223,9 @@
     line-height: 1;
   }
 
-  .today-settings-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 8px;
-    background: var(--orange);
-    color: white;
-    border-radius: 20px;
-    padding: 5px 14px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
+  .task-cb { display: none; }
 
-  .today-settings-badge:hover { background: var(--orange-light); }
-
-  .today-tasks { padding: 20px 28px 28px; display: flex; flex-direction: column; gap: 10px; }
-
-  .task-item {
+  .task-label {
     display: flex;
     align-items: center;
     gap: 14px;
@@ -231,26 +235,57 @@
     cursor: pointer;
     transition: all 0.2s;
     border: 2px solid transparent;
+    user-select: none;
   }
 
-  .task-item:hover { border-color: var(--green-accent); background: #f0f8f0; }
+  .task-label:hover { border-color: var(--green-accent); background: #f0f8f0; }
 
-  .task-checkbox {
+  .task-checkbox-ui {
     width: 22px; height: 22px;
     border-radius: 50%;
     border: 2px solid #ccc;
     flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.2s;
+    position: relative;
     cursor: pointer;
   }
 
-  .task-item.done .task-checkbox {
+  .task-checkbox-ui:hover {
     background: var(--green-dark);
     border-color: var(--green-dark);
   }
 
-  .task-item.done .task-name { text-decoration: line-through; color: var(--text-muted); }
+  .task-checkbox-ui:hover::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    margin: auto;
+  }
+
+  .task-cb:checked + .task-label { opacity: 0.7; }
+
+  .task-cb:checked + .task-label .task-checkbox-ui {
+    background: var(--green-dark);
+    border-color: var(--green-dark);
+  }
+
+  .task-cb:checked + .task-label .task-checkbox-ui::after {
+    content: '';
+    display: block;
+    width: 6px; height: 10px;
+    border: 2.5px solid white;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translate(-1px,-1px);
+  }
+
+  .task-cb:checked + .task-label .task-name {
+    text-decoration: line-through;
+    color: var(--text-muted);
+  }
 
   .task-info { flex: 1; }
   .task-name { font-size: 14px; font-weight: 600; color: var(--text-dark); }
@@ -263,18 +298,14 @@
     margin-top: 3px;
   }
 
-  .tag-social { color: #7b35c8; }
-  .tag-work { color: var(--purple); }
-  .tag-personal { color: var(--orange); }
+  .tag-соціалізація { color: #7b35c8; }
+  .tag-робота { color: rgb(189, 19, 19); }
+  .tag-хобі { color: var(--orange); }
+  .tag-відпочинок { color: var(--green-mid); }
 
-  .empty-state {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 13px;
-    padding: 30px;
-  }
+  .today-tasks { padding: 20px 28px 28px; display: flex; flex-direction: column; gap: 10px; }
 
-  /* RIGHT PANEL */
+  /* ── RIGHT PANEL ── */
   .right-panel {
     width: 320px;
     flex-shrink: 0;
@@ -292,46 +323,9 @@
     animation: slideUp 0.4s ease 0.1s both;
   }
 
-  .idea-input {
-    width: 100%;
-    border: none;
-    outline: none;
-    font-family: 'Manrope', sans-serif;
-    font-size: 14px;
-    color: var(--text-muted);
-    background: transparent;
-    resize: none;
-    height: 36px;
-  }
-
-  .idea-input::placeholder { color: #bbb; }
-
-  .idea-divider { height: 1px; background: var(--border); margin: 14px 0; }
-
-  .idea-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .idea-action-btn {
-    width: 34px; height: 34px;
-    border-radius: 10px;
-    border: none;
-    background: #f5f5f5;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    color: #999;
-    transition: all 0.2s;
-  }
-
-  .idea-action-btn:hover { background: #eee; color: var(--text-dark); }
-  .idea-action-btn svg { width: 16px; height: 16px; }
-
   .idea-add-btn {
     width: 42px; height: 42px;
     border-radius: 14px;
-    border: none;
     background: var(--green-dark);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
@@ -339,6 +333,7 @@
     margin-left: auto;
     transition: all 0.2s;
     box-shadow: 0 4px 12px rgba(26,58,26,0.3);
+    border: none;
   }
 
   .idea-add-btn:hover { background: var(--green-mid); transform: scale(1.05); }
@@ -352,12 +347,19 @@
     animation: slideUp 0.4s ease 0.2s both;
   }
 
-  .general-header {
+  .general-details { padding: 0; }
+
+  .general-summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 20px 0;
+    padding: 20px 20px 16px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
   }
+
+  .general-summary::-webkit-details-marker { display: none; }
 
   .general-title {
     font-family: 'Unbounded', sans-serif;
@@ -380,52 +382,212 @@
     font-weight: 700;
   }
 
-  .collapse-btn {
+  .collapse-icon {
     width: 28px; height: 28px;
-    border: none;
-    background: #f5f5f5;
     border-radius: 8px;
+    background: #f5f5f5;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
     color: #666;
-    transition: all 0.2s;
+    flex-shrink: 0;
+    transition: transform 0.2s;
   }
 
-  .collapse-btn:hover { background: #eee; }
-  .collapse-btn svg { width: 14px; height: 14px; }
+  .collapse-icon svg { width: 14px; height: 14px; }
+  details[open] .collapse-icon { transform: rotate(180deg); }
 
-  .general-tasks { padding: 14px 20px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .general-tasks { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 10px; }
 
   .task-meta { display: flex; align-items: center; gap: 8px; margin-top: 3px; }
   .task-time { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
   .task-time svg { width: 12px; height: 12px; }
 
-  /* HELP BTN */
-  .help-btn {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 36px; height: 36px;
-    border-radius: 50%;
+  /* ── CALENDAR PANEL ── */
+  .calendar-wrapper {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+    overflow: hidden;
+  }
+
+  .calendar-main {
+    flex: 1;
     background: white;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    overflow-y: auto;
+    animation: slideUp 0.4s ease;
+  }
+
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .cal-month-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--green-dark);
+    letter-spacing: -0.5px;
+  }
+
+  .cal-nav-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
     border: 1px solid var(--border);
+    background: white;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
+    color: var(--text-dark);
+    transition: all 0.2s;
+    font-size: 16px;
+  }
+
+  .cal-nav-btn:hover { background: var(--green-dark); color: white; border-color: var(--green-dark); }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  .cal-day-name {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
     color: var(--text-muted);
+    letter-spacing: 0.5px;
+    padding: 8px 0;
+    text-transform: uppercase;
+  }
+
+  .cal-day {
+    aspect-ratio: 1;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .cal-day:hover { background: #f0f8f0; }
+
+  .cal-day.empty { cursor: default; color: #ddd; }
+
+  .cal-day.today {
+    background: var(--green-dark);
+    color: white;
+  }
+
+  .cal-day.today:hover { background: var(--green-mid); }
+
+  .cal-day.has-tasks::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--orange);
+  }
+
+  .cal-day.today.has-tasks::after { background: #7fff7f; }
+
+  /* Planning sidebar */
+  .calendar-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+  }
+
+  .plan-card {
+    background: white;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    flex: 1;
+    animation: slideUp 0.4s ease 0.1s both;
+  }
+
+  .plan-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--green-dark);
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .plan-subtitle {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .plan-task-item {
+    padding: 12px 14px;
+    background: #f5f8ff;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+  }
+
+  .plan-task-item:hover { border-color: var(--green-accent); background: #f0f8f0; }
+
+  .plan-empty {
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: center;
+    padding: 30px 0;
+  }
+
+  /* ── PLACEHOLDER PANELS ── */
+  .placeholder-panel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .placeholder-icon {
+    width: 80px; height: 80px;
+    background: white;
+    border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .placeholder-icon svg { width: 36px; height: 36px; color: var(--text-muted); }
+
+  .placeholder-text {
+    font-family: 'Unbounded', sans-serif;
     font-size: 14px;
     font-weight: 700;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: all 0.2s;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
   }
 
-  .help-btn:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
-
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ADD TASK MODAL */
+  /* ── MODAL ── */
   .modal-overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.3);
@@ -436,7 +598,7 @@
     z-index: 100;
   }
 
-  .modal-overlay.open { display: flex; }
+  .modal-overlay:target { display: flex; }
 
   .modal {
     background: white;
@@ -465,6 +627,7 @@
     border-radius: 12px;
     margin-bottom: 12px;
     transition: border-color 0.2s;
+    display: block;
   }
 
   .modal-input:focus { border-color: var(--green-accent); }
@@ -497,27 +660,39 @@
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
+    text-decoration: none;
+    color: var(--text-dark);
+    text-align: center;
+    display: block;
     transition: all 0.2s;
   }
 
   .btn-cancel:hover { background: #f5f5f5; }
 
-  .btn-add {
-    flex: 1; padding: 12px;
-    border: none;
-    border-radius: 12px;
-    background: var(--green-dark);
-    color: white;
-    font-family: 'Manrope', sans-serif;
+  .help-btn {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: white;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
     font-size: 14px;
     font-weight: 700;
-    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     transition: all 0.2s;
+    text-decoration: none;
   }
 
-  .btn-add:hover { background: var(--green-mid); }
+  .help-btn:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
 
-  /* Scrollbar */
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
@@ -525,54 +700,65 @@
 </head>
 <body>
 
-<!-- SIDEBAR -->
+<!-- Radio inputs MUST be outside sidebar/main to control both via CSS sibling selectors -->
+<input class="nav-radio" type="radio" name="nav" id="nav1" checked>
+<input class="nav-radio" type="radio" name="nav" id="nav2">
+<input class="nav-radio" type="radio" name="nav" id="nav3">
+<input class="nav-radio" type="radio" name="nav" id="nav4">
+<input class="nav-radio" type="radio" name="nav" id="nav5">
+
+<!-- ─────────────── SIDEBAR ─────────────── -->
 <aside class="sidebar">
   <div class="logo">
     <div class="logo-icon">T</div>
     <div class="logo-text">ToDaY</div>
   </div>
 
-  <div class="nav-item active" onclick="setNav(this)">
+  <label class="nav-label" for="nav1">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
       <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
     </svg>
     СЬОГОДНІ
     <span class="nav-dot"></span>
-  </div>
+  </label>
 
-  <div class="nav-item" onclick="setNav(this)">
+  <label class="nav-label" for="nav2">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
     </svg>
     ЗАГАЛЬНІ
-  </div>
+    <span class="nav-dot"></span>
+  </label>
 
-  <div class="nav-item" onclick="setNav(this)">
+  <label class="nav-label" for="nav3">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
       <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
       <line x1="3" y1="10" x2="21" y2="10"/>
     </svg>
     КАЛЕНДАР
-  </div>
+    <span class="nav-dot"></span>
+  </label>
 
-  <div class="nav-item" onclick="setNav(this)">
+  <label class="nav-label" for="nav4">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
     </svg>
     ЦІКАВЕНЬКО
-  </div>
+    <span class="nav-dot"></span>
+  </label>
 
-  <div class="nav-item" onclick="setNav(this)">
+  <label class="nav-label" for="nav5">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
     </svg>
     РЕЙТИНГ
-  </div>
+    <span class="nav-dot"></span>
+  </label>
 
   <div class="sidebar-spacer"></div>
 
-  <div class="profile-card">
+  <a href="{% url 'myapp:profile' %}" class="profile-card" style="text-decoration: none; color: inherit; display: flex;">
     <div class="profile-avatar">
       <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
@@ -581,251 +767,284 @@
     </div>
     <div class="profile-info">
       <div class="profile-label">Профіль</div>
-      <div class="profile-name">Корис...</div>
+      <div class="profile-name">{{ request.user.username }}</div>
     </div>
     <div class="coins">
-      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="color:var(--orange)">
         <circle cx="12" cy="12" r="10"/>
       </svg>
-      100
+      {{ request.user.coins|default:0 }}
     </div>
-  </div>
+  </a>
 </aside>
 
-<!-- MAIN -->
+<!-- ─────────────── MAIN ─────────────── -->
 <main class="main">
 
-  <!-- CENTER -->
-  <div class="center-panel">
-    <div class="today-card">
-      <div class="today-header">
-        <div class="today-icon">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-        </div>
-        <div class="today-title-block">
-          <div class="today-title">СЬОГОДНІ</div>
-          <div class="today-settings-badge" onclick="openSettings()">
-            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+  <!-- ══ PANEL: СЬОГОДНІ ══ -->
+  <div class="panel-today">
+    <div class="center-panel">
+      <div class="today-card">
+        <div class="today-header">
+          <div class="today-icon">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
             </svg>
-            НАЛАШТУВАННЯ
+          </div>
+          <div class="today-title-block">
+            <div class="today-title">СЬОГОДНІ</div>
           </div>
         </div>
-      </div>
-      <div class="today-tasks" id="todayTasks">
-        <div class="task-item" onclick="toggleDone(this)">
-          <div class="task-checkbox"></div>
-          <div class="task-info">
-            <div class="task-name">Зателефонувати ...</div>
-            <div class="task-tag tag-social">Соціалізація</div>
-          </div>
+        <div class="today-tasks">
+          {% for task in today_tasks %}
+            <div class="task-label">
+              <a href="{% url 'tasks:complete_task' task.id %}" class="task-checkbox-ui" style="text-decoration: none;"></a>
+              <div class="task-info">
+                <div class="task-name">{{ task.title }}</div>
+                <div class="task-tag tag-{{ task.category.name|lower }}">{{ task.category.name|default:"Без категорії" }}</div>
+              </div>
+            </div>
+          {% empty %}
+            <p style="color: #888; text-align: center; padding: 20px;">На сьогодні завдань немає 🙌</p>
+          {% endfor %}
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- RIGHT -->
-  <div class="right-panel">
-    <div class="idea-card">
-      <textarea class="idea-input" id="ideaInput" placeholder="Нова ідея..."></textarea>
-      <div class="idea-divider"></div>
-      <div class="idea-actions">
-        <button class="idea-action-btn" title="Час">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-          </svg>
-        </button>
-        <button class="idea-action-btn" title="Робота">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
-            <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
-          </svg>
-        </button>
-        <button class="idea-action-btn" title="Кава">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path d="M17 8h1a4 4 0 010 8h-1M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/>
-          </svg>
-        </button>
-        <button class="idea-action-btn" title="Люди">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
-          </svg>
-        </button>
-        <button class="idea-action-btn" title="Колір">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/>
-            <circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/>
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c1.66 0 3-.34 3-1 0-.39-.15-.74-.39-1.01A1.01 1.01 0 0115 19c0-.55.45-1 1-1h1c3.31 0 6-2.69 6-6C23 6.48 17.99 2 12 2z"/>
-          </svg>
-        </button>
-        <button class="idea-add-btn" onclick="openAddModal()">
+    <div class="right-panel">
+      <div class="idea-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; min-height: 120px;" onclick="location.href='#addModal'">
+        <div class="idea-add-btn" style="margin: 0; width: 50px; height: 50px;">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
             <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
-        </button>
+        </div>
+        <span style="font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 700; color: var(--green-dark); letter-spacing: 0.5px;">
+          ДОДАТИ ЗАВДАННЯ
+        </span>
+      </div>
+
+      <div class="general-card">
+        <details class="general-details" open>
+          <summary class="general-summary">
+            <div class="general-title">
+              ТВОЇ СПРАВИ
+              <span class="count-badge">{{ other_tasks|length }}</span>
+            </div>
+            <span class="collapse-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+              </svg>
+            </span>
+          </summary>
+          <div class="general-tasks">
+            {% for task in other_tasks %}
+              <div class="task-label">
+                <a href="{% url 'tasks:complete_task' task.id %}" class="task-checkbox-ui" style="text-decoration: none;"></a>
+                <div class="task-info">
+                  <div class="task-name">{{ task.title }}</div>
+                  <div class="task-tag">{{ task.category.name|default:"Загальне" }}</div>
+                </div>
+              </div>
+            {% empty %}
+              <p style="color: #888; text-align: center; padding: 20px;">Наповни мене</p>
+            {% endfor %}
+          </div>
+        </details>
       </div>
     </div>
+  </div>
 
-    <div class="general-card">
-      <div class="general-header">
-        <div class="general-title">
-          ЗАГАЛЬНІ
-          <span class="count-badge" id="generalCount">1</span>
+  <!-- ══ PANEL: ЗАГАЛЬНІ ══ -->
+  <div class="panel-general">
+    <div class="center-panel">
+      <div class="today-card">
+        <div class="today-header">
+          <div class="today-icon" style="background: linear-gradient(135deg, #7b35c8, #a855f7);">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+          </div>
+          <div class="today-title-block">
+            <div class="today-title">ЗАГАЛЬНІ</div>
+          </div>
         </div>
-        <button class="collapse-btn" onclick="toggleGeneral()">
-          <svg id="collapseIcon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
-          </svg>
-        </button>
-      </div>
-      <div class="general-tasks" id="generalTasks">
-        <div class="task-item" onclick="toggleDone(this)">
-          <div class="task-checkbox"></div>
-          <div class="task-info">
-            <div class="task-name">Завершити прое...</div>
-            <div class="task-meta">
-              <span class="task-time">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-                </svg>
-                2ГОД
-              </span>
-              <span class="task-tag tag-work">РОБОТА</span>
+        <div class="today-tasks">
+          {% for task in other_tasks %}
+            <div class="task-label">
+              <a href="{% url 'tasks:complete_task' task.id %}" class="task-checkbox-ui" style="text-decoration: none;"></a>
+              <div class="task-info">
+                <div class="task-name">{{ task.title }}</div>
+                <div class="task-tag">{{ task.category.name|default:"Загальне" }}</div>
+              </div>
             </div>
+          {% empty %}
+            <p style="color: #888; text-align: center; padding: 20px;">Список порожній 📋</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PANEL: КАЛЕНДАР ══ -->
+  <div class="panel-calendar">
+    <div class="calendar-wrapper">
+      <div class="calendar-main">
+        <div class="cal-header">
+          <button class="cal-nav-btn" onclick="prevMonth()">&#8592;</button>
+          <div class="cal-month-title" id="calMonthTitle">ЛЮТИЙ 2026</div>
+          <button class="cal-nav-btn" onclick="nextMonth()">&#8594;</button>
+        </div>
+        <div class="cal-grid" id="calGrid">
+          <!-- Days rendered by JS -->
+        </div>
+      </div>
+
+      <div class="calendar-sidebar">
+        <div class="plan-card">
+          <div class="plan-title">ПЛАНУВАННЯ</div>
+          <div class="plan-subtitle" id="planSubtitle">Двічі клікніть на справу:</div>
+          <div id="planTasksList">
+            {% for task in other_tasks %}
+              <div class="plan-task-item">{{ task.title }}</div>
+            {% empty %}
+              <div class="plan-empty">Завдань немає</div>
+            {% endfor %}
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- ══ PANEL: ЦІКАВЕНЬКО ══ -->
+  <div class="panel-interesting">
+    <div class="placeholder-panel">
+      <div class="placeholder-icon">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </div>
+      <div class="placeholder-text">ЦІКАВЕНЬКО — СКОРО</div>
+    </div>
+  </div>
+
+  <!-- ══ PANEL: РЕЙТИНГ ══ -->
+  <div class="panel-rating">
+    <div class="placeholder-panel">
+      <div class="placeholder-icon">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+        </svg>
+      </div>
+      <div class="placeholder-text">РЕЙТИНГ — СКОРО</div>
+    </div>
+  </div>
+
 </main>
 
-<!-- HELP -->
-<button class="help-btn">?</button>
+<a href="#" class="help-btn">?</a>
 
-<!-- ADD MODAL -->
-<div class="modal-overlay" id="addModal" onclick="closeModalOutside(event)">
+<!-- ─────────────── MODAL ─────────────── -->
+<div class="modal-overlay" id="addModal">
   <div class="modal">
     <div class="modal-title">Нове завдання</div>
-    <input class="modal-input" id="taskName" placeholder="Назва завдання..." />
-    <div class="modal-row">
-      <select class="modal-select" id="taskCategory">
-        <option value="">Категорія</option>
-        <option value="social">Соціалізація</option>
-        <option value="work">Робота</option>
-        <option value="personal">Особисте</option>
-      </select>
-      <select class="modal-select" id="taskList">
-        <option value="today">Сьогодні</option>
-        <option value="general">Загальні</option>
-      </select>
-    </div>
-    <input class="modal-input" id="taskTime" placeholder="Час (наприклад: 2год)" />
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Скасувати</button>
-      <button class="btn-add" onclick="addTask()">Додати</button>
-    </div>
+    <form action="{% url 'tasks:add_task' %}" method="POST">
+      {% csrf_token %}
+      <input type="text" name="title" class="modal-input" placeholder="Назва завдання..." required>
+      <div class="modal-row">
+        <select name="category" class="modal-select">
+          <option value="">Без категорії</option>
+          <option value="Соціалізація">Соціалізація</option>
+          <option value="Робота">Робота</option>
+          <option value="Хобі">Хобі</option>
+          <option value="Відпочинок">Відпочинок</option>
+        </select>
+        <select name="is_for_today" class="modal-select">
+          <option value="true">Виконати сьогодні ⚡</option>
+          <option value="false">В загальний список</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <a href="#" class="btn-cancel">Скасувати</a>
+        <button type="submit" class="idea-add-btn" style="border:none; width: 60px;">OK</button>
+      </div>
+    </form>
   </div>
 </div>
 
 <script>
-  function setNav(el) {
-    document.querySelectorAll('.nav-item').forEach(n => {
-      n.classList.remove('active');
-      const dot = n.querySelector('.nav-dot');
-      if (dot) dot.remove();
+  // ── CALENDAR LOGIC ──
+  const MONTHS_UK = ['СІЧЕНЬ','ЛЮТИЙ','БЕРЕЗЕНЬ','КВІТЕНЬ','ТРАВЕНЬ','ЧЕРВЕНЬ',
+                     'ЛИПЕНЬ','СЕРПЕНЬ','ВЕРЕСЕНЬ','ЖОВТЕНЬ','ЛИСТОПАД','ГРУДЕНЬ'];
+  const DAY_NAMES = ['ПН','ВТ','СР','ЧТ','ПТ','СБ','НД'];
+
+  const now = new Date();
+  let currentYear = now.getFullYear();
+  let currentMonth = now.getMonth();
+
+  function renderCalendar() {
+    const grid = document.getElementById('calGrid');
+    const title = document.getElementById('calMonthTitle');
+    title.textContent = MONTHS_UK[currentMonth] + ' ' + currentYear;
+
+    grid.innerHTML = '';
+
+    // Day names header
+    DAY_NAMES.forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'cal-day-name';
+      el.textContent = d;
+      grid.appendChild(el);
     });
-    el.classList.add('active');
-    const dot = document.createElement('span');
-    dot.className = 'nav-dot';
-    el.appendChild(dot);
-  }
 
-  function toggleDone(item) {
-    item.classList.toggle('done');
-    const cb = item.querySelector('.task-checkbox');
-    if (item.classList.contains('done')) {
-      cb.innerHTML = `<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
-    } else {
-      cb.innerHTML = '';
-    }
-    updateCount();
-  }
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    // getDay(): 0=Sun, 1=Mon... convert to Mon-first
+    let startOffset = firstDay.getDay() - 1;
+    if (startOffset < 0) startOffset = 6;
 
-  function updateCount() {
-    const total = document.querySelectorAll('#generalTasks .task-item').length;
-    document.getElementById('generalCount').textContent = total;
-  }
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const today = new Date();
 
-  let generalOpen = true;
-  function toggleGeneral() {
-    const tasks = document.getElementById('generalTasks');
-    const icon = document.getElementById('collapseIcon');
-    generalOpen = !generalOpen;
-    tasks.style.display = generalOpen ? 'flex' : 'none';
-    icon.innerHTML = generalOpen
-      ? `<path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>`
-      : `<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>`;
-  }
-
-  function openAddModal() {
-    document.getElementById('addModal').classList.add('open');
-    setTimeout(() => document.getElementById('taskName').focus(), 100);
-  }
-
-  function closeModal() {
-    document.getElementById('addModal').classList.remove('open');
-    document.getElementById('taskName').value = '';
-    document.getElementById('taskTime').value = '';
-  }
-
-  function closeModalOutside(e) {
-    if (e.target === document.getElementById('addModal')) closeModal();
-  }
-
-  function addTask() {
-    const name = document.getElementById('taskName').value.trim();
-    if (!name) return;
-
-    const cat = document.getElementById('taskCategory').value;
-    const list = document.getElementById('taskList').value;
-    const time = document.getElementById('taskTime').value.trim();
-
-    const catLabels = { social: { label: 'Соціалізація', cls: 'tag-social' }, work: { label: 'Робота', cls: 'tag-work' }, personal: { label: 'Особисте', cls: 'tag-personal' } };
-    const catInfo = catLabels[cat] || null;
-
-    const item = document.createElement('div');
-    item.className = 'task-item';
-    item.onclick = function() { toggleDone(this); };
-
-    let meta = '';
-    if (time) meta += `<span class="task-time"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>${time.toUpperCase()}</span>`;
-    if (catInfo) meta += `<span class="task-tag ${catInfo.cls}">${catInfo.label.toUpperCase()}</span>`;
-
-    item.innerHTML = `
-      <div class="task-checkbox"></div>
-      <div class="task-info">
-        <div class="task-name">${name}</div>
-        ${meta ? `<div class="task-meta">${meta}</div>` : ''}
-      </div>`;
-
-    if (list === 'general') {
-      document.getElementById('generalTasks').appendChild(item);
-    } else {
-      document.getElementById('todayTasks').appendChild(item);
+    // Empty cells
+    for (let i = 0; i < startOffset; i++) {
+      const el = document.createElement('div');
+      el.className = 'cal-day empty';
+      grid.appendChild(el);
     }
 
-    updateCount();
-    closeModal();
+    // Day cells
+    for (let d = 1; d <= daysInMonth; d++) {
+      const el = document.createElement('div');
+      el.className = 'cal-day';
+      el.textContent = d;
+
+      // today highlight removed
+
+      grid.appendChild(el);
+    }
   }
 
-  // Keyboard shortcut
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
+  function prevMonth() {
+    currentMonth--;
+    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+    renderCalendar();
+  }
+
+  function nextMonth() {
+    currentMonth++;
+    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+    renderCalendar();
+  }
+
+  // Initial render
+  renderCalendar();
+
+  // Active nav label highlight based on checked radio
+  document.querySelectorAll('.nav-radio').forEach(radio => {
+    radio.addEventListener('change', () => {
+      document.querySelectorAll('.nav-label').forEach(l => l.style.background = '');
+    });
   });
 </script>
+
 </body>
 </html>
