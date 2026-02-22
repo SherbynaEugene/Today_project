@@ -70,6 +70,7 @@
     letter-spacing: -0.5px;
   }
 
+  /* Nav uses hidden radio inputs + labels */
   .nav-radio { display: none; }
 
   .nav-label {
@@ -96,7 +97,9 @@
     color: white;
   }
 
-  .nav-radio:checked + .nav-label .nav-dot { display: block; }
+  .nav-radio:checked + .nav-label .nav-dot {
+    display: block;
+  }
 
   .nav-dot {
     display: none;
@@ -121,7 +124,10 @@
     border: 1px solid var(--border);
   }
 
-  .profile-card:hover { background: #f9f9f9; cursor: pointer; }
+  .profile-card:hover {
+    background: #f9f9f9;
+    cursor: pointer;
+  }
 
   .profile-avatar {
     width: 38px; height: 38px;
@@ -140,6 +146,7 @@
     display: flex; align-items: center; gap: 5px;
     font-weight: 700; font-size: 14px; color: var(--text-dark);
   }
+  .coins svg { color: var(--orange); }
 
   /* ── MAIN ── */
   .main {
@@ -150,22 +157,6 @@
     overflow: hidden;
   }
 
-  /* ── PANELS (show/hide via CSS) ── */
-  /* За замовчуванням показуємо "сьогодні" панель */
-  .panel-today,
-  .panel-general,
-  .panel-calendar,
-  .panel-interesting,
-  .panel-rating { display: none; }
-
-  /* Коли активна відповідна radio — показуємо панель */
-  #nav1:checked ~ .main .panel-today     { display: flex; gap: 20px; flex: 1; overflow: hidden; }
-  #nav2:checked ~ .main .panel-general   { display: flex; gap: 20px; flex: 1; overflow: hidden; }
-  #nav3:checked ~ .main .panel-calendar  { display: flex; gap: 20px; flex: 1; overflow: hidden; }
-  #nav4:checked ~ .main .panel-interesting { display: flex; gap: 20px; flex: 1; overflow: hidden; }
-  #nav5:checked ~ .main .panel-rating    { display: flex; gap: 20px; flex: 1; overflow: hidden; }
-
-  /* ── TODAY CARD ── */
   .center-panel {
     flex: 1.2;
     display: flex;
@@ -174,6 +165,7 @@
     overflow-y: auto;
   }
 
+  /* ── TODAY CARD ── */
   .today-card {
     background: white;
     border-radius: 24px;
@@ -223,6 +215,7 @@
     line-height: 1;
   }
 
+  /* ── TASKS ── */
   .task-cb { display: none; }
 
   .task-label {
@@ -241,16 +234,17 @@
   .task-label:hover { border-color: var(--green-accent); background: #f0f8f0; }
 
   .task-checkbox-ui {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    border: 2px solid #ccc;
-    flex-shrink: 0;
     display: inline-flex;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    transition: all 0.2s;
+    cursor: pointer;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
     position: relative;
-    cursor: pointer;
   }
 
   .task-checkbox-ui:hover {
@@ -266,36 +260,23 @@
   }
 
   .task-cb:checked + .task-label { opacity: 0.7; }
-
-  .task-cb:checked + .task-label .task-checkbox-ui {
-    background: var(--green-dark);
-    border-color: var(--green-dark);
-  }
-
+  .task-cb:checked + .task-label .task-checkbox-ui { background: var(--green-dark); border-color: var(--green-dark); }
   .task-cb:checked + .task-label .task-checkbox-ui::after {
     content: '';
     display: block;
     width: 6px; height: 10px;
     border: 2.5px solid white;
-    border-top: none;
-    border-left: none;
+    border-top: none; border-left: none;
     transform: rotate(45deg) translate(-1px,-1px);
   }
-
-  .task-cb:checked + .task-label .task-name {
-    text-decoration: line-through;
-    color: var(--text-muted);
-  }
+  .task-cb:checked + .task-label .task-name { text-decoration: line-through; color: var(--text-muted); }
 
   .task-info { flex: 1; }
   .task-name { font-size: 14px; font-weight: 600; color: var(--text-dark); }
 
   .task-tag {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    margin-top: 3px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase; margin-top: 3px;
   }
 
   .tag-соціалізація { color: #7b35c8; }
@@ -350,46 +331,33 @@
   .general-details { padding: 0; }
 
   .general-summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     padding: 20px 20px 16px;
-    cursor: pointer;
-    list-style: none;
-    user-select: none;
+    cursor: pointer; list-style: none; user-select: none;
   }
 
   .general-summary::-webkit-details-marker { display: none; }
 
   .general-title {
     font-family: 'Unbounded', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--green-dark);
-    letter-spacing: 0.5px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 13px; font-weight: 700;
+    color: var(--green-dark); letter-spacing: 0.5px;
+    display: flex; align-items: center; gap: 8px;
   }
 
   .count-badge {
     width: 22px; height: 22px;
-    background: var(--green-dark);
-    color: white;
+    background: var(--green-dark); color: white;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 11px; font-weight: 700;
   }
 
   .collapse-icon {
     width: 28px; height: 28px;
-    border-radius: 8px;
-    background: #f5f5f5;
+    border-radius: 8px; background: #f5f5f5;
     display: flex; align-items: center; justify-content: center;
-    color: #666;
-    flex-shrink: 0;
-    transition: transform 0.2s;
+    color: #666; flex-shrink: 0; transition: transform 0.2s;
   }
 
   .collapse-icon svg { width: 14px; height: 14px; }
@@ -401,15 +369,23 @@
   .task-time { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
   .task-time svg { width: 12px; height: 12px; }
 
-  /* ── CALENDAR PANEL ── */
-  .calendar-wrapper {
-    flex: 1;
-    display: flex;
+  /* ── CALENDAR (НОВЕ — тільки це додано) ── */
+  .calendar-section {
+    display: none; /* приховано за замовчуванням */
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 50;
+    padding: 28px;
     gap: 20px;
-    overflow: hidden;
   }
 
-  .calendar-main {
+  /* показуємо коли nav3 активний */
+  #nav3:checked ~ .calendar-section {
+    display: flex;
+  }
+
+  .cal-main {
     flex: 1;
     background: white;
     border-radius: 24px;
@@ -420,18 +396,14 @@
   }
 
   .cal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 28px;
   }
 
   .cal-month-title {
     font-family: 'Unbounded', sans-serif;
-    font-size: 22px;
-    font-weight: 900;
-    color: var(--green-dark);
-    letter-spacing: -0.5px;
+    font-size: 22px; font-weight: 900;
+    color: var(--green-dark); letter-spacing: -0.5px;
   }
 
   .cal-nav-btn {
@@ -440,10 +412,8 @@
     border: 1px solid var(--border);
     background: white;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    color: var(--text-dark);
-    transition: all 0.2s;
-    font-size: 16px;
+    cursor: pointer; color: var(--text-dark);
+    transition: all 0.2s; font-size: 16px;
   }
 
   .cal-nav-btn:hover { background: var(--green-dark); color: white; border-color: var(--green-dark); }
@@ -455,179 +425,99 @@
   }
 
   .cal-day-name {
-    text-align: center;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-muted);
-    letter-spacing: 0.5px;
-    padding: 8px 0;
-    text-transform: uppercase;
+    text-align: center; font-size: 11px; font-weight: 700;
+    color: var(--text-muted); letter-spacing: 0.5px;
+    padding: 8px 0; text-transform: uppercase;
   }
 
   .cal-day {
     aspect-ratio: 1;
     border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-dark);
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600;
+    color: var(--text-dark); cursor: pointer;
+    transition: all 0.2s; position: relative;
   }
 
   .cal-day:hover { background: #f0f8f0; }
-
   .cal-day.empty { cursor: default; color: #ddd; }
+  .cal-day.selected { background: var(--green-dark); color: white; }
+  .cal-day.selected:hover { background: var(--green-mid); }
 
-  .cal-day.today {
-    background: var(--green-dark);
-    color: white;
-  }
-
-  .cal-day.today:hover { background: var(--green-mid); }
-
-  .cal-day.has-tasks::after {
-    content: '';
-    position: absolute;
-    bottom: 4px;
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--orange);
-  }
-
-  .cal-day.today.has-tasks::after { background: #7fff7f; }
-
-  /* Planning sidebar */
-  .calendar-sidebar {
-    width: 280px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  .cal-sidebar {
+    width: 280px; flex-shrink: 0;
+    display: flex; flex-direction: column; gap: 16px;
     overflow-y: auto;
   }
 
   .plan-card {
-    background: white;
-    border-radius: 24px;
-    padding: 24px;
+    background: white; border-radius: 24px; padding: 24px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    flex: 1;
-    animation: slideUp 0.4s ease 0.1s both;
+    flex: 1; animation: slideUp 0.4s ease 0.1s both;
+    display: flex; flex-direction: column;
   }
 
   .plan-title {
     font-family: 'Unbounded', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--green-dark);
-    letter-spacing: 0.5px;
-    margin-bottom: 6px;
+    font-size: 13px; font-weight: 700;
+    color: var(--green-dark); letter-spacing: 0.5px; margin-bottom: 6px;
   }
 
   .plan-subtitle {
-    font-size: 11px;
-    color: var(--text-muted);
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    margin-bottom: 16px;
+    font-size: 11px; color: var(--text-muted);
+    font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; margin-bottom: 20px;
   }
 
-  .plan-task-item {
-    padding: 12px 14px;
-    background: #f5f8ff;
-    border-radius: 12px;
-    margin-bottom: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-dark);
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 2px solid transparent;
+  .plan-selected-date {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 28px; font-weight: 900;
+    color: var(--green-dark); line-height: 1; margin-bottom: 4px;
   }
 
-  .plan-task-item:hover { border-color: var(--green-accent); background: #f0f8f0; }
+  .plan-selected-month {
+    font-size: 13px; color: var(--text-muted);
+    font-weight: 600; margin-bottom: 20px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  .plan-divider { height: 1px; background: var(--border); margin-bottom: 16px; }
 
   .plan-empty {
-    color: var(--text-muted);
-    font-size: 13px;
-    text-align: center;
-    padding: 30px 0;
+    color: var(--text-muted); font-size: 13px;
+    text-align: center; padding: 30px 0;
+    flex: 1; display: flex; align-items: center; justify-content: center;
   }
-
-  /* ── PLACEHOLDER PANELS ── */
-  .placeholder-panel {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .placeholder-icon {
-    width: 80px; height: 80px;
-    background: white;
-    border-radius: 24px;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  }
-
-  .placeholder-icon svg { width: 36px; height: 36px; color: var(--text-muted); }
-
-  .placeholder-text {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text-muted);
-    letter-spacing: 0.5px;
-  }
+  /* ── кінець CALENDAR ── */
 
   /* ── MODAL ── */
   .modal-overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.3);
     backdrop-filter: blur(4px);
-    display: none;
-    align-items: center;
-    justify-content: center;
+    display: none; align-items: center; justify-content: center;
     z-index: 100;
   }
 
   .modal-overlay:target { display: flex; }
 
   .modal {
-    background: white;
-    border-radius: 24px;
-    padding: 28px;
-    width: 400px;
+    background: white; border-radius: 24px; padding: 28px; width: 400px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.2);
     animation: slideUp 0.3s ease;
   }
 
   .modal-title {
     font-family: 'Unbounded', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--green-dark);
-    margin-bottom: 20px;
+    font-size: 16px; font-weight: 700;
+    color: var(--green-dark); margin-bottom: 20px;
   }
 
   .modal-input {
-    width: 100%;
-    border: 2px solid var(--border);
-    outline: none;
-    font-family: 'Manrope', sans-serif;
-    font-size: 14px;
-    padding: 12px 16px;
-    border-radius: 12px;
-    margin-bottom: 12px;
-    transition: border-color 0.2s;
-    display: block;
+    width: 100%; border: 2px solid var(--border); outline: none;
+    font-family: 'Manrope', sans-serif; font-size: 14px;
+    padding: 12px 16px; border-radius: 12px; margin-bottom: 12px;
+    transition: border-color 0.2s; display: block;
   }
 
   .modal-input:focus { border-color: var(--green-accent); }
@@ -635,16 +525,10 @@
   .modal-row { display: flex; gap: 10px; margin-bottom: 12px; }
 
   .modal-select {
-    flex: 1;
-    border: 2px solid var(--border);
-    outline: none;
-    font-family: 'Manrope', sans-serif;
-    font-size: 13px;
-    padding: 10px 14px;
-    border-radius: 12px;
-    background: white;
-    transition: border-color 0.2s;
-    cursor: pointer;
+    flex: 1; border: 2px solid var(--border); outline: none;
+    font-family: 'Manrope', sans-serif; font-size: 13px;
+    padding: 10px 14px; border-radius: 12px;
+    background: white; transition: border-color 0.2s; cursor: pointer;
   }
 
   .modal-select:focus { border-color: var(--green-accent); }
@@ -652,38 +536,24 @@
   .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 
   .btn-cancel {
-    flex: 1; padding: 12px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    background: white;
-    font-family: 'Manrope', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    text-decoration: none;
-    color: var(--text-dark);
-    text-align: center;
-    display: block;
-    transition: all 0.2s;
+    flex: 1; padding: 12px; border: 2px solid var(--border);
+    border-radius: 12px; background: white;
+    font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 700;
+    cursor: pointer; text-decoration: none; color: var(--text-dark);
+    text-align: center; display: block; transition: all 0.2s;
   }
 
   .btn-cancel:hover { background: #f5f5f5; }
 
   .help-btn {
-    position: fixed;
-    bottom: 24px; right: 24px;
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: white;
-    border: 1px solid var(--border);
+    position: fixed; bottom: 24px; right: 24px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: white; border: 1px solid var(--border);
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    color: var(--text-muted);
-    font-size: 14px;
-    font-weight: 700;
+    cursor: pointer; color: var(--text-muted);
+    font-size: 14px; font-weight: 700;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: all 0.2s;
-    text-decoration: none;
+    transition: all 0.2s; text-decoration: none;
   }
 
   .help-btn:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
@@ -700,12 +570,35 @@
 </head>
 <body>
 
-<!-- Radio inputs MUST be outside sidebar/main to control both via CSS sibling selectors -->
+<!-- radio inputs винесені ДО sidebar щоб CSS ~ селектор працював -->
 <input class="nav-radio" type="radio" name="nav" id="nav1" checked>
 <input class="nav-radio" type="radio" name="nav" id="nav2">
 <input class="nav-radio" type="radio" name="nav" id="nav3">
 <input class="nav-radio" type="radio" name="nav" id="nav4">
 <input class="nav-radio" type="radio" name="nav" id="nav5">
+
+<!-- ── CALENDAR SECTION (показується поверх коли nav3 активний) ── -->
+<div class="calendar-section">
+  <div class="cal-main">
+    <div class="cal-header">
+      <button class="cal-nav-btn" onclick="prevMonth()">&#8592;</button>
+      <div class="cal-month-title" id="calMonthTitle"></div>
+      <button class="cal-nav-btn" onclick="nextMonth()">&#8594;</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <div class="cal-sidebar">
+    <div class="plan-card">
+      <div class="plan-title">ПЛАНУВАННЯ</div>
+      <div class="plan-subtitle">Оберіть день</div>
+      <div class="plan-selected-date" id="sideDate">—</div>
+      <div class="plan-selected-month" id="sideMonth"></div>
+      <div class="plan-divider"></div>
+      <div class="plan-empty" id="sideEmpty">Натисніть на день щоб обрати</div>
+    </div>
+  </div>
+</div>
 
 <!-- ─────────────── SIDEBAR ─────────────── -->
 <aside class="sidebar">
@@ -778,97 +671,68 @@
   </a>
 </aside>
 
-<!-- ─────────────── MAIN ─────────────── -->
+<!-- ─────────────── MAIN (без змін) ─────────────── -->
 <main class="main">
 
-  <!-- ══ PANEL: СЬОГОДНІ ══ -->
-  <div class="panel-today">
-    <div class="center-panel">
-      <div class="today-card">
-        <div class="today-header">
-          <div class="today-icon">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-          </div>
-          <div class="today-title-block">
-            <div class="today-title">СЬОГОДНІ</div>
-          </div>
-        </div>
-        <div class="today-tasks">
-          {% for task in today_tasks %}
-            <div class="task-label">
-              <a href="{% url 'tasks:complete_task' task.id %}" class="task-checkbox-ui" style="text-decoration: none;"></a>
-              <div class="task-info">
-                <div class="task-name">{{ task.title }}</div>
-                <div class="task-tag tag-{{ task.category.name|lower }}">{{ task.category.name|default:"Без категорії" }}</div>
-              </div>
-            </div>
-          {% empty %}
-            <p style="color: #888; text-align: center; padding: 20px;">На сьогодні завдань немає 🙌</p>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-
-    <div class="right-panel">
-      <div class="idea-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; min-height: 120px;" onclick="location.href='#addModal'">
-        <div class="idea-add-btn" style="margin: 0; width: 50px; height: 50px;">
+  <!-- CENTER -->
+  <div class="center-panel">
+    <div class="today-card">
+      <div class="today-header">
+        <div class="today-icon">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
           </svg>
         </div>
-        <span style="font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 700; color: var(--green-dark); letter-spacing: 0.5px;">
-          ДОДАТИ ЗАВДАННЯ
-        </span>
+        <div class="today-title-block">
+          <div class="today-title">СЬОГОДНІ</div>
+        </div>
       </div>
 
-      <div class="general-card">
-        <details class="general-details" open>
-          <summary class="general-summary">
-            <div class="general-title">
-              ТВОЇ СПРАВИ
-              <span class="count-badge">{{ other_tasks|length }}</span>
+      <div class="today-tasks">
+        {% for task in today_tasks %}
+          <div class="task-label">
+            <a href="{% url 'tasks:complete_task' task.id %}" class="task-checkbox-ui" style="text-decoration: none;"></a>
+            <div class="task-info">
+              <div class="task-name">{{ task.title }}</div>
+              <div class="task-tag tag-{{ task.category.name|lower }}">{{ task.category.name|default:"Без категорії" }}</div>
             </div>
-            <span class="collapse-icon">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
-              </svg>
-            </span>
-          </summary>
-          <div class="general-tasks">
-            {% for task in other_tasks %}
-              <div class="task-label">
-                <a href="{% url 'tasks:complete_task' task.id %}" class="task-checkbox-ui" style="text-decoration: none;"></a>
-                <div class="task-info">
-                  <div class="task-name">{{ task.title }}</div>
-                  <div class="task-tag">{{ task.category.name|default:"Загальне" }}</div>
-                </div>
-              </div>
-            {% empty %}
-              <p style="color: #888; text-align: center; padding: 20px;">Наповни мене</p>
-            {% endfor %}
           </div>
-        </details>
+        {% empty %}
+          <p style="color: #888; text-align: center; padding: 20px;">На сьогодні завдань немає 🙌</p>
+        {% endfor %}
       </div>
     </div>
   </div>
 
-  <!-- ══ PANEL: ЗАГАЛЬНІ ══ -->
-  <div class="panel-general">
-    <div class="center-panel">
-      <div class="today-card">
-        <div class="today-header">
-          <div class="today-icon" style="background: linear-gradient(135deg, #7b35c8, #a855f7);">
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+
+    <div class="idea-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; min-height: 120px;" onclick="location.href='#addModal'">
+      <div class="idea-add-btn" style="margin: 0; width: 50px; height: 50px;">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </div>
+      <span style="font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 700; color: var(--green-dark); letter-spacing: 0.5px;">
+        ДОДАТИ ЗАВДАННЯ
+      </span>
+    </div>
+
+    <div class="general-card">
+      <details class="general-details" open>
+        <summary class="general-summary">
+          <div class="general-title">
+            ТВОЇ СПРАВИ
+            <span class="count-badge">{{ other_tasks|length }}</span>
+          </div>
+          <span class="collapse-icon">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
             </svg>
-          </div>
-          <div class="today-title-block">
-            <div class="today-title">ЗАГАЛЬНІ</div>
-          </div>
-        </div>
-        <div class="today-tasks">
+          </span>
+        </summary>
+
+        <div class="general-tasks">
           {% for task in other_tasks %}
             <div class="task-label">
               <a href="{% url 'tasks:complete_task' task.id %}" class="task-checkbox-ui" style="text-decoration: none;"></a>
@@ -878,72 +742,18 @@
               </div>
             </div>
           {% empty %}
-            <p style="color: #888; text-align: center; padding: 20px;">Список порожній 📋</p>
+            <p style="color: #888; text-align: center; padding: 20px;">Наповни мене</p>
           {% endfor %}
         </div>
-      </div>
+      </details>
     </div>
+
   </div>
-
-  <!-- ══ PANEL: КАЛЕНДАР ══ -->
-  <div class="panel-calendar">
-    <div class="calendar-wrapper">
-      <div class="calendar-main">
-        <div class="cal-header">
-          <button class="cal-nav-btn" onclick="prevMonth()">&#8592;</button>
-          <div class="cal-month-title" id="calMonthTitle">ЛЮТИЙ 2026</div>
-          <button class="cal-nav-btn" onclick="nextMonth()">&#8594;</button>
-        </div>
-        <div class="cal-grid" id="calGrid">
-          <!-- Days rendered by JS -->
-        </div>
-      </div>
-
-      <div class="calendar-sidebar">
-        <div class="plan-card">
-          <div class="plan-title">ПЛАНУВАННЯ</div>
-          <div class="plan-subtitle" id="planSubtitle">Двічі клікніть на справу:</div>
-          <div id="planTasksList">
-            {% for task in other_tasks %}
-              <div class="plan-task-item">{{ task.title }}</div>
-            {% empty %}
-              <div class="plan-empty">Завдань немає</div>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ PANEL: ЦІКАВЕНЬКО ══ -->
-  <div class="panel-interesting">
-    <div class="placeholder-panel">
-      <div class="placeholder-icon">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-        </svg>
-      </div>
-      <div class="placeholder-text">ЦІКАВЕНЬКО — СКОРО</div>
-    </div>
-  </div>
-
-  <!-- ══ PANEL: РЕЙТИНГ ══ -->
-  <div class="panel-rating">
-    <div class="placeholder-panel">
-      <div class="placeholder-icon">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
-        </svg>
-      </div>
-      <div class="placeholder-text">РЕЙТИНГ — СКОРО</div>
-    </div>
-  </div>
-
 </main>
 
 <a href="#" class="help-btn">?</a>
 
-<!-- ─────────────── MODAL ─────────────── -->
+<!-- ─────────────── MODAL (без змін) ─────────────── -->
 <div class="modal-overlay" id="addModal">
   <div class="modal">
     <div class="modal-title">Нове завдання</div>
@@ -971,8 +781,8 @@
   </div>
 </div>
 
+<!-- ── CALENDAR JS ── -->
 <script>
-  // ── CALENDAR LOGIC ──
   const MONTHS_UK = ['СІЧЕНЬ','ЛЮТИЙ','БЕРЕЗЕНЬ','КВІТЕНЬ','ТРАВЕНЬ','ЧЕРВЕНЬ',
                      'ЛИПЕНЬ','СЕРПЕНЬ','ВЕРЕСЕНЬ','ЖОВТЕНЬ','ЛИСТОПАД','ГРУДЕНЬ'];
   const DAY_NAMES = ['ПН','ВТ','СР','ЧТ','ПТ','СБ','НД'];
@@ -980,15 +790,14 @@
   const now = new Date();
   let currentYear = now.getFullYear();
   let currentMonth = now.getMonth();
+  let selectedDay = null;
 
   function renderCalendar() {
     const grid = document.getElementById('calGrid');
     const title = document.getElementById('calMonthTitle');
     title.textContent = MONTHS_UK[currentMonth] + ' ' + currentYear;
-
     grid.innerHTML = '';
 
-    // Day names header
     DAY_NAMES.forEach(d => {
       const el = document.createElement('div');
       el.className = 'cal-day-name';
@@ -996,28 +805,34 @@
       grid.appendChild(el);
     });
 
-    const firstDay = new Date(currentYear, currentMonth, 1);
-    // getDay(): 0=Sun, 1=Mon... convert to Mon-first
-    let startOffset = firstDay.getDay() - 1;
+    let startOffset = new Date(currentYear, currentMonth, 1).getDay() - 1;
     if (startOffset < 0) startOffset = 6;
 
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    const today = new Date();
 
-    // Empty cells
     for (let i = 0; i < startOffset; i++) {
       const el = document.createElement('div');
       el.className = 'cal-day empty';
       grid.appendChild(el);
     }
 
-    // Day cells
     for (let d = 1; d <= daysInMonth; d++) {
       const el = document.createElement('div');
       el.className = 'cal-day';
       el.textContent = d;
 
-      // today highlight removed
+      if (selectedDay && selectedDay.d === d &&
+          selectedDay.m === currentMonth && selectedDay.y === currentYear) {
+        el.classList.add('selected');
+      }
+
+      el.addEventListener('click', () => {
+        selectedDay = { d, m: currentMonth, y: currentYear };
+        document.getElementById('sideDate').textContent = d;
+        document.getElementById('sideMonth').textContent = MONTHS_UK[currentMonth] + ' ' + currentYear;
+        document.getElementById('sideEmpty').textContent = 'Завдань на цей день немає';
+        renderCalendar();
+      });
 
       grid.appendChild(el);
     }
@@ -1035,15 +850,7 @@
     renderCalendar();
   }
 
-  // Initial render
   renderCalendar();
-
-  // Active nav label highlight based on checked radio
-  document.querySelectorAll('.nav-radio').forEach(radio => {
-    radio.addEventListener('change', () => {
-      document.querySelectorAll('.nav-label').forEach(l => l.style.background = '');
-    });
-  });
 </script>
 
 </body>
