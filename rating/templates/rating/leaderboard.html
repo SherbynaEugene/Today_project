@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Leaderboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #bbbbc4;
+            color: white;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .leaderboard-card {
+            background: #f6f6f8;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            background: #2a2a3d;
+            transition: 0.3s;
+        }
+
+        .row:hover {
+            transform: scale(1.02);
+        }
+
+        .rank {
+            font-weight: bold;
+            font-size: 18px;
+            width: 40px;
+        }
+
+        .username {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .points {
+            font-weight: bold;
+            color: gold;
+        }
+
+        .gold { background: linear-gradient(90deg, #3a2f00, #5c4700); }
+        .silver { background: linear-gradient(90deg, #2e2e2e, #444); }
+        .bronze { background: linear-gradient(90deg, #3b2a1a, #5a3d24); }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background: orange;
+            color: black;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🏆 Leaderboard</h1>
+
+    <div class="leaderboard-card">
+
+        {% for user_rating in top_users %}
+            <div class="row 
+                {% if forloop.counter == 1 %}gold
+                {% elif forloop.counter == 2 %}silver
+                {% elif forloop.counter == 3 %}bronze
+                {% endif %}
+            ">
+                <div class="rank">
+                    {{ forloop.counter }}
+                </div>
+
+                <div class="username">
+                    {{ user_rating.user.username }}
+                </div>
+
+                <div class="points">
+                    {{ user_rating.total_points|floatformat:0 }} pts
+                </div>
+            </div>
+        {% empty %}
+            <p>Поки що немає даних.</p>
+        {% endfor %}
+
+    </div>
+
+    <div style="text-align:center;">
+        <a href="{% url 'rating:my_rating' %}" class="back-btn">
+            ← Назад до мого рейтингу
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

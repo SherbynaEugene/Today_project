@@ -5,13 +5,6 @@ from .models import Task, SubTask, Category
 
 MIN_POINTS = 5
 
-def calculate_points(task, user):
-    base = task.estimated_hours * 10
-    rating_multiplier = 1 + (user.rating * 0.1)
-    points = base * rating_multiplier
-    return max(points, MIN_POINTS)
-
-
 @login_required
 def task_list(request):
     incomplete = Task.objects.filter(user=request.user, is_completed=False).order_by('order')
@@ -80,12 +73,6 @@ def complete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     task.is_completed = True
     task.save()
-
-# award points and coins
-    points = calculate_points(task, request.user)
-    request.user.total_points += int(points)
-    request.user.coins += int(points)
-    request.user.save()
 
     return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
 

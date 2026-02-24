@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Мій рейтинг</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: #fbfbfb;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            margin-bottom: 40px;
+        }
+
+        h1, h2 {
+            margin-top: 0;
+        }
+
+        .points {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: gold;
+        }
+
+        .streak {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .progress-wrapper {
+            width: 100%;
+            height: 12px;
+            background: #333;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, orange, gold);
+            transition: width 1s ease;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: orange;
+            color: black;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .history-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #2a2a3d;
+            border-radius: 10px;
+        }
+
+        .history-points {
+            font-weight: bold;
+            color: gold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="card">
+        <h1>🏆 Мій рейтинг</h1>
+
+        <div class="points">
+            {{ rating.total_points|floatformat:0 }} pts
+        </div>
+
+        <div class="streak">
+            🔥 Серія: <strong>{{ rating.streak_days }}</strong> днів
+        </div>
+
+        <div class="progress-wrapper">
+            <div class="progress-bar" data-progress="{{ rating.streak_days }}"></div>
+        </div>
+
+        <a href="{% url 'rating:leaderboard' %}" class="btn">
+            Перейти до Leaderboard →
+        </a>
+    </div>
+
+    <div class="card">
+        <h2>📊 Історія нарахувань</h2>
+
+        {% for item in history %}
+            <div class="history-row">
+                <div>
+                    <strong>{{ item.task.title }}</strong><br>
+                    <small>{{ item.created_at|date:"d M Y H:i" }}</small>
+                </div>
+                <div class="history-points">
+                    +{{ item.earned_points|floatformat:0 }}
+                </div>
+            </div>
+        {% empty %}
+            <p>Поки що немає завершених задач.</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const bar = document.querySelector(".progress-bar");
+    const streak = parseInt(bar.dataset.progress) || 0;
+
+    const percentage = Math.min(streak * 5, 100);
+    bar.style.width = percentage + "%";
+});
+</script>
+
+</body>
+</html>

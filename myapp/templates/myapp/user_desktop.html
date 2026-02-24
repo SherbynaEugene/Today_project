@@ -35,7 +35,7 @@
   .sidebar {
     width: 280px;
     flex-shrink: 0;
-    background: #ffffff;
+    background: hsl(0, 0%, 100%);
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
@@ -641,13 +641,13 @@
     <span class="nav-dot"></span>
   </label>
 
-  <label class="nav-label" for="nav5">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
-    </svg>
-    РЕЙТИНГ
-    <span class="nav-dot"></span>
-  </label>
+<a href="{% url 'rating:my_rating' %}" class="nav-label">
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+  </svg>
+  РЕЙТИНГ
+  <span class="nav-dot"></span>
+</a>
 
   <div class="sidebar-spacer"></div>
 
