@@ -81,9 +81,24 @@
             border-radius: 10px;
         }
 
+        .history-details strong {
+            color: white;
+            font-size: 16px;
+        }
+
         .history-points {
             font-weight: bold;
             color: gold;
+        }
+
+        .history-bonus {
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        .history-time {
+            font-size: 12px;
+            color: #ccc;
         }
     </style>
 </head>
@@ -116,9 +131,23 @@
 
         {% for item in history %}
             <div class="history-row">
-                <div>
-                    <strong>{{ item.task.title }}</strong><br>
-                    <small>{{ item.created_at|date:"d M Y H:i" }}</small>
+                <div class="history-details">
+                    <strong>{{ item.task.title }}</strong>
+                    <small class="history-time">
+                        Завершено: {{ item.task.completed_at|date:"d M Y H:i" }} |
+                        {% if item.task.completed_at and item.task.created_at %}
+                            ⏱ Час на виконання: 
+                            {% with delta=item.task.completed_at|timesince:item.task.created_at %}
+                                {{ delta }}
+                            {% endwith %}
+                        {% else %}
+                            ⏱ Час на виконання: -
+                        {% endif %}
+                    </small>
+                    <small class="history-bonus">
+                        ⚡ Швидкість: x{{ item.speed_bonus|floatformat:2 }} |
+                        🔥 Серія: x{{ item.streak_multiplier|floatformat:2 }}
+                    </small>
                 </div>
                 <div class="history-points">
                     +{{ item.earned_points|floatformat:0 }}

@@ -1,0 +1,13 @@
+<h2>Історія нарахувань</h2>
+
+{% for record in history %}
+  <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd;">
+    <strong>{{ record.task.title }}</strong><br>
+    +{{ record.earned_points|floatformat:0 }} points<br>
+    Швидкість: x{{ record.speed_bonus|floatformat:2 }}<br>
+    Серія: x{{ record.streak_multiplier|floatformat:2 }}<br>
+    <small>{{ record.created_at|date:"d.m.Y H:i" }}</small>
+  </div>
+{% empty %}
+  <p>Наразі історії немає.</p>
+{% endfor %}

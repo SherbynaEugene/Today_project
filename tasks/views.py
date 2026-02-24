@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils import timezone
 from .models import Task, SubTask, Category
 
 MIN_POINTS = 5
@@ -72,6 +73,7 @@ def add_task(request):
 def complete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     task.is_completed = True
+    task.completed_at = timezone.now()
     task.save()
 
     return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
@@ -82,3 +84,36 @@ def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     task.delete()
     return redirect('tasks:task_list')
+
+
+
+## LIMIT OF 3 TASKS PER DAY
+
+# from django.utils import timezone
+# from django.shortcuts import get_object_or_404, redirect
+# from rating.services import reward_for_task_completion
+
+# def complete_task(request, task_id):
+#     task = get_object_or_404(Task, id=task_id, user=request.user)
+
+#     if task.is_completed:
+#         return redirect("tasks:today_tasks")
+
+#     today = timezone.localdate()
+
+#     completed_today = Task.objects.filter(
+#         user=request.user,
+#         is_completed=True,
+#         completed_at__date=today
+#     ).count()
+
+#     if completed_today >= 3:
+#         return redirect("tasks:today_tasks")  # або можна показати повідомлення
+
+#     task.is_completed = True
+#     task.completed_at = timezone.now()
+#     task.save()
+
+#     reward_for_task_completion(task)
+
+#     return redirect("tasks:today_tasks")
