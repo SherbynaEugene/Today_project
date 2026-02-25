@@ -6,6 +6,12 @@ from .models import Task, SubTask, Category
 
 MIN_POINTS = 5
 
+def calculate_points(task, user):
+    base = task.estimated_hours * 10
+    rating_multiplier = 1 + (1 * 0.1) #it should be user ratinf * 0.1 or smth
+    points = base * rating_multiplier
+    return max(points, MIN_POINTS)
+
 @login_required
 def task_list(request):
     incomplete = Task.objects.filter(user=request.user, is_completed=False).order_by('order')
@@ -40,7 +46,7 @@ def today_tasks(request):
 def add_task(request):
     if request.method == 'POST':
         title = request.POST.get('title')
-        estimated_hours = request.POST.get('estimated_hours', 1)
+        estimated_hours = request.POST.get('duration', 1)
         planned_date = request.POST.get('planned_date') or None
         is_for_today = request.POST.get('is_for_today') == 'true'
         category_name = request.POST.get('category') or None
@@ -75,6 +81,12 @@ def complete_task(request, task_id):
     task.is_completed = True
     task.completed_at = timezone.now()
     task.save()
+
+    # award points and coins
+    points = calculate_points(task, request.user)
+    request.user.total_points += int(points)
+    request.user.coins += int(points)
+    request.user.save()
 
     return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
 

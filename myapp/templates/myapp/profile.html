@@ -2,409 +2,43 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
+    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Профіль | ToDay</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --brand-purple: #4b1434;
-            --brand-orange: #e6921a;
-            --brand-green: #1f4d2b;
-            --bg-light: #f8f9fa;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #fff;
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .dashboard { display: flex; width: 100%; }
-
-        /* Ліве меню */
-        .sidebar {
-            width: 200px;
-            border-right: 1px solid #eee;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* Центральна частина */
-        .main-content {
-            flex: 1;
-            padding: 30px;
-            background-color: #fff;
-        }
-
-        .profile-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        h1 { color: var(--brand-green); text-transform: uppercase; font-weight: 900; margin: 0; }
-
-        /* Вкладки */
-        .tab-btn {
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: 1px solid #eee;
-            background: #fff;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .tab-btn.active {
-            background: var(--brand-purple);
-            color: white;
-            border-color: var(--brand-purple);
-        }
-
-        /* Контент вкладок */
-        .character-card {
-            background: white;
-            border: 1px solid #eee;
-            border-radius: 40px;
-            padding: 10px 40px;    /* Збільшуємо відступи зверху і знизу */
-            text-align: center;
-            min-height: 540px;    /* Встановлюємо велику мінімальну висоту */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-        }
-
-        .dyabchyk-container {
-            position: relative;
-            width: 275px;
-            height: 400px;
-            margin: 0 auto;
-        }
-
-        /* Малюнок Дябчика */
-        .d-part { position: absolute; background: var(--brand-green); border-radius: 10px; }
-        .d-head { width: 90px; height: 90px; border: 5px solid var(--brand-green); background: none; border-radius: 50%; left: 50%; transform: translateX(-50%); /* Зсуваємо назад на половину власної ширини */ top: 20px; }
-        .d-body { width: 5px; height: 140px; left: 50%; transform: translateX(-50%); top: 125px; }
-
-        .d-arm-l { width: 100px; height: 5px; left: -100px; /* вліво від тулуба */ top: 40px;  /* на 40px нижче шиї */ transform: rotate(-30deg); transform-origin: right center; /* Важливо: точка обертання в місці кріплення */ }
-        .d-arm-r { width: 100px; height: 5px; left: 6px;    /* від правого краю тулуба */ top: 40px; transform: rotate(30deg); transform-origin: left center; /* Точка обертання зліва */; }
-
-        .d-leg-l { width: 110px; height: 5px; left: -106px;
-            top: 135px;   /* Майже в самому низу тулуба */
-            transform: rotate(-65deg);
-            transform-origin: right center; }
-        .d-leg-r { width: 110px; height: 5px; left:2px; top: 135px; transform: rotate(65deg); transform-origin: left center; }
-
-        /* Крамниця */
-        .shop-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 15px;
-        }
-        .shop-item {
-            background: #fdfdfd;
-            border: 1px solid #f0f0f0;
-            border-radius: 20px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-        }
-        .price { color: var(--brand-orange); font-weight: bold; font-size: 14px; margin-top: 10px; }
-        /* Ціна в крамниці */
-        .price-tag {
-            color: var(--brand-orange);
-            font-weight: bold;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-
-        /* Стан картки при покупці/одяганні */
-        .shop-item.owned { border-color: var(--brand-purple); background: #fdf4f9; }
-        .shop-item.equipped { border: 2px solid var(--brand-green); background: #f0fff4; }
-        .shop-item.equipped .price-tag { color: var(--brand-green); }
-
-        /* Очі - тепер вони видимі */
-        .d-eyes {
-            display: flex;
-            justify-content: space-around;
-            width: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 30px;
-            background: none; /* Щоб не перекривало голову зеленим фоном */
-        }
-        .eye-dot {
-            width: 8px; height: 8px;
-            background: var(--brand-green);
-            border-radius: 50%;
-        }
-
-        /* Ліва долоня */
-        .d-palm-l {
-            width: 20px;
-            height: 16px;
-            background: var(--brand-green);
-            border-radius: 50%;
-            /* Позиціонування: */
-            left: -8px;   /* Висуваємо за край лінії руки */
-            top: -6px;    /* Центруємо вертикально відносно товщини руки (5px) */
-        }
-
-        /* Права долоня */
-        .d-palm-r {
-            width: 20px;
-            height: 16px;
-            background: var(--brand-green);
-            border-radius: 50%;
-            /* Позиціонування: */
-            left: 100%;   /* Ставимо в самий кінець правої руки */
-            top: -6px;    /* Центруємо вертикально */
-        }
-
-        /* Кофта */
-        #part-shirt {
-            width: 65px;
-            height: 90px;
-            background: repeating-linear-gradient(
-                to bottom,
-                #c0392b,    /* Червоний колір починається */
-                #c0392b 15px, /* Червоний колір триває до 15px */
-                #05192e 15px, /* Чорний колір починається відразу після */
-                #05192e 30px  /* Чорний колір триває до 30px, потім цикл повторюється */
-            );
-            left: 50%;
-            transform: translateX(-50%);
-            top: 30px;
-            border-radius: 10px;
-            z-index: 2; /* Під руками */
-            border: 2px solid #962d22;
-        }
-
-        /* Кілт */
-        #part-kilt {
-            width: 75px;
-            height: 55px;
-            background: repeating-linear-gradient(90deg, #1f4d2b, #1f4d2b 8px, #36141e 8px, #14361e 16px);
-            left: 50%;
-            transform: translateX(-50%);
-            top: 110px;
-            border-radius: 2px 2px 8px 8px;
-            z-index: -1;
-        }
-
-        /* Черевики (через псевдоелементи для кожної ноги) */
-        #part-leg-l::after, #part-leg-r::after {
-            content: '';
-            position: absolute;
-            width: 25px;
-            height: 12px;
-            background: #e6921a;
-            bottom: -5px;
-            border-radius: 5px 12px 2px 2px;
-        }
-        #part-leg-l::after { left: -15px; transform: rotate(65deg); }
-        #part-leg-r::after { right: -15px; transform: rotate(-65deg) scaleX(-1); }
-
-        /* Волосся та Вуха */
-        #part-hair-short { color: #4b2c20; font-weight: bold; text-align: center; }
-        #part-hair-long {
-            width: 100px; height: 60px; border-radius: 40px 40px 0 0;
-            border: 4px solid #4b2c20; border-bottom: 0;
-            top: 15px; left: -5px; background: none;
-        }
-
-        /* Навушники */
-        #part-headphones::before {
-            content: '🎧';
-            position: absolute;
-            font-size: 50px;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        /* Ноутбук */
-        #part-laptop {
-            position: absolute;
-            left: 170px;
-            top: 180px;
-            font-size: 45px;
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
-        }
-
-        .hidden { display: none !important; }
-
-        /* Права панель */
-        .right-panel {
-            width: 350px;
-            padding: 30px;
-            border-left: 1px solid #eee;
-        }
-
-        .info-card {
-            border: 1px solid #eee;
-            border-radius: 25px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .wallet-badge {
-            background: var(--brand-purple);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 20px;
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-        }
-        /*для правої панелі */
-        .user-info-section {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .strike-badge {
-            margin-top: 10px;
-            padding: 8px 12px;
-            background: #fff9f0;
-            border-radius: 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: bold;
-            color: var(--brand-orange);
-        }
-
-        .login-data-card {
-            background: #f4f7f5;
-            border-radius: 20px;
-            padding: 20px;
-            position: relative;
-        }
-
-        .login-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            color: var(--brand-green);
-            font-size: 12px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .login-field {
-            font-size: 14px;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        .login-field span {
-            color: #666;
-            font-weight: bold;
-        }
-
-        .wallet-card-new {
-            background: var(--brand-purple);
-            color: white;
-            padding: 25px;
-            border-radius: 30px;
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .wallet-title {
-            font-size: 12px;
-            font-weight: 900;
-            opacity: 0.8;
-            letter-spacing: 1px;
-        }
-
-        .wallet-amount {
-            font-size: 32px;
-            font-weight: 900;
-        }
-
-        .hidden { display: none !important; }
-        /* Контейнер для розділення статистики на 2 частини */
-        .stats-layout {
-            display: flex;
-            gap: 30px;
-            align-items: flex-start;
-        }
-
-        .stats-visual { flex: 1; } /* Для графіка */
-        .stats-details { flex: 1; } /* Для тексту */
-
-        /* Картки сфер */
-        .sphere-item {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 12px 20px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .sphere-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 900;
-            font-size: 13px;
-            text-transform: uppercase;
-            color: var(--brand-green);
-        }
-
-        .sphere-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-
-        .sphere-value {
-            font-weight: 900;
-            color: var(--brand-green);
-        }
-
-        /* Сфери за кольорами з макета */
-        .dot-work { background-color: #1f4d2b; }
-        .dot-rest { background-color: #e6921a; }
-        .dot-soc { background-color: #4b1434; }
-        .dot-hobby { background-color: #a855f7; }
-        .dot-other { background-color: #d1d5db; border: 1px dashed #999; }
-    </style>
 </head>
 <body>
 
 <div class="dashboard">
+        <!-- ─────────────── SIDEBAR ─────────────── -->
     <aside class="sidebar">
-        <div style="font-weight: 900; font-size: 24px; color: var(--brand-green);">ToDay</div>
-        <nav style="display: flex; flex-direction: column; gap: 15px; color: #aaa; font-weight: bold; font-size: 12px;">
+        <div class="logo">
+            <div class="logo-icon">T</div>
+            <div class="logo-text">ToDaY</div>
+        </div>
+
+        <a href="{% url 'myapp:user_desktop' %}" class="menu-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
             <span>СЬОГОДНІ</span>
-            <span>ЗАГАЛЬНІ</span>
-            <span>КАЛЕНДАР</span>
-            <span style="color: var(--brand-green);">ПРОФІЛЬ</span>
-        </nav>
+            <span class="menu-dot"></span>
+        </a>
+
+        <a href="{% url 'rating:my_rating' %}" class="menu-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+            </svg>
+            <span>РЕЙТИНГ</span>
+            <span class="menu-dot"></span>
+        </a>
     </aside>
 
     <main class="main-content">
         <div class="profile-header">
             <h1>Профіль</h1>
-            <div class="tabs-navigation" style="display: flex; gap: 10px;">
+            <div class="tabs-menuigation" style="display: flex; gap: 10px;">
                 <button id="btn-person" onclick="showTab('person')" class="tab-btn active">ПЕРСОНАЖ</button>
                 <button id="btn-shop" onclick="showTab('shop')" class="tab-btn">КРАМНИЦЯ</button>
                 <button id="btn-stats" onclick="showTab('stats')" class="tab-btn">СТАТИСТИКА</button>
@@ -413,104 +47,68 @@
 
         <div id="tab-person" class="tab-content">
             <div class="character-card">
-                <h3 style="margin: 0; color: var(--brand-green);">ДЯБЧИК</h3>
+                <h3 style="margin: 0; color: var(--green-dark);">ДЯБЧИК</h3>
                 <p style="font-size: 12px; color: #aaa; margin-bottom: 30px;">(це ти)</p>
+                <!-- <p style="color: red;">DEBUG: {{ equipped_slugs }}</p> -->
                 <div class="dyabchyk-container">
-                    <div id="head" class="d-part d-head hidden">
-                        <div id="part-eye-l" class="d-part d-eyes hidden" style="width: 10px; left: 25%;"><div class="eye-dot"></div></div>
-                        <div id="part-eye-r" class="d-part d-eyes hidden" style="width: 10px; left: 65%;"><div class="eye-dot"></div></div>
+                    <div id="head" class="d-part d-head {% if 'head' not in equipped_slugs %}hidden{% endif %}">
+                        <div id="part-eye-l" class="d-part d-eyes {% if 'eye-l' not in equipped_slugs %}hidden{% endif %}" style="width: 10px; left: 25%;"><div class="eye-dot"></div></div>
+                        <div id="part-eye-r" class="d-part d-eyes {% if 'eye-r' not in equipped_slugs %}hidden{% endif %}" style="width: 10px; left: 65%;"><div class="eye-dot"></div></div>
 
-                        <div id="brow-piercing" class = "d-part brow-piercing hidden"></div>
-                        <div id="ears" class = "d-part ears hidden"></div>
-                        <div id="fox-ears" class = "d-part fox-ears hidden"></div>
+                        <div id="brow-piercing" class = "d-part brow-piercing {% if 'brow-piercing' not in equipped_slugs %}hidden{% endif %}"></div>
+                        <div id="ears" class = "d-part ears {% if 'ears' not in equipped_slugs %}hidden{% endif %}"></div>
+                        <div id="fox-ears" class = "d-part fox-ears {% if 'fox-ears' not in equipped_slugs %}hidden{% endif %}"></div>
 
-                        <div id="part-smile" class="d-part hidden" style="width: 20px; height: 10px; border: 3px solid var(--brand-green); border-top: 0; border-radius: 0 0 15px 15px; top: 60px; left: 50%; transform: translateX(-50%); background: none;"></div>
-                        <div id="part-frown" class="d-part hidden" style="width: 20px; height: 10px; border: 3px solid #c0392b; border-bottom: 0; border-radius: 15px 15px 0 0; top: 65px; left: 50%; transform: translateX(-50%); background: none;"></div>
-                        <div id="part-tongue" class="d-part hidden" style="top: 65px; left: 50%; transform: translateX(-50%); background:none;">👅</div>
+                        <div id="part-smile" class="d-part {% if 'smile' not in equipped_slugs %}hidden{% endif %}" style="width: 20px; height: 10px; border: 3px solid var(--green-dark); border-top: 0; border-radius: 0 0 15px 15px; top: 60px; left: 50%; transform: translateX(-50%); background: none;"></div>
+                        <div id="part-frown" class="d-part {% if 'frown' not in equipped_slugs %}hidden{% endif %}" style="width: 20px; height: 10px; border: 3px solid #c0392b; border-bottom: 0; border-radius: 15px 15px 0 0; top: 65px; left: 50%; transform: translateX(-50%); background: none;"></div>
+                        <div id="part-tongue" class="d-part {% if 'tongue' not in equipped_slugs %}hidden{% endif %}" style="top: 65px; left: 50%; transform: translateX(-50%); background:none;">👅</div>
 
-                        <div id="part-hair-short" class="d-part hidden" style="width: 100px; top: -15px; left: -5px; font-size: 40px; background: none;">♒</div>
-                        <div id="part-hair-long" class="d-part hidden"></div>
-                        <div id="part-hat" class="d-part hidden" style="width: 100px; top: -45px; left: -5px; font-size: 50px; background: none;">🎩</div>
+                        <div id="part-hair-short" class="d-part {% if 'short-hair' not in equipped_slugs %}hidden{% endif %}" style="width: 100px; top: -15px; left: -5px; font-size: 40px; background: none;">♒</div>
+                        <div id="part-hair-long" class="d-part {% if 'long-hair' not in equipped_slugs %}hidden{% endif %}"></div>
+                        <div id="part-hat" class="d-part {% if 'hat' not in equipped_slugs %}hidden{% endif %}" style="width: 100px; top: -45px; left: -5px; font-size: 50px; background: none;">🎩</div>
                     </div>
 
                     <div class="d-part d-body">
-                        <div id="part-shirt" class="d-part hidden"></div>
-                        <div id="part-kilt" class="d-part hidden"></div>
+                        <div id="part-shirt" class="d-part {% if 'shirt-red-black' not in equipped_slugs %}hidden{% endif %}"></div>
+                        <div id="part-kilt" class="d-part {% if 'kilt-green' not in equipped_slugs %}hidden{% endif %}"></div>
 
-                        <div id="part-arm-l" class="d-part d-arm-l hidden"><div id="part-palm-l" class="d-part d-palm-l hidden"></div></div>
-                        <div id="part-arm-r" class="d-part d-arm-r hidden"><div id="part-palm-r" class="d-part d-palm-r hidden"></div></div>
+                        <div id="part-arm-l" class="d-part d-arm-l {% if 'arm-l' not in equipped_slugs %}hidden{% endif %}"><div id="part-palm-l" class="d-part d-palm-l hidden"></div></div>
+                        <div id="part-arm-r" class="d-part d-arm-r {% if 'arm-r' not in equipped_slugs %}hidden{% endif %}"><div id="part-palm-r" class="d-part d-palm-r hidden"></div></div>
 
-                        <div id="part-leg-l" class="d-part d-leg-l hidden"></div>
-                        <div id="part-leg-r" class="d-part d-leg-r hidden"></div>
+                        <div id="part-leg-l" class="d-part d-leg-l {% if 'leg-l' not in equipped_slugs %}hidden{% endif %}"></div>
+                        <div id="part-leg-r" class="d-part d-leg-r {% if 'leg-r' not in equipped_slugs %}hidden{% endif %}"></div>
                     </div>
 
-                    <div id="part-laptop" class="d-part hidden">💻</div>
-                    <div id="part-headphones" class="d-part hidden"></div>
+                    <div id="part-laptop" class="d-part {% if 'laptop' not in equipped_slugs %}hidden{% endif %}">💻</div>
+                    <div id="part-headphones" class="d-part {% if 'headphones' not in equipped_slugs %}hidden{% endif %}"></div>
                 </div>
             </div>
         </div>
 
         <div id="tab-shop" class="tab-content hidden">
             <div class="shop-grid">
-                <div id="item-head" class="shop-item" onclick="handleShopClick('head', 10)">
-                    <div>○</div><p>ГОЛОВА</p>
-                    <div class="price-tag">💰 10</div>
-                </div>
+                {% for item in all_items %}
+                <div class="shop-item
+                    {% if item.slug in owned_slugs %}owned{% endif %}
+                    {% if item.slug in equipped_slugs %}equipped{% endif %}">
 
-                <div id="item-leg-l" class="shop-item" onclick="handleShopClick('leg-l', 10)">
-                    <div>/</div><p>ЛІВА НОГА</p>
-                    <div class="price-tag">💰 10</div>
-                </div>
-                <div id="item-leg-r" class="shop-item" onclick="handleShopClick('leg-r', 10)">
-                    <div>\</div><p>ПРАВА НОГА</p>
-                    <div class="price-tag">💰 10</div>
-                </div>
+                    <div class="shop-icon">{{ item.icon }}</div>
+                    <p>{{ item.name }}</p>
 
-                <div id="item-arm-l" class="shop-item" onclick="handleShopClick('arm-l', 10)">
-                    <div>/</div><p>ЛІВА РУКА</p>
-                    <div class="price-tag">💰 10</div>
+                    {% if item.slug not in owned_slugs %}
+                        <a href="{% url 'profile_app:buy' item.slug %}" class="buy-button-container">
+                            <div class="price-tag">💰 {{ item.price }}</div>
+                            <div class="price-tag">КУПИТИ</div>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'profile_app:toggle' item.slug %}" class="price-link">
+                            <div class="price-tag">
+                                {% if item.slug in equipped_slugs %}ЗНЯТИ{% else %}ОДЯГТИ{% endif %}
+                            </div>
+                        </a>
+                    {% endif %}
                 </div>
-                <div id="item-arm-r" class="shop-item" onclick="handleShopClick('arm-r', 10)">
-                    <div>\</div><p>ПРАВА РУКА</p>
-                    <div class="price-tag">💰 10</div>
-                </div>
-
-                <div id="item-eye-l" class="shop-item" onclick="handleShopClick('eye-l', 10)">
-                    <div>👀</div><p>ЛІВЕ ОКО</p>
-                    <div class="price-tag">💰 10</div>
-                </div>
-                <div id="item-eye-r" class="shop-item" onclick="handleShopClick('eye-r', 10)">
-                    <div>👀</div><p>ПРАВЕ ОКО</p>
-                    <div class="price-tag">💰 10</div>
-                </div>
-
-                <div id="item-palm-l" class="shop-item" onclick="handleShopClick('palm-l', 15)">
-                    <div>👋</div><p>ЛІВА ДОЛОНЯ</p>
-                    <div class="price-tag">💰 15</div>
-                </div>
-                <div id="item-palm-r" class="shop-item" onclick="handleShopClick('palm-r', 15)">
-                    <div>👋</div><p>ПРАВА ДОЛОНЯ</p>
-                    <div class="price-tag">💰 15</div>
-                </div>
-
-                <div id="item-hat" class="shop-item" onclick="handleShopClick('hat', 50)"><div>🎩</div><p>КАПЕЛЮХ</p><div class="price-tag">💰 50</div></div>
-                <div id="item-laptop" class="shop-item" onclick="handleShopClick('laptop', 200)"><div>💻</div><p>НОУТБУК</p><div class="price-tag">💰 200</div></div>
-                <div id="item-smile" class="shop-item" onclick="handleShopClick('smile', 10)"><div>◡̈</div><p>УСМІШКА</p><div class="price-tag">💰 10</div></div>
-
-                <div id="item-frown" class="shop-item" onclick="handleShopClick('frown', 10)"><div>︿</div><p>ПОХМУРИЙ РОТ</p><div class="price-tag">💰 10</div></div>
-                <div id="item-tongue" class="shop-item" onclick="handleShopClick('tongue', 10)"><div>👅</div><p>ЯЗИК</p><div class="price-tag">💰 10</div></div>
-                <div id="item-short-hair" class="shop-item" onclick="handleShopClick('short-hair', 10)"><div>♒</div><p>КОРОТКЕ ВОЛОССЯ</p><div class="price-tag">💰 10</div></div>
-                <div id="item-long-hair" class="shop-item" onclick="handleShopClick('long-hair', 10)"><div>|||</div><p>ДОВГЕ ВОЛОССЯ</p><div class="price-tag">💰 10</div></div>
-                <div id="item-ears" class="shop-item" onclick="handleShopClick('ears', 10)"><div>👂</div><p>ВУХА</p><div class="price-tag">💰 10</div></div>
-                <div id="item-fox-ears" class="shop-item" onclick="handleShopClick('fox-ears', 10)"><div>🦊</div><p>ЛИСЯЧІ ВУШКА</p><div class="price-tag">💰 10</div></div>
-                <div id="item-headphones" class="shop-item" onclick="handleShopClick('headphones', 10)"><div>🎧</div><p>НАВУШНИКИ</p><div class="price-tag">💰 10</div></div>
-                <div id="item-shirt-red-black" class="shop-item" onclick="handleShopClick('shirt-red-black', 10)"><div>👕</div><p>КОФТА</p><div class="price-tag">💰 10</div></div>
-                <div id="item-kilt-green" class="shop-item" onclick="handleShopClick('kilt-green', 10)"><div>👗</div><p>КІЛТ</p><div class="price-tag">💰 10</div></div>
-                <div id="item-shoes-orange" class="shop-item" onclick="handleShopClick('shoes-orange', 10)"><div>👟</div><p>ЧЕРЕВИКИ</p><div class="price-tag">💰 10</div></div>
-                <div id="item-wolf" class="shop-item" onclick="handleShopClick('wolf', 10)"><div>💅</div><p>КІГТИКИ ВОВКА</p><div class="price-tag">💰 10</div></div>
-                <div id="item-brow-piercing" class="shop-item" onclick="handleShopClick('brow-piercing', 10)"><div>💅</div><p>ПІРСИНГ БРОВИ</p><div class="price-tag">💰 10</div></div>
-
-
+                {% endfor %}
             </div>
         </div>
 
@@ -565,13 +163,13 @@
             <div style="display: flex; align-items: center; gap: 15px;">
                 <div style="width: 55px; height: 55px; background: #ffe0b2; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;">👤</div>
                 <div>
-                    <div style="font-weight: 900; color: var(--brand-green); font-size: 18px;">КОРИСТУВАЧ</div>
-                    <div style="font-size: 13px; color: #aaa;">dd@d</div>
+                    <div style="font-weight: 900; color: var(--green-dark); font-size: 18px;">КОРИСТУВАЧ</div>
+                    <div style="font-size: 13px; color: #aaa;">{{ user.username }}</div>
                 </div>
             </div>
             <div class="strike-badge">
                 <span>🔥</span>
-                <span>Страйк: 3 дні</span>
+                <span>Страйк: {{ user.streak }} days</span>
             </div>
         </div>
 
@@ -582,14 +180,14 @@
                 </div>
                 <div id="toggle-password" onclick="togglePasswordVisibility()" style="cursor: pointer; font-size: 16px;">👁️</div>
             </div>
-            <div class="login-field"><span>Логін:</span> dd@d</div>
+            <div class="login-field"><span>Логін:</span>{{ user.email }}</div>
             <div class="login-field"><span>Пароль:</span> <span id="password-text">••••••••</span></div>
         </div>
 
         <div class="wallet-card-new">
             <div class="wallet-title">ВАШ ГАМАНЕЦЬ 💰</div>
             <div class="wallet-amount">
-                <span id="coin-count-display">100</span> <span style="font-size: 14px;">КОЇНІВ</span>
+                <span id="coin-count-display">{{ user.coins }}</span> <span style="font-size: 14px;">КОЇНІВ</span>
             </div>
         </div>
     </div>
@@ -597,42 +195,7 @@
 </div>
 
 <script>
-    // 1. Глобальні змінні
-    let userCoins = 100; // Початковий капітал
-    let inventory = {
-        'head': { owned: false, equipped: false, parts: ['head'] },
-        'eye-l':  { owned: false, equipped: false, parts: ['part-eye-l'] },
-        'eye-r':  { owned: false, equipped: false, parts: ['part-eye-r'] },
-        'palm-l': { owned: false, equipped: false, parts: ['part-palm-l'] },
-        'palm-r': { owned: false, equipped: false, parts: ['part-palm-r'] },
-        'leg-l':  { owned: false, equipped: false, parts: ['part-leg-l'] },
-        'leg-r':  { owned: false, equipped: false, parts: ['part-leg-r'] },
-        'arm-l': { owned: false, equipped: false, parts: ['part-arm-l'] },
-        'arm-r': { owned: false, equipped: false, parts: ['part-arm-r'] },
-        'smile': { owned: false, equipped: false, parts: ['part-smile'] },
-        'frown': { owned: false, equipped: false, parts: ['part-frown'] },
-        'tongue': { owned: false, equipped: false, parts: ['part-tongue'] },
-        'brow-piercing': { owned: false, equipped: false, parts: ['part-piercing'] },
-
-        // Волосся та аксесуари
-        'short-hair': { owned: false, equipped: false, parts: ['part-hair-short'] },
-        'long-hair': { owned: false, equipped: false, parts: ['part-hair-long'] },
-        'ears': { owned: false, equipped: false, parts: ['part-ears'] },
-        'fox-ears': { owned: false, equipped: false, parts: ['part-fox-ears'] },
-        'wolf': { owned: false, equipped: false, parts: ['part-wolf'] },
-        'hat': { owned: false, equipped: false, parts: ['part-hat'] },
-        'headphones': { owned: false, equipped: false, parts: ['part-headphones'] },
-
-        // Одяг та взуття
-        'shirt-red-black': { owned: false, equipped: false, parts: ['part-shirt'] },
-        'kilt-green': { owned: false, equipped: false, parts: ['part-kilt'] },
-        'shoes-orange': { owned: false, equipped: false, parts: ['part-leg-l', 'part-leg-r'] },
-
-        // Предмети
-        'laptop': { owned: false, equipped: false, parts: ['part-laptop'] }
-    };
-
-    // 2. Функція перемикання вкладок
+        // 2. Функція перемикання вкладок
     function showTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -641,55 +204,6 @@
         document.getElementById('btn-' + tabName).classList.add('active');
 
         if(tabName === 'stats') { initChart(); }
-    }
-
-    // 3. ЛОГІКА КРАМНИЦІ
-    function handleShopClick(itemId, price) {
-        let item = inventory[itemId];
-        const shopCard = document.getElementById('item-' + itemId);
-        const priceTag = shopCard.querySelector('.price-tag');
-
-        // Купівля
-        if (!item.owned) {
-            if (userCoins >= price) {
-                userCoins -= price;
-                item.owned = true;
-                item.equipped = true;
-
-                // Оновлюємо цифру в гаманці
-                document.getElementById('coin-count-display').innerText = userCoins;
-
-                shopCard.classList.add('owned', 'equipped');
-                priceTag.innerText = "ОДЯГНЕНО";
-                updateDyabchyk(itemId, true);
-            } else {
-                alert("Недостатньо коїнів!");
-            }
-        }
-        // Зняти / Одягнути
-        else {
-            item.equipped = !item.equipped;
-
-            if (item.equipped) {
-                shopCard.classList.add('equipped');
-                priceTag.innerText = "ОДЯГНЕНО";
-                updateDyabchyk(itemId, true);
-            } else {
-                shopCard.classList.remove('equipped');
-                priceTag.innerText = "ПРИДБАНО";
-                updateDyabchyk(itemId, false);
-            }
-        }
-    }
-
-    function updateDyabchyk(itemId, show) {
-        inventory[itemId].parts.forEach(partId => {
-            const el = document.getElementById(partId);
-            if (el) {
-                if (show) el.classList.remove('hidden');
-                else el.classList.add('hidden');
-            }
-        });
     }
 
     // 4. Пароль та Графік

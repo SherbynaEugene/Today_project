@@ -1,0 +1,573 @@
+/*ЦЕ ВСЕ З PROFILE.HTML*/
+:root {
+    --green-dark: #1f4d2b;
+    --green-mid: #2d5a2d;
+    --green-accent: #3d7a3d;
+    --orange: #e6921a;
+    --orange-light: #ff9a1f;
+    --purple: #4b1434;
+    --bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-dark: #1a1a1a;
+    --text-muted: #888;
+    --border: #e8e8e8;
+  }
+    /* ── SIDEBAR ── */
+    .sidebar-spacer { flex: 1; }
+    .sidebar {
+        width: 180px;
+        flex-shrink: 0;
+        background: hsl(0, 0%, 100%);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        padding: 28px 20px;
+        gap: 4px;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 8px;
+        margin-bottom: 28px;
+    }
+
+    .logo-icon {
+        width: 40px; height: 40px;
+        background: var(--green-dark);
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        color: white;
+        font-family: 'Unbounded', sans-serif;
+        font-weight: 900;
+        font-size: 16px;
+    }
+
+    .logo-text {
+        font-family: 'Unbounded', sans-serif;
+        font-weight: 600;
+        font-size: 20px;
+        color: var(--green-dark);
+        letter-spacing: -0.5px;
+    }
+
+    .menu-label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: 14px;
+        cursor: pointer;
+        color: #888;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        transition: all 0.2s;
+        position: relative;
+        user-select: none;
+    }
+
+    .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        text-decoration: none;
+        color: #aaa; /* Сірий для неактивних */
+        font-weight: bold;
+        font-size: 13px;
+        transition: 0.3s;
+        border-radius: 12px;
+    }
+
+    .menu-item svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .menu-item:hover {
+        background: #f8f9fa;
+        color: var(--green-dark);
+    }
+
+    .menu-item.active {
+        color: var(--green-dark);
+    }
+
+    .profile-avatar-mini {
+        width: 30px;
+        height: 30px;
+        background: #eee;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+
+body {
+    background: radial-gradient(
+        circle at 20% 20%,
+        #f3e8ff 0%,
+        #f9f6ff 40%,
+        #ffffff 100%
+    );
+    font-family: 'Manrope', sans-serif;
+    /* background: var(--bg); */
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    color: var(--text-dark);
+}
+
+.dashboard { display: flex; width: 100%; }
+
+/* Центральна частина */
+.main-content {
+    flex: 1;
+    padding: 30px;
+    background-color: #fff;
+}
+
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; margin: 0; }
+
+/* Вкладки */
+.tab-btn {
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 1px solid #eee;
+    background: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    background: var(--purple);
+    color: white;
+    border-color: var(--purple);
+}
+
+/* Контент вкладок */
+.character-card {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 40px;
+    padding: 10px 40px;    /* Збільшуємо відступи зверху і знизу */
+    text-align: center;
+    min-height: 540px;    /* Встановлюємо велику мінімальну висоту */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+}
+
+.dyabchyk-container {
+    position: relative;
+    width: 275px;
+    height: 400px;
+    margin: 0 auto;
+}
+
+/* Малюнок Дябчика */
+.d-part { position: absolute; background: var(--green-dark); border-radius: 10px; }
+.d-head { width: 90px; height: 90px; border: 5px solid var(--green-dark); background: none; border-radius: 50%; left: 50%; transform: translateX(-50%); /* Зсуваємо назад на половину власної ширини */ top: 20px; }
+.d-body { width: 5px; height: 140px; left: 50%; transform: translateX(-50%); top: 125px; }
+
+.d-arm-l { width: 100px; height: 5px; left: -100px; /* вліво від тулуба */ top: 40px;  /* на 40px нижче шиї */ transform: rotate(-30deg); transform-origin: right center; /* Важливо: точка обертання в місці кріплення */ }
+.d-arm-r { width: 100px; height: 5px; left: 6px;    /* від правого краю тулуба */ top: 40px; transform: rotate(30deg); transform-origin: left center; /* Точка обертання зліва */; }
+
+.d-leg-l { width: 110px; height: 5px; left: -106px;
+    top: 135px;   /* Майже в самому низу тулуба */
+    transform: rotate(-65deg);
+    transform-origin: right center; }
+.d-leg-r { width: 110px; height: 5px; left:2px; top: 135px; transform: rotate(65deg); transform-origin: left center; }
+
+/* Крамниця */
+.shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 25px;
+}
+.shop-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 20px;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.shop-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(123,92,255,0.15);
+}
+
+.shop-icon {
+    font-size: 42px;
+    margin-bottom: 8px;
+    transition: transform 0.2s ease;
+}
+
+
+.shop-item:hover .shop-icon {
+    transform: scale(1.15);
+}
+.price { color: var(--orange); font-weight: bold; font-size: 14px; margin-top: 10px; }
+/* Ціна в крамниці */
+.shop-item a {
+    text-decoration: none;
+}
+
+.price-link .price-tag {
+    font-weight: 700;
+    background: #e0f7e9;
+    color: #3a5a40;
+    border-radius: 14px;
+    padding: 8px 16px;
+}
+/* Стан картки при покупці/одяганні */
+.shop-item p {
+    font-weight: 700;
+    font-size: 14px;
+    /* color: var(--green-dark); */
+}
+.shop-item.owned {
+    border-color: rgba(75, 20, 52, 0.3);
+}
+
+.shop-item.equipped {
+    border: 2px solid var(--green-dark);
+}
+.shop-item.equipped .price-link .price-tag {
+    background: #ffe5ec;
+    color: #d63384;
+    font-weight: 600;
+}
+.shop-item.equipped::after {
+    content: "ON";
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--purple);
+    color: white;
+    font-size: 9px;
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+/* .shop-item.owned { border-color: var(--purple); background: #fdf4f9; }
+.shop-item.equipped { border: 2px solid var(--green-dark); background: #f0fff4; }
+.shop-item.equipped .price-tag { color: var(--green-dark); } */
+
+/* Очі - тепер вони видимі */
+.d-eyes {
+    display: flex;
+    justify-content: space-around;
+    width: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 30px;
+    background: none; /* Щоб не перекривало голову зеленим фоном */
+}
+.eye-dot {
+    width: 8px; height: 8px;
+    background: var(--green-dark);
+    border-radius: 50%;
+}
+
+/* Ліва долоня */
+.d-palm-l {
+    width: 20px;
+    height: 16px;
+    background: var(--green-dark);
+    border-radius: 50%;
+    /* Позиціонування: */
+    left: -8px;   /* Висуваємо за край лінії руки */
+    top: -6px;    /* Центруємо вертикально відносно товщини руки (5px) */
+}
+
+/* Права долоня */
+.d-palm-r {
+    width: 20px;
+    height: 16px;
+    background: var(--green-dark);
+    border-radius: 50%;
+    /* Позиціонування: */
+    left: 100%;   /* Ставимо в самий кінець правої руки */
+    top: -6px;    /* Центруємо вертикально */
+}
+
+/* Кофта */
+#part-shirt {
+    width: 65px;
+    height: 90px;
+    background: repeating-linear-gradient(
+        to bottom,
+        #c0392b,    /* Червоний колір починається */
+        #c0392b 15px, /* Червоний колір триває до 15px */
+        #05192e 15px, /* Чорний колір починається відразу після */
+        #05192e 30px  /* Чорний колір триває до 30px, потім цикл повторюється */
+    );
+    left: 50%;
+    transform: translateX(-50%);
+    top: 30px;
+    border-radius: 10px;
+    z-index: 2; /* Під руками */
+    border: 2px solid #962d22;
+}
+
+/* Кілт */
+#part-kilt {
+    width: 75px;
+    height: 55px;
+    background: repeating-linear-gradient(90deg, #1f4d2b, #1f4d2b 8px, #36141e 8px, #14361e 16px);
+    left: 50%;
+    transform: translateX(-50%);
+    top: 110px;
+    border-radius: 2px 2px 8px 8px;
+    z-index: -1;
+}
+
+/* Черевики (через псевдоелементи для кожної ноги) */
+#part-leg-l::after, #part-leg-r::after {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 12px;
+    background: #e6921a;
+    bottom: -5px;
+    border-radius: 5px 12px 2px 2px;
+}
+#part-leg-l::after { left: -15px; transform: rotate(65deg); }
+#part-leg-r::after { right: -15px; transform: rotate(-65deg) scaleX(-1); }
+
+/* Волосся та Вуха */
+#part-hair-short { color: #4b2c20; font-weight: bold; text-align: center; }
+#part-hair-long {
+    width: 100px; height: 60px; border-radius: 40px 40px 0 0;
+    border: 4px solid #4b2c20; border-bottom: 0;
+    top: 15px; left: -5px; background: none;
+}
+
+/* Навушники */
+#part-headphones::before {
+    content: '🎧';
+    position: absolute;
+    font-size: 50px;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Ноутбук */
+#part-laptop {
+    position: absolute;
+    left: 170px;
+    top: 180px;
+    font-size: 45px;
+    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
+}
+
+.hidden { display: none !important; }
+
+/* Права панель */
+.right-panel {
+    width: 350px;
+    padding: 30px;
+    border-left: 1px solid #eee;
+}
+
+.info-card {
+    border: 1px solid #eee;
+    border-radius: 25px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.wallet-badge {
+    background: var(--purple);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+/*для правої панелі */
+.user-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.strike-badge {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #fff9f0;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--orange);
+}
+
+.login-data-card {
+    background: #f4f7f5;
+    border-radius: 20px;
+    padding: 20px;
+    position: relative;
+}
+
+.login-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    color: var(--green-dark);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.login-field {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.login-field span {
+    color: #666;
+    font-weight: bold;
+}
+
+.wallet-card-new {
+    background: var(--purple);
+    color: white;
+    padding: 25px;
+    border-radius: 30px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.wallet-title {
+    font-size: 12px;
+    font-weight: 900;
+    opacity: 0.8;
+    letter-spacing: 1px;
+}
+
+.wallet-amount {
+    font-size: 32px;
+    font-weight: 900;
+}
+
+.hidden { display: none !important; }
+/* Контейнер для розділення статистики на 2 частини */
+.stats-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.stats-visual { flex: 1; } /* Для графіка */
+.stats-details { flex: 1; } /* Для тексту */
+
+/* Картки сфер */
+.sphere-item {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sphere-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 900;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: var(--green-dark);
+}
+
+.sphere-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.sphere-value {
+    font-weight: 900;
+    color: var(--green-dark);
+}
+
+/* Сфери за кольорами з макета */
+.dot-work { background-color: #1f4d2b; }
+.dot-rest { background-color: #e6921a; }
+.dot-soc { background-color: #4b1434; }
+.dot-hobby { background-color: #a855f7; }
+.dot-other { background-color: #d1d5db; border: 1px dashed #999; }
+
+
+/* крамниця */
+.buy-button-container .price-tag:first-child {
+    background: #fff8e6;
+    color: var(--orange);
+}
+
+.buy-button-container .price-tag:last-child {
+    background: var(--green-dark);
+    color: white;
+}
+
+.buy-button-container:hover .price-tag:last-child {
+    background: var(--green-accent);
+}
+
+
+.price-value {
+    font-size: 14px;
+    font-weight: bold;
+    color: #d4a017; /* Золотистий колір для монет */
+}
+
+
+
+/* Стиль для ОДЯГТИ/ЗНЯТИ (помаранчевий) */
+.toggle-text {
+    color: #f39c12;
+    text-decoration: underline;
+    font-weight: bold;
+    text-transform: uppercase;
+}

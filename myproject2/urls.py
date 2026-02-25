@@ -8,5 +8,5 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('tasks/', include('tasks.urls')),
     path("rating/", include("rating.urls")),
+    path('profile-shop/', include('profile_app.urls', namespace='profile_app')),
 ]
-

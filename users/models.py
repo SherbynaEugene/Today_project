@@ -6,4 +6,4 @@ class User(AbstractUser):
     total_points = models.IntegerField(default=0)
     coins = models.IntegerField(default=100)  # added this for coin sysytem
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']
