@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, register, sign_in, profile, user_desktop, calendar
+from .views import index, register, sign_in, profile, user_desktop, interesting, general_tasks, calendar
 
 app_name = "myapp"
 
@@ -10,5 +10,9 @@ urlpatterns = [
     path('sign_in/', sign_in, name='sign_in'),
     path('profile/', profile, name='profile'),
     path('user_desktop/', user_desktop, name='user_desktop'),
+    path('interesting/', interesting, name='interesting'),
+    path('general_tasks/', general_tasks, name='general_tasks'),
     path('calendar/', calendar, name='calendar'),
+
 ]
+

@@ -17,7 +17,9 @@ def task_list(request):
     incomplete = Task.objects.filter(user=request.user, is_completed=False).order_by('order')
     completed = Task.objects.filter(user=request.user, is_completed=True).order_by('-created_at')
     categories = Category.objects.filter(user=request.user)
-    return render(request, 'tasks/task_list.html', {
+    print("INCOMPLETE:", incomplete)
+    print("COMPLETED:", completed)
+    return render(request, 'myapp/general_tasks.html', {
         'incomplete_tasks': incomplete,
         'completed_tasks': completed,
         'categories': categories,
@@ -74,6 +76,11 @@ def add_task(request):
     categories = Category.objects.filter(user=request.user)
     return render(request, 'tasks/add_task.html', {'categories': categories})
 
+def move_to_today(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    task.is_for_today = True
+    task.save()
+    return redirect('tasks:today_tasks')
 
 @login_required
 def complete_task(request, task_id):
@@ -96,6 +103,8 @@ def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     task.delete()
     return redirect('tasks:task_list')
+
+
 
 
 

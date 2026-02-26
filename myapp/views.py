@@ -13,4 +13,7 @@ def user_desktop(request):
     return render(request, 'myapp/user_desktop.html')
 def calendar(request):
     return render(request, 'myapp/calendar.html')
-
+def interesting(request):
+    return render(request, 'myapp/interesting.html')
+def general_tasks(request):
+    return render(request, 'myapp/general_tasks.html')
