@@ -11,3 +11,6 @@ def profile(request):
     return redirect('/profile-shop/')
 def user_desktop(request):
     return render(request, 'myapp/user_desktop.html')
+def calendar(request):
+    return render(request, 'myapp/calendar.html')
+
