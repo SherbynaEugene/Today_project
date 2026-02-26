@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Item, UserInventory
+from django.contrib import messages
 
 @login_required
 def profile_view(request):
@@ -38,7 +39,6 @@ def profile_view(request):
 def buy_item(request, item_slug):
     item = get_object_or_404(Item, slug=item_slug)
     user = request.user
-
     if user.coins >= item.price:
         inventory_obj, created = UserInventory.objects.get_or_create(user=user, item=item)
         if created:
@@ -47,8 +47,7 @@ def buy_item(request, item_slug):
             # Викликаємо toggle_item, щоб він одягнувся з урахуванням слотів
             return toggle_item(request, item_slug)
     else:
-        pass
-
+        messages.error(request, f'Недостатньо монет! У тебе лише {user.coins}!')
     return redirect('profile_app:main')
 
 @login_required
