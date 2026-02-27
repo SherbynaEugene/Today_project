@@ -1,5 +1,8 @@
 
 from django.shortcuts import render, redirect
+from tasks.models import Task
+
+
 
 def index(request):
     return render(request, 'myapp/index.html')
@@ -10,7 +13,8 @@ def sign_in(request):
 def profile(request):
     return redirect('/profile-shop/')
 def user_desktop(request):
-    return render(request, 'myapp/user_desktop.html')
+    tasks = Task.objects.all()
+    return render(request, 'myapp/user_desktop.html', {'tasks': tasks})
 def calendar(request):
     return render(request, 'myapp/calendar.html')
 def interesting(request):

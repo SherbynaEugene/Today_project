@@ -25,8 +25,8 @@ def calculate_time_multiplier(task: Task):
 
 
     planned_date = task.planned_date or timezone.localdate()
-    deadline_datetime = datetime.combine(planned_date, task.deadline_time)
-    deadline_datetime = timezone.make_aware(deadline_datetime)
+    # deadline_datetime = datetime.combine(planned_date, task.deadline_time)
+    deadline_datetime = timezone.now()
 
     if task.completed_at > deadline_datetime:
         return LATE_PENALTY_MULTIPLIER
