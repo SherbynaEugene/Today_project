@@ -1,108 +1,4 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <title>Мій рейтинг</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #ffffff;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 50px auto;
-            padding: 20px;
-        }
-
-        .card {
-            background: #fbfbfb;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-            margin-bottom: 40px;
-        }
-
-        h1, h2 {
-            margin-top: 0;
-        }
-
-        .points {
-            font-size: 48px;
-            font-weight: bold;
-            margin: 20px 0;
-            color: gold;
-        }
-
-        .streak {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-
-        .progress-wrapper {
-            width: 100%;
-            height: 12px;
-            background: #333;
-            border-radius: 20px;
-            overflow: hidden;
-            margin-bottom: 25px;
-        }
-
-        .progress-bar {
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, orange, gold);
-            transition: width 1s ease;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background: orange;
-            color: black;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
-        }
-
-        .history-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            padding: 12px;
-            background: #2a2a3d;
-            border-radius: 10px;
-        }
-
-        .history-details strong {
-            color: white;
-            font-size: 16px;
-        }
-
-        .history-points {
-            font-weight: bold;
-            color: gold;
-        }
-
-        .history-bonus {
-            font-size: 12px;
-            color: #ccc;
-        }
-
-        .history-time {
-            font-size: 12px;
-            color: #ccc;
-        }
-    </style>
-</head>
-<body>
 
 <div class="container">
 
@@ -111,14 +7,6 @@
 
         <div class="points">
             {{ rating.total_points|floatformat:0 }} pts
-        </div>
-
-        <div class="streak">
-            🔥 Серія: <strong>{{ rating.streak_days }}</strong> днів
-        </div>
-
-        <div class="progress-wrapper">
-            <div class="progress-bar" data-progress="{{ rating.streak_days }}"></div>
         </div>
 
         <a href="{% url 'rating:leaderboard' %}" class="btn">
@@ -131,27 +19,32 @@
 
         {% for item in history %}
             <div class="history-row">
+
                 <div class="history-details">
+
                     <strong>{{ item.task.title }}</strong>
+
                     <small class="history-time">
                         Завершено: {{ item.task.completed_at|date:"d M Y H:i" }} |
-                        {% if item.task.completed_at and item.task.created_at %}
-                            ⏱ Час на виконання: 
-                            {% with delta=item.task.completed_at|timesince:item.task.created_at %}
-                                {{ delta }}
-                            {% endwith %}
-                        {% else %}
-                            ⏱ Час на виконання: -
+                        ⏱ Фактичний час: 
+                        {{ item.time_spent_formatted }} |
+                        📌 Заплановано: 
+                        {{ item.estimated_hours|floatformat:2 }} год
+                    </small>
+
+                    <small class="history-bonus">
+                        ⚡ Множник: x{{ item.multiplier|floatformat:2 }}
+                        {% if item.multiplier < 0.5 %}
+                            | ⏰ Прострочено
                         {% endif %}
                     </small>
-                    <small class="history-bonus">
-                        ⚡ Швидкість: x{{ item.speed_bonus|floatformat:2 }} |
-                        🔥 Серія: x{{ item.streak_multiplier|floatformat:2 }}
-                    </small>
+
                 </div>
+
                 <div class="history-points">
                     +{{ item.earned_points|floatformat:0 }}
                 </div>
+
             </div>
         {% empty %}
             <p>Поки що немає завершених задач.</p>
@@ -160,15 +53,75 @@
 
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const bar = document.querySelector(".progress-bar");
-    const streak = parseInt(bar.dataset.progress) || 0;
+<style>
+.container {
+    max-width: 1100px;
+    margin: 50px auto;
+    padding: 20px;
+}
 
-    const percentage = Math.min(streak * 5, 100);
-    bar.style.width = percentage + "%";
-});
-</script>
+.card {
+    background: #fbfbfb;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    margin-bottom: 40px;
+}
 
-</body>
-</html>
+.points {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: gold;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: orange;
+    color: black;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.history-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #2a2a3d;
+    border-radius: 12px;
+    transition: 0.2s ease;
+}
+
+.history-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+.history-details strong {
+    color: white;
+    font-size: 16px;
+}
+
+.history-time {
+    display: block;
+    font-size: 13px;
+    color: #ccc;
+    margin-top: 4px;
+}
+
+.history-bonus {
+    display: block;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 6px;
+}
+
+.history-points {
+    font-weight: bold;
+    color: gold;
+    font-size: 20px;
+}
+</style>

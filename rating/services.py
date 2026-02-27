@@ -1,65 +1,55 @@
 from django.utils import timezone
-from datetime import datetime, timedelta
+from datetime import datetime
 from django.db import transaction
 from tasks.models import Task
 from .models import UserRating, RatingHistory
 
-# Constants
 BASE_POINTS = 100
-MAX_STREAK_BONUS = 0.25
-MIN_SPEED_RATIO = 0.5
+MIN_MULTIPLIER = 0.5
+MAX_MULTIPLIER = 2.0
+LATE_PENALTY_MULTIPLIER = 0.3
 
-def calculate_speed_bonus(task: Task):
-    now = timezone.now()
 
-    if not task.is_for_today:
+def calculate_time_multiplier(task: Task):
+    if not task.completed_at:
+        return 0
+
+    actual_seconds = (task.completed_at - task.created_at).total_seconds()
+
+    if actual_seconds <= 0:
         return 1
 
-    today = timezone.localdate()
-    deadline_datetime = datetime.combine(today, task.deadline_time)
+    actual_hours = actual_seconds / 3600
+
+    estimated_hours = task.estimated_hours if task.estimated_hours > 0 else 1
+
+
+    planned_date = task.planned_date or timezone.localdate()
+    deadline_datetime = datetime.combine(planned_date, task.deadline_time)
     deadline_datetime = timezone.make_aware(deadline_datetime)
 
-    total_time = (deadline_datetime - task.created_at).total_seconds()
-    time_passed = (now - task.created_at).total_seconds()
+    if task.completed_at > deadline_datetime:
+        return LATE_PENALTY_MULTIPLIER
 
-    if total_time <= 0:
-        return 1
+    ratio = estimated_hours / actual_hours
 
-    ratio = 1 - (time_passed / total_time)
-    return max(ratio, MIN_SPEED_RATIO)
+    return max(MIN_MULTIPLIER, min(ratio, MAX_MULTIPLIER))
 
-def update_streak(user_rating: UserRating):
-
-    today = timezone.localdate()
-
-    if user_rating.last_completed_date == today:
-        return
-
-    if user_rating.last_completed_date == today - timedelta(days=1):
-        user_rating.streak_days += 1
-    else:
-        user_rating.streak_days = 1
-
-    user_rating.last_completed_date = today
-
-def calculate_streak_multiplier(streak_days: int):
-    bonus = min(streak_days * 0.01, MAX_STREAK_BONUS)
-    return 1 + bonus
 
 @transaction.atomic
 def reward_for_task_completion(task: Task):
     if not task.is_completed:
         return
+
     if RatingHistory.objects.filter(user=task.user, task=task).exists():
         return
 
     user_rating, _ = UserRating.objects.select_for_update().get_or_create(user=task.user)
 
-    speed_bonus = calculate_speed_bonus(task)
-    update_streak(user_rating)
-    streak_multiplier = calculate_streak_multiplier(user_rating.streak_days)
+    multiplier = calculate_time_multiplier(task)
 
-    earned_points = BASE_POINTS * speed_bonus * streak_multiplier
+    earned_points = BASE_POINTS * multiplier
+
     user_rating.total_points += earned_points
     user_rating.save()
 
@@ -67,6 +57,7 @@ def reward_for_task_completion(task: Task):
         user=task.user,
         task=task,
         earned_points=earned_points,
-        speed_bonus=speed_bonus,
-        streak_multiplier=streak_multiplier,
+        multiplier=multiplier,
+        time_spent_hours=(task.completed_at - task.created_at).total_seconds() / 3600,
+        estimated_hours=task.estimated_hours,
     )

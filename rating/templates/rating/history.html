@@ -1,13 +1,54 @@
 <h2>Історія нарахувань</h2>
 
 {% for record in history %}
-  <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd;">
-    <strong>{{ record.task.title }}</strong><br>
-    +{{ record.earned_points|floatformat:0 }} points<br>
-    Швидкість: x{{ record.speed_bonus|floatformat:2 }}<br>
-    Серія: x{{ record.streak_multiplier|floatformat:2 }}<br>
-    <small>{{ record.created_at|date:"d.m.Y H:i" }}</small>
-  </div>
+<div class="rating-history-card">
+
+    <div class="history-header">
+        <strong>{{ record.task.title }}</strong>
+        <span class="points">
+            +{{ record.earned_points|floatformat:0 }} pts
+        </span>
+    </div>
+
+    <div class="history-details">
+        <p>
+            ⏱ Витрачено: 
+            {{ record.time_spent_hours|floatformat:2 }} год
+        </p>
+
+        <p>
+            📋 Заплановано: 
+            {{ record.estimated_hours|floatformat:2 }} год
+        </p>
+
+        <p>
+            📊 Множник: 
+            x{{ record.multiplier|floatformat:2 }}
+        </p>
+
+        {% if record.task.completed_at > record.task.planned_date|default:record.task.created_at|date:"Y-m-d" %}
+        {% endif %}
+
+        {% if record.task.completed_at %}
+            {% with deadline=record.task.planned_date %}
+            {% endwith %}
+        {% endif %}
+
+        {% if record.task.completed_at and record.task.planned_date %}
+            {% if record.task.completed_at.date > record.task.planned_date %}
+                <p style="color: red;">⚠ Прострочено</p>
+            {% else %}
+                <p style="color: green;">✅ Виконано вчасно</p>
+            {% endif %}
+        {% endif %}
+
+        <small>
+            Виконано: {{ record.task.completed_at|date:"d.m.Y H:i" }}
+        </small>
+    </div>
+
+</div>
+
 {% empty %}
-  <p>Наразі історії немає.</p>
+<p>Наразі історії немає.</p>
 {% endfor %}
