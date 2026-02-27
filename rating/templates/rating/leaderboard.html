@@ -1,124 +1,160 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <title>Leaderboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaderboard — ToDaY</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-dark: #1a3a1a;
+    --green-mid: #2d5a2d;
+    --orange: #f07c00;
+    --bg: #f4f6f4;
+    --text-dark: #1a1a1a;
+    --text-muted: #888;
+    --border: #e8e8e8;
+  }
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #bbbbc4;
-            color: white;
-        }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .container {
-            max-width: 900px;
-            margin: 60px auto;
-            padding: 20px;
-        }
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+    min-height: 100vh;
+    padding: 32px;
+  }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
 
-        .leaderboard-card {
-            background: #f6f6f8;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-        }
+  .back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 13px;
+    font-weight: 700;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
 
-        .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            border-radius: 12px;
-            background: #2a2a3d;
-            transition: 0.3s;
-        }
+  .back-btn:hover { background: var(--green-dark); color: white; border-color: var(--green-dark); }
 
-        .row:hover {
-            transform: scale(1.02);
-        }
+  .page-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--green-dark);
+    letter-spacing: -0.5px;
+  }
 
-        .rank {
-            font-weight: bold;
-            font-size: 18px;
-            width: 40px;
-        }
+  .board-card {
+    background: white;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    max-width: 700px;
+    margin: 0 auto;
+    animation: slideUp 0.4s ease;
+  }
 
-        .username {
-            flex: 1;
-            margin-left: 10px;
-        }
+  .board-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    margin-bottom: 10px;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    background: #f5f8ff;
+  }
 
-        .points {
-            font-weight: bold;
-            color: gold;
-        }
+  .board-row:last-child { margin-bottom: 0; }
+  .board-row:hover { border-color: #3d7a3d; background: #f0f8f0; transform: translateX(4px); }
 
-        .gold { background: linear-gradient(90deg, #3a2f00, #5c4700); }
-        .silver { background: linear-gradient(90deg, #2e2e2e, #444); }
-        .bronze { background: linear-gradient(90deg, #3b2a1a, #5a3d24); }
+  .board-row.gold   { background: #fffbea; border-color: #f5c518; }
+  .board-row.silver { background: #f8f8f8; border-color: #c0c0c0; }
+  .board-row.bronze { background: #fff5ee; border-color: #cd7f32; }
 
-        .back-btn {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 10px 20px;
-            background: orange;
-            color: black;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: bold;
-        }
+  .rank-badge {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
 
-        .back-btn:hover {
-            opacity: 0.9;
-        }
-    </style>
+  .gold   .rank-badge { background: #f5c518; color: #7a5c00; }
+  .silver .rank-badge { background: #c0c0c0; color: #555; }
+  .bronze .rank-badge { background: #cd7f32; color: white; }
+  .board-row:not(.gold):not(.silver):not(.bronze) .rank-badge {
+    background: var(--green-dark); color: white;
+  }
+
+  .board-username {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+  .board-pts {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--orange);
+  }
+
+  .empty-msg {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
 </head>
 <body>
 
-<div class="container">
-    <h1>🏆 Leaderboard</h1>
+<div class="page-header">
+  <a href="{% url 'rating:my_rating' %}" class="back-btn">← Назад</a>
+  <div class="page-title">LEADERBOARD</div>
+  <div style="width:100px;"></div>
+</div>
 
-    <div class="leaderboard-card">
-
-        {% for user_rating in top_users %}
-            <div class="row 
-                {% if forloop.counter == 1 %}gold
-                {% elif forloop.counter == 2 %}silver
-                {% elif forloop.counter == 3 %}bronze
-                {% endif %}
-            ">
-                <div class="rank">
-                    {{ forloop.counter }}
-                </div>
-
-                <div class="username">
-                    {{ user_rating.user.username }}
-                </div>
-
-                <div class="points">
-                    {{ user_rating.total_points|floatformat:0 }} pts
-                </div>
-            </div>
-        {% empty %}
-            <p>Поки що немає даних.</p>
-        {% endfor %}
-
+<div class="board-card">
+  {% for user_rating in top_users %}
+    <div class="board-row
+      {% if forloop.counter == 1 %}gold
+      {% elif forloop.counter == 2 %}silver
+      {% elif forloop.counter == 3 %}bronze
+      {% endif %}
+    ">
+      <div class="rank-badge">{{ forloop.counter }}</div>
+      <div class="board-username">{{ user_rating.user.username }}</div>
+      <div class="board-pts">{{ user_rating.total_points|floatformat:0 }} pts</div>
     </div>
-
-    <div style="text-align:center;">
-        <a href="{% url 'rating:my_rating' %}" class="back-btn">
-            ← Назад до мого рейтингу
-        </a>
-    </div>
-
+  {% empty %}
+    <div class="empty-msg">Поки що немає даних 🙌</div>
+  {% endfor %}
 </div>
 
 </body>
