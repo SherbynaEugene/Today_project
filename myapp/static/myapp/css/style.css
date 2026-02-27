@@ -407,7 +407,7 @@ h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; marg
 }
 
 /* Черевики (через псевдоелементи для кожної ноги) */
-#part-leg-l::after, #part-leg-r::after {
+#part-shooes {
     content: '';
     position: absolute;
     width: 25px;
