@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from tasks.models import Task
 from datetime import date
 import calendar as cal
+from django.db.models import Q
+from datetime import date as date_type
 
 def index(request):
     return render(request, 'myapp/index.html')
@@ -40,11 +42,23 @@ def calendar(request):
     if selected_date_str:
         try:
             selected_date = date.fromisoformat(selected_date_str)
-            day_tasks = Task.objects.filter(
-                user=request.user,
-                planned_date=selected_date,
-                is_completed=False
-            )
+            today = date_type.today()
+
+            if selected_date == today:
+                # if today show is_for_today AND planned_date=today
+                day_tasks = Task.objects.filter(
+                    user=request.user,
+                    is_completed=False
+                ).filter(
+                    Q(is_for_today=True) | Q(planned_date=selected_date)
+                )
+            else:
+                # only planned_date for other days
+                day_tasks = Task.objects.filter(
+                    user=request.user,
+                    planned_date=selected_date,
+                    is_completed=False
+                )
         except ValueError:
             pass
 
@@ -69,6 +83,15 @@ def calendar(request):
             planned_date__isnull=False
         ).values_list('planned_date__day', flat=True)
     )
+
+    if year == today.year and month == today.month:
+        has_today_tasks = Task.objects.filter(
+            user=request.user,
+            is_completed=False,
+            is_for_today=True
+        ).exists()
+    if has_today_tasks:
+        busy_dates.add(today.day)
 
     prev_month = month - 1 if month > 1 else 12
     prev_year = year if month > 1 else year - 1
