@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 from .models import Task, SubTask, Category
+from django.views.decorators.http import require_POST
 
 MIN_POINTS = 5
 
@@ -104,7 +105,16 @@ def delete_task(request, task_id):
     task.delete()
     return redirect('tasks:task_list')
 
-
+@login_required
+@require_POST
+def assign_task_to_date(request):
+    task_id = request.POST.get('task_id_select')
+    task = get_object_or_404(Task, id=task_id, user=request.user)
+    date_str = request.POST.get('date')
+    redirect_url = request.POST.get('redirect', '/calendar/')
+    task.planned_date = date_str or None
+    task.save()
+    return redirect(redirect_url)
 
 
 
