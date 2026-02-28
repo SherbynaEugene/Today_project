@@ -17,7 +17,7 @@ class Task(models.Model):
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
     planned_date = models.DateField(null=True, blank=True)
     is_for_today = models.BooleanField(default=False)
-    deadline_time = models.TimeField(default="12:00")
+    deadline_time = models.TimeField(default="16:00")
     estimated_hours = models.FloatField(default=1)
     is_completed = models.BooleanField(default=False)
     order = models.IntegerField(default=0)

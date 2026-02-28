@@ -56,8 +56,7 @@
     letter-spacing: -0.5px;
   }
 
-  .cal-btns { display: flex; gap: 8px; align-items: center; }
-
+  /* .cal-btns { display: flex; gap: 8px; align-items: center; } */
   .cal-nav-btn {
     width: 36px; height: 36px;
     border-radius: 10px;
@@ -66,23 +65,10 @@
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; color: var(--text-dark);
     transition: all 0.2s; font-size: 16px;
+    /* text-decoration: none; */
   }
 
   .cal-nav-btn:hover { background: var(--green-dark); color: white; border-color: var(--green-dark); }
-
-  .cal-exit-btn {
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    background: #e53e3e;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; color: white;
-    font-size: 18px;
-    text-decoration: none;
-    transition: background 0.2s;
-    flex-shrink: 0;
-  }
-
-  .cal-exit-btn:hover { background: #c53030; }
 
   .cal-grid {
     display: grid;
@@ -99,16 +85,32 @@
   .cal-day {
     aspect-ratio: 1;
     border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     font-size: 14px; font-weight: 600;
     color: var(--text-dark); cursor: pointer;
     transition: all 0.2s;
+    text-decoration: none;
+    position: relative;
+    gap: 3px;
   }
 
   .cal-day:hover { background: #f0f8f0; }
-  .cal-day.empty { cursor: default; color: #ddd; }
+  .cal-day.empty { cursor: default; color: #ddd; pointer-events: none; }
   .cal-day.selected { background: var(--green-dark); color: white; }
   .cal-day.selected:hover { background: var(--green-mid); }
+  .cal-day.today { border: 2px solid var(--green-dark); }
+  .cal-day.selected.today { border-color: white; }
+
+  /* Dot if there is assignment */
+  .day-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--green-dark);
+  }
+  .cal-day.selected .day-dot { background: white; }
 
   .cal-sidebar {
     width: 280px; flex-shrink: 0;
@@ -119,6 +121,7 @@
     background: white; border-radius: 0px; padding: 24px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     flex: 1; display: flex; flex-direction: column;
+    overflow-y: auto;
   }
 
   .plan-title {
@@ -149,9 +152,61 @@
 
   .plan-empty {
     color: var(--text-muted); font-size: 13px;
-    text-align: center; padding: 30px 0;
-    flex: 1; display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 20px 0;
+    display: flex; align-items: center; justify-content: center;
   }
+
+  .task-item {
+    padding: 10px 12px;
+    background: #f4f6f4;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-dark);
+  }
+
+  .assign-form {
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+
+  .assign-label {
+    font-size: 11px; font-weight: 700;
+    color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 8px;
+  }
+
+  .assign-form select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    background: #f4f6f4;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    outline: none;
+  }
+
+  .assign-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--green-dark);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .assign-btn:hover { background: var(--green-mid); }
 
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -234,99 +289,78 @@
 
 <div class="cal-main">
   <div class="cal-header">
-    <button class="cal-nav-btn" onclick="prevMonth()">&#8592;</button>
-    <div class="cal-month-title" id="calMonthTitle"></div>
-    <div class="cal-btns">
-      <button class="cal-nav-btn" onclick="nextMonth()">&#8594;</button>
-      <!-- <a href="{% url 'myapp:user_desktop' %}" class="cal-exit-btn">&#x2715;</a> -->
-    </div>
+    <a href="?year={{ prev_year }}&month={{ prev_month }}{% if selected_date_str %}&date={{ selected_date_str }}{% endif %}" class="cal-nav-btn">←</a>
+    <div class="cal-month-title">{{ month_name }} {{ year }}</div>
+    <a href="?year={{ next_year }}&month={{ next_month }}{% if selected_date_str %}&date={{ selected_date_str }}{% endif %}" class="cal-nav-btn">→</a>
   </div>
-  <div class="cal-grid" id="calGrid"></div>
+
+  <div class="cal-grid">
+    {% for name in day_names %}
+      <div class="cal-day-name">{{ name }}</div>
+    {% endfor %}
+
+    {% for week in cal_matrix %}
+      {% for day in week %}
+        {% if day == 0 %}
+          <div class="cal-day empty"></div>
+        {% else %}
+          <a href="?year={{ year }}&month={{ month }}&date={{ year }}-{{ month|stringformat:'02d' }}-{{ day|stringformat:'02d' }}"
+             class="cal-day
+             {% if selected_date and selected_date.day == day and selected_date.month == month and selected_date.year == year %}selected{% endif %}
+             {% if today.day == day and today.month == month and today.year == year %}today{% endif %}">
+            {{ day }}
+            {% if day in busy_dates %}<span class="day-dot"></span>{% endif %}
+          </a>
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+  </div>
 </div>
 
 <div class="cal-sidebar">
   <div class="plan-card">
     <div class="plan-title">ПЛАНУВАННЯ</div>
-    <div class="plan-subtitle" id="planSub">Оберіть день</div>
-    <div class="plan-selected-date" id="sideDate"></div>
-    <div class="plan-selected-month" id="sideMonth"></div>
-    <div class="plan-divider" id="planDiv" style="display:none;"></div>
-    <div class="plan-empty" id="sideEmpty">Натисніть на день щоб обрати</div>
+
+    {% if selected_date %}
+      <div class="plan-selected-date">{{ selected_date.day }}</div>
+      <div class="plan-selected-month">{{ month_name }} {{ year }}</div>
+      <div class="plan-divider"></div>
+
+      {% if day_tasks %}
+        {% for task in day_tasks %}
+          <div class="task-item">{{ task.title }}</div>
+        {% endfor %}
+      {% else %}
+        <div class="plan-empty">Завдань на цей день немає</div>
+      {% endif %}
+
+      {% if all_tasks %}
+        <div class="assign-form">
+          <div class="assign-label">Додати завдання</div>
+          <form method="POST" action="{% url 'tasks:assign_to_date' %}">
+            {% csrf_token %}
+            <input type="hidden" name="date" value="{{ selected_date_str }}">
+            <input type="hidden" name="redirect" value="/calendar/?year={{ year }}&month={{ month }}&date={{ selected_date_str }}">
+            <input type="hidden" name="year" value="{{ year }}">
+            <input type="hidden" name="month" value="{{ month }}">
+            <select name="task_id_select">
+              {% for task in all_tasks %}
+                <option value="{{ task.id }}">
+                  {{ task.title }}{% if task.planned_date %} (вже на {{ task.planned_date }}){% endif %}
+                </option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="assign-btn">Призначити на цей день</button>
+          </form>
+        </div>
+      {% endif %}
+
+    {% else %}
+      <div class="plan-subtitle">Оберіть день</div>
+      <div class="plan-empty">Натисніть на день щоб обрати</div>
+    {% endif %}
   </div>
 </div>
-
-<script>
-  const MONTHS_UK = ['СІЧЕНЬ','ЛЮТИЙ','БЕРЕЗЕНЬ','КВІТЕНЬ','ТРАВЕНЬ','ЧЕРВЕНЬ',
-                     'ЛИПЕНЬ','СЕРПЕНЬ','ВЕРЕСЕНЬ','ЖОВТЕНЬ','ЛИСТОПАД','ГРУДЕНЬ'];
-  const DAY_NAMES = ['ПН','ВТ','СР','ЧТ','ПТ','СБ','НД'];
-
-  const now = new Date();
-  let currentYear = now.getFullYear();
-  let currentMonth = now.getMonth();
-  let selectedDay = null;
-
-  function renderCalendar() {
-    const grid = document.getElementById('calGrid');
-    const title = document.getElementById('calMonthTitle');
-    title.textContent = MONTHS_UK[currentMonth] + ' ' + currentYear;
-    grid.innerHTML = '';
-
-    DAY_NAMES.forEach(d => {
-      const el = document.createElement('div');
-      el.className = 'cal-day-name';
-      el.textContent = d;
-      grid.appendChild(el);
-    });
-
-    let startOffset = new Date(currentYear, currentMonth, 1).getDay() - 1;
-    if (startOffset < 0) startOffset = 6;
-
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-    for (let i = 0; i < startOffset; i++) {
-      const el = document.createElement('div');
-      el.className = 'cal-day empty';
-      grid.appendChild(el);
-    }
-
-    for (let d = 1; d <= daysInMonth; d++) {
-      const el = document.createElement('div');
-      el.className = 'cal-day';
-      el.textContent = d;
-
-      if (selectedDay && selectedDay.d === d &&
-          selectedDay.m === currentMonth && selectedDay.y === currentYear) {
-        el.classList.add('selected');
-      }
-
-      el.addEventListener('click', () => {
-        selectedDay = { d, m: currentMonth, y: currentYear };
-        document.getElementById('planSub').style.display = 'none';
-        document.getElementById('sideDate').textContent = d;
-        document.getElementById('sideMonth').textContent = MONTHS_UK[currentMonth] + ' ' + currentYear;
-        document.getElementById('planDiv').style.display = 'block';
-        document.getElementById('sideEmpty').textContent = 'Завдань на цей день немає';
-        renderCalendar();
-      });
-
-      grid.appendChild(el);
-    }
-  }
-
-  function prevMonth() {
-    currentMonth--;
-    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
-    renderCalendar();
-  }
-
-  function nextMonth() {
-    currentMonth++;
-    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-    renderCalendar();
-  }
-
-  renderCalendar();
-</script>
 
 </body>
 </html>

@@ -1,127 +1,297 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мій рейтинг — ToDaY</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-dark: #1a3a1a;
+    --green-mid: #2d5a2d;
+    --green-accent: #3d7a3d;
+    --orange: #f07c00;
+    --orange-light: #ff9a1f;
+    --bg: #f4f6f4;
+    --text-dark: #1a1a1a;
+    --text-muted: #888;
+    --border: #e8e8e8;
+  }
 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-<div class="container">
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+    min-height: 100vh;
+    padding: 32px;
+  }
 
-    <div class="card">
-        <h1>🏆 Мій рейтинг</h1>
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
 
-        <div class="points">
-            {{ rating.total_points|floatformat:0 }} pts
+  .back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 13px;
+    font-weight: 700;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .back-btn:hover { background: var(--green-dark); color: white; border-color: var(--green-dark); }
+
+  .page-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  /* ── POINTS CARD ── */
+  .points-card {
+    background: var(--green-dark);
+    border-radius: 24px;
+    padding: 32px;
+    color: white;
+    box-shadow: 0 4px 24px rgba(26,58,26,0.25);
+    animation: slideUp 0.4s ease;
+  }
+
+  .points-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+  }
+
+  .points-value {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 56px;
+    font-weight: 900;
+    color: white;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .points-unit {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .leaderboard-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 14px;
+    text-decoration: none;
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .leaderboard-btn:hover { background: rgba(255,255,255,0.18); }
+
+  .leaderboard-btn span { font-size: 18px; }
+
+  /* ── HISTORY CARD ── */
+  .history-card {
+    background: white;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    animation: slideUp 0.4s ease 0.1s both;
+  }
+
+  .history-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--green-dark);
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .history-count {
+    width: 24px; height: 24px;
+    background: var(--green-dark);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .history-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 18px;
+    background: #f5f8ff;
+    border-radius: 16px;
+    margin-bottom: 10px;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .history-row:hover { border-color: var(--green-accent); background: #f0f8f0; }
+
+  .history-row:last-child { margin-bottom: 0; }
+
+  .history-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+
+  .history-info { flex: 1; min-width: 0; }
+
+  .history-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .history-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .history-meta span {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .history-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+
+  .badge-ok { background: #e8f5e8; color: var(--green-mid); }
+  .badge-late { background: #fff0f0; color: #c53030; }
+
+  .history-pts {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--orange);
+    flex-shrink: 0;
+  }
+
+  .empty-msg {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="{% url 'myapp:user_desktop' %}" class="back-btn">← Назад</a>
+  <div class="page-title">Мій рейтинг</div>
+  <a href="{% url 'rating:leaderboard' %}" class="back-btn">Leaderboard →</a>
+</div>
+
+<div class="layout">
+
+  <!-- POINTS -->
+  <div class="points-card">
+    <div class="points-label">Загальний рахунок</div>
+    <div class="points-value">{{ rating.total_points|floatformat:0 }}</div>
+    <div class="points-unit">балів</div>
+    <a href="{% url 'rating:leaderboard' %}" class="leaderboard-btn">
+      ТАБЛИЦЯ ЛІДЕРІВ
+      <span>→</span>
+    </a>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history-card">
+    <div class="history-title">
+      ІСТОРІЯ НАРАХУВАНЬ
+    </div>
+
+    {% for item in history %}
+      <div class="history-row">
+        <div class="history-icon">✓</div>
+        <div class="history-info">
+          <div class="history-name">{{ item.task.title }}</div>
+          <div class="history-meta">
+            <span>⏱ {{ item.time_spent_formatted }}</span>
+            <span>📋 {{ item.estimated_hours|floatformat:2 }} год</span>
+            <span>📊 x{{ item.multiplier|floatformat:2 }}</span>
+            {% if item.multiplier < 0.5 %}
+              <span class="history-badge badge-late">Прострочено</span>
+            {% else %}
+              <span class="history-badge badge-ok">Вчасно</span>
+            {% endif %}
+            <span>{{ item.task.completed_at|date:"d.m.Y H:i" }}</span>
+          </div>
         </div>
-
-        <a href="{% url 'rating:leaderboard' %}" class="btn">
-            Перейти до Leaderboard →
-        </a>
-    </div>
-
-    <div class="card">
-        <h2>📊 Історія нарахувань</h2>
-
-        {% for item in history %}
-            <div class="history-row">
-
-                <div class="history-details">
-
-                    <strong>{{ item.task.title }}</strong>
-
-                    <small class="history-time">
-                        Завершено: {{ item.task.completed_at|date:"d M Y H:i" }} |
-                        ⏱ Фактичний час: 
-                        {{ item.time_spent_formatted }} |
-                        📌 Заплановано: 
-                        {{ item.estimated_hours|floatformat:2 }} год
-                    </small>
-
-                    <small class="history-bonus">
-                        ⚡ Множник: x{{ item.multiplier|floatformat:2 }}
-                        {% if item.multiplier < 0.5 %}
-                            | ⏰ Прострочено
-                        {% endif %}
-                    </small>
-
-                </div>
-
-                <div class="history-points">
-                    +{{ item.earned_points|floatformat:0 }}
-                </div>
-
-            </div>
-        {% empty %}
-            <p>Поки що немає завершених задач.</p>
-        {% endfor %}
-    </div>
+        <div class="history-pts">+{{ item.earned_points|floatformat:0 }}</div>
+      </div>
+    {% empty %}
+      <div class="empty-msg">Поки що немає завершених задач 🙌</div>
+    {% endfor %}
+  </div>
 
 </div>
 
-<style>
-.container {
-    max-width: 1100px;
-    margin: 50px auto;
-    padding: 20px;
-}
-
-.card {
-    background: #fbfbfb;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-    margin-bottom: 40px;
-}
-
-.points {
-    font-size: 48px;
-    font-weight: bold;
-    margin: 20px 0;
-    color: gold;
-}
-
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background: orange;
-    color: black;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.history-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-    padding: 15px;
-    background: #2a2a3d;
-    border-radius: 12px;
-    transition: 0.2s ease;
-}
-
-.history-row:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-}
-
-.history-details strong {
-    color: white;
-    font-size: 16px;
-}
-
-.history-time {
-    display: block;
-    font-size: 13px;
-    color: #ccc;
-    margin-top: 4px;
-}
-
-.history-bonus {
-    display: block;
-    font-size: 12px;
-    color: #aaa;
-    margin-top: 6px;
-}
-
-.history-points {
-    font-weight: bold;
-    color: gold;
-    font-size: 20px;
-}
-</style>
+</body>
+</html>

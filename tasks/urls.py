@@ -9,4 +9,5 @@ urlpatterns = [
     path('complete/<int:task_id>/', views.complete_task, name='complete_task'),
     path('delete/<int:task_id>/', views.delete_task, name='delete_task'),
     path('move-to-today/<int:task_id>/', views.move_to_today, name='move_to_today'),
+    path('assign-to-date/', views.assign_task_to_date, name='assign_to_date'),
 ]
