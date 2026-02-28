@@ -43,7 +43,6 @@ def today_tasks(request):
         user=request.user,
         is_for_today=False,
         is_completed=False,
-        # planned_date__isnull=True
     ).order_by('order')
 
     categories = Category.objects.filter(user=request.user)
