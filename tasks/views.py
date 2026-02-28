@@ -69,9 +69,9 @@ def add_task(request):
         if category_name:
             # get_or_create шукає категорію, а якщо її немає створює
             category_id, created = Category.objects.get_or_create(
-                name=category_name,
-                user=request.user
-            )
+            name=category_name,
+            defaults={'color': '#1f4d2b'} # Колір для нової категорії, якщо вона не знайдена
+        )
 
         task = Task.objects.create(
             user=request.user,

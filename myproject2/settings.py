@@ -127,3 +127,12 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "users.User"
 LOGIN_URL = 'myapp:sign_in'
+
+# SMTP сервер
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'        # наприклад, Gmail
+EMAIL_PORT = 587                      # порт TLS
+EMAIL_USE_TLS = True                  # використання TLS
+EMAIL_HOST_USER = 'todayproductivityapp@gmail.com'       # ваша пошта
+EMAIL_HOST_PASSWORD = 'qzawhfrjlsznvwal'     # пароль додатку (не ваш звичайний пароль Gmail)
+DEFAULT_FROM_EMAIL = 'noreply@example.com'    # від кого приходять листи

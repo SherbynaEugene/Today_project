@@ -59,8 +59,7 @@ def sign_in(request):
 
 def sign_out(request):
     logout(request)
-    return redirect('users:sign_in')
-
+    return render(request, 'myapp/index.html')
 
 @login_required
 def profile(request):

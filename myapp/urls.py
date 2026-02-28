@@ -13,6 +13,4 @@ urlpatterns = [
     path('interesting/', interesting, name='interesting'),
     path('general_tasks/', general_tasks, name='general_tasks'),
     path('calendar/', calendar, name='calendar'),
-
 ]
-

@@ -433,7 +433,7 @@ h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; marg
     position: absolute;
     width: 96px; /* Ширина між вухами */
     height: 40px;
-    top: -30px; /* Регулюй висоту посадки */
+    top: -27px; /* Регулюй висоту посадки */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -455,12 +455,12 @@ h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; marg
 
 /* Нахиляємо ліве вухо до центру */
 .fox-ears::before {
-    transform: rotate(-15deg);
+    transform: rotate(-30deg);
 }
 
 /* Нахиляємо праве вухо до центру */
 .fox-ears::after {
-    transform: rotate(15deg);
+    transform: rotate(30deg);
 }
 
 /* Контейнер кігтів */
@@ -599,10 +599,10 @@ h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; marg
 #part-headphones::before {
     content: '🎧';
     position: absolute;
-    font-size: 110px;
-    top: -20px;
-    left: 137px;
-    transform: translateX(-50%);
+    font-size: 170px;
+    top: -70px;
+    left: -1px;
+    transform: translateX(-50%) scaleY(0.6);
 }
 
 /* Ноутбук */
@@ -773,7 +773,7 @@ h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; marg
 
 /* Стиль для ОДЯГТИ/ЗНЯТИ (помаранчевий) */
 .toggle-text {
-    color: #f39c12;
+    color: #811032;
     text-decoration: underline;
     font-weight: bold;
     text-transform: uppercase;
