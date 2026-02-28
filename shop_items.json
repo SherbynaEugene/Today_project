@@ -1,0 +1,290 @@
+[
+{
+  "model": "profile_app.item",
+  "pk": 1,
+  "fields": {
+    "name": "Голова",
+    "slug": "head",
+    "price": 200,
+    "slot": "none",
+    "css_id": null,
+    "icon": "○"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 2,
+  "fields": {
+    "name": "Ліва нога",
+    "slug": "leg-l",
+    "price": 150,
+    "slot": "none",
+    "css_id": null,
+    "icon": "/"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 3,
+  "fields": {
+    "name": "Права нога",
+    "slug": "leg-r",
+    "price": 150,
+    "slot": "none",
+    "css_id": null,
+    "icon": "\\"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 4,
+  "fields": {
+    "name": "Ліва рука",
+    "slug": "arm-l",
+    "price": 125,
+    "slot": "none",
+    "css_id": null,
+    "icon": "//"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 5,
+  "fields": {
+    "name": "Права рука",
+    "slug": "arm-r",
+    "price": 125,
+    "slot": "none",
+    "css_id": null,
+    "icon": "\\\\"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 6,
+  "fields": {
+    "name": "Ліве око",
+    "slug": "eye-l",
+    "price": 250,
+    "slot": "none",
+    "css_id": null,
+    "icon": "👀"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 7,
+  "fields": {
+    "name": "Праве око",
+    "slug": "eye-r",
+    "price": 250,
+    "slot": "none",
+    "css_id": null,
+    "icon": "👀"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 8,
+  "fields": {
+    "name": "Ліва долоня",
+    "slug": "palm-l",
+    "price": 300,
+    "slot": "none",
+    "css_id": null,
+    "icon": "👋"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 9,
+  "fields": {
+    "name": "Права долоня",
+    "slug": "palm-r",
+    "price": 300,
+    "slot": "none",
+    "css_id": null,
+    "icon": "👋"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 10,
+  "fields": {
+    "name": "Капелюх",
+    "slug": "hat",
+    "price": 499,
+    "slot": "none",
+    "css_id": null,
+    "icon": "🎩"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 11,
+  "fields": {
+    "name": "Похмурий рот",
+    "slug": "frown",
+    "price": 450,
+    "slot": "mouth",
+    "css_id": null,
+    "icon": "︿"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 12,
+  "fields": {
+    "name": "Усмішка",
+    "slug": "smile",
+    "price": 450,
+    "slot": "mouth",
+    "css_id": null,
+    "icon": "◡̈"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 13,
+  "fields": {
+    "name": "Язик",
+    "slug": "tongue",
+    "price": 676,
+    "slot": "none",
+    "css_id": null,
+    "icon": "👅"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 14,
+  "fields": {
+    "name": "Коротке волосся",
+    "slug": "hair-short",
+    "price": 969,
+    "slot": "head_top",
+    "css_id": null,
+    "icon": "♒"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 15,
+  "fields": {
+    "name": "Довге волосся",
+    "slug": "hair-long",
+    "price": 999,
+    "slot": "head_top",
+    "css_id": null,
+    "icon": "|||"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 16,
+  "fields": {
+    "name": "Вуха",
+    "slug": "ears",
+    "price": 1000,
+    "slot": "none",
+    "css_id": null,
+    "icon": "👂"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 17,
+  "fields": {
+    "name": "Лисячі вушка",
+    "slug": "fox-ears",
+    "price": 1167,
+    "slot": "none",
+    "css_id": null,
+    "icon": "🦊"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 18,
+  "fields": {
+    "name": "Навушники",
+    "slug": "headphones",
+    "price": 2222,
+    "slot": "none",
+    "css_id": null,
+    "icon": "🎧"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 19,
+  "fields": {
+    "name": "Кофта",
+    "slug": "shirt-red-black",
+    "price": 4001,
+    "slot": "none",
+    "css_id": null,
+    "icon": "👕"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 20,
+  "fields": {
+    "name": "Кілт",
+    "slug": "kilt-green",
+    "price": 5000,
+    "slot": "none",
+    "css_id": null,
+    "icon": "👗"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 21,
+  "fields": {
+    "name": "Черевики",
+    "slug": "shoes-orange",
+    "price": 10000,
+    "slot": "feet",
+    "css_id": null,
+    "icon": "👟"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 22,
+  "fields": {
+    "name": "Кігтики вовка",
+    "slug": "wolf",
+    "price": 66666,
+    "slot": "none",
+    "css_id": null,
+    "icon": "💅"
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 23,
+  "fields": {
+    "name": "Пірсинг брови",
+    "slug": "brow-piercing",
+    "price": 10,
+    "slot": "none",
+    "css_id": null,
+    "icon": "."
+  }
+},
+{
+  "model": "profile_app.item",
+  "pk": 24,
+  "fields": {
+    "name": "Ноутбук",
+    "slug": "laptop",
+    "price": 10000,
+    "slot": "none",
+    "css_id": null,
+    "icon": "💻"
+  }
+}
+]

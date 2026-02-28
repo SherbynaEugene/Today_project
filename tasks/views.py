@@ -1,23 +1,25 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils import timezone
 from .models import Task, SubTask, Category
 
 MIN_POINTS = 5
 
 def calculate_points(task, user):
     base = task.estimated_hours * 10
-    rating_multiplier = 1 + (user.rating * 0.1)
+    rating_multiplier = 1 + (1 * 0.1) #it should be user ratinf * 0.1 or smth
     points = base * rating_multiplier
     return max(points, MIN_POINTS)
-
 
 @login_required
 def task_list(request):
     incomplete = Task.objects.filter(user=request.user, is_completed=False).order_by('order')
     completed = Task.objects.filter(user=request.user, is_completed=True).order_by('-created_at')
     categories = Category.objects.filter(user=request.user)
-    return render(request, 'tasks/task_list.html', {
+    print("INCOMPLETE:", incomplete)
+    print("COMPLETED:", completed)
+    return render(request, 'myapp/general_tasks.html', {
         'incomplete_tasks': incomplete,
         'completed_tasks': completed,
         'categories': categories,
@@ -46,7 +48,7 @@ def today_tasks(request):
 def add_task(request):
     if request.method == 'POST':
         title = request.POST.get('title')
-        estimated_hours = request.POST.get('estimated_hours', 1)
+        estimated_hours = request.POST.get('duration', 1)
         planned_date = request.POST.get('planned_date') or None
         is_for_today = request.POST.get('is_for_today') == 'true'
         category_name = request.POST.get('category') or None
@@ -74,14 +76,20 @@ def add_task(request):
     categories = Category.objects.filter(user=request.user)
     return render(request, 'tasks/add_task.html', {'categories': categories})
 
+def move_to_today(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    task.is_for_today = True
+    task.save()
+    return redirect('tasks:today_tasks')
 
 @login_required
 def complete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     task.is_completed = True
+    task.completed_at = timezone.now()
     task.save()
 
-# award points and coins
+    # award points and coins
     points = calculate_points(task, request.user)
     request.user.total_points += int(points)
     request.user.coins += int(points)
@@ -95,3 +103,38 @@ def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     task.delete()
     return redirect('tasks:task_list')
+
+
+
+
+
+## LIMIT OF 3 TASKS PER DAY
+
+# from django.utils import timezone
+# from django.shortcuts import get_object_or_404, redirect
+# from rating.services import reward_for_task_completion
+
+# def complete_task(request, task_id):
+#     task = get_object_or_404(Task, id=task_id, user=request.user)
+
+#     if task.is_completed:
+#         return redirect("tasks:today_tasks")
+
+#     today = timezone.localdate()
+
+#     completed_today = Task.objects.filter(
+#         user=request.user,
+#         is_completed=True,
+#         completed_at__date=today
+#     ).count()
+
+#     if completed_today >= 3:
+#         return redirect("tasks:today_tasks")  # або можна показати повідомлення
+
+#     task.is_completed = True
+#     task.completed_at = timezone.now()
+#     task.save()
+
+#     reward_for_task_completion(task)
+
+#     return redirect("tasks:today_tasks")

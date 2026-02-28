@@ -1,0 +1,177 @@
+
+  :root {
+    --green-dark: #1a3a1a;
+    --green-mid: #2d5a2d;
+    --green-accent: #3d7a3d;
+    --orange: #f07c00;
+    --orange-light: #ff9a1f;
+    --purple: #6b0f4e;
+    --bg: #f4f6f4;
+    --card-bg: #ffffff;
+    --text-dark: #1a1a1a;
+    --text-muted: #888;
+    --border: #e8e8e8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--bg);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    color: var(--text-dark);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: hsl(0, 0%, 100%);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 28px 20px;
+    gap: 4px;
+    position: sticky;   /* Або fixed */
+    top: 0;
+    height: 100vh;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 8px;
+    margin-bottom: 28px;
+  }
+
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: var(--green-dark);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 900;
+    font-size: 16px;
+  }
+
+  .logo-text {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--green-dark);
+    letter-spacing: -0.5px;
+  }
+
+  /* Nav uses hidden radio inputs + labels */
+  .nav-radio { display: none; }
+
+  .nav-label {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    cursor: pointer;
+    color: #888;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    position: relative;
+    user-select: none;
+  }
+
+  .nav-label:hover { background: #eee; color: var(--text-dark); }
+
+    .sidebar .chosen {
+        background: var(--green-dark);  /* темно-зелений фон */
+        color: white;                   /* текст білий */
+        border-radius: 14px;            /* закруглення як у інших пунктів */
+        position: relative;
+        transition: background 0.2s, color 0.2s;
+    }
+
+    .sidebar .chosen svg {
+        stroke: white; /* щоб іконка також стала білою */
+    }
+
+    .sidebar .chosen .nav-dot {
+        display: block;
+        background: #a0f0a0; /* світлий зелений для точки праворуч */
+    }
+
+  .nav-dot {
+    display: none;
+    width: 6px; height: 6px;
+    background: #7fff7f;
+    border-radius: 50%;
+    position: absolute;
+    right: 14px;
+  }
+
+  .nav-label svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  .sidebar-spacer { flex: 1; }
+
+  .profile-card {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--border);
+  }
+
+  .profile-card:hover {
+    background: #f9f9f9;
+    cursor: pointer;
+  }
+
+  .profile-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #fff9ef;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--orange);
+    flex-shrink: 0;
+  }
+
+  .profile-info { flex: 1; }
+  .profile-label { font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
+  .profile-name { font-size: 14px; font-weight: 700; color: var(--text-dark); }
+
+  .coin-icon {
+    color: var(--orange);
+}
+  /* Для обраної профільної картки */
+.sidebar .profile-card.chosen {
+    background: var(--green-dark); /* темно-зелений фон */
+    color: white;                  /* текст білий */
+    border-color: var(--green-dark); /* можна підкреслити бордер */
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.sidebar .profile-card.chosen .profile-name,
+.sidebar .profile-card.chosen .profile-label {
+    color: white; /* ім’я та мітка профілю */
+}
+
+.sidebar .profile-card.chosen .coins {
+    color: white; /* монети */
+}
+
+.sidebar .profile-card.chosen .profile-avatar svg {
+    stroke: var(--green-dark); /* іконка аватару */
+}
+  .coins {
+    display: flex; align-items: center; gap: 5px;
+    font-weight: 700; font-size: 14px; color: var(--text-dark);
+  }
+  .coins svg { color: white; }

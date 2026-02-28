@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'myapp',
     'users',
     'tasks',
+    'rating',
+    'profile_app',
 ]
 
 MIDDLEWARE = [

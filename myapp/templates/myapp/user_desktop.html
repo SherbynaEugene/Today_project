@@ -1,4 +1,4 @@
-<!-- додам кнопку коли буде готовий бекенд -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -6,148 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ToDaY</title>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'myapp/css/menu.css' %}">
 <style>
-  :root {
-    --green-dark: #1a3a1a;
-    --green-mid: #2d5a2d;
-    --green-accent: #3d7a3d;
-    --orange: #f07c00;
-    --orange-light: #ff9a1f;
-    --purple: #6b0f4e;
-    --bg: #f4f6f4;
-    --card-bg: #ffffff;
-    --text-dark: #1a1a1a;
-    --text-muted: #888;
-    --border: #e8e8e8;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Manrope', sans-serif;
-    background: var(--bg);
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-    color: var(--text-dark);
-  }
-
-  /* ── SIDEBAR ── */
-  .sidebar {
-    width: 280px;
-    flex-shrink: 0;
-    background: #ffffff;
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    padding: 28px 20px;
-    gap: 4px;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0 8px;
-    margin-bottom: 28px;
-  }
-
-  .logo-icon {
-    width: 40px; height: 40px;
-    background: var(--green-dark);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    color: white;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 900;
-    font-size: 16px;
-  }
-
-  .logo-text {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 700;
-    font-size: 20px;
-    color: var(--green-dark);
-    letter-spacing: -0.5px;
-  }
-
-  /* Nav uses hidden radio inputs + labels */
-  .nav-radio { display: none; }
-
-  .nav-label {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    border-radius: 14px;
-    cursor: pointer;
-    color: #888;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    transition: all 0.2s;
-    position: relative;
-    user-select: none;
-  }
-
-  .nav-label:hover { background: #eee; color: var(--text-dark); }
-
-  .nav-radio:checked + .nav-label {
-    background: var(--green-dark);
-    color: white;
-  }
-
-  .nav-radio:checked + .nav-label .nav-dot {
-    display: block;
-  }
-
-  .nav-dot {
-    display: none;
-    width: 6px; height: 6px;
-    background: #7fff7f;
-    border-radius: 50%;
-    position: absolute;
-    right: 14px;
-  }
-
-  .nav-label svg { width: 18px; height: 18px; flex-shrink: 0; }
-
-  .sidebar-spacer { flex: 1; }
-
-  .profile-card {
-    background: white;
-    border-radius: 16px;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border: 1px solid var(--border);
-  }
-
-  .profile-card:hover {
-    background: #f9f9f9;
-    cursor: pointer;
-  }
-
-  .profile-avatar {
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    background: #fde8c0;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--orange);
-    flex-shrink: 0;
-  }
-
-  .profile-info { flex: 1; }
-  .profile-label { font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
-  .profile-name { font-size: 14px; font-weight: 700; color: var(--text-dark); }
-
-  .coins {
-    display: flex; align-items: center; gap: 5px;
-    font-weight: 700; font-size: 14px; color: var(--text-dark);
-  }
-  .coins svg { color: var(--orange); }
 
   /* ── MAIN ── */
   .main {
@@ -285,7 +145,7 @@
   .tag-хобі { color: var(--orange); }
   .tag-відпочинок { color: var(--green-mid); }
 
-  .today-tasks { padding: 20px 28px 28px; display: flex; flex-direction: column; gap: 10px; }
+  .today-tasks { padding: 20px 28px 28px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; max-height: 60vh; }
 
   /* ── RIGHT PANEL ── */
   .right-panel {
@@ -294,7 +154,8 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    overflow-y: auto;
+    /* overflow-y: auto; */
+
   }
 
   .idea-card {
@@ -364,132 +225,13 @@
   .collapse-icon svg { width: 14px; height: 14px; }
   details[open] .collapse-icon { transform: rotate(180deg); }
 
-  .general-tasks { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .general-tasks { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 10px; max-height: 400px;    /* Встанови висоту, після якої з'явиться скрол */
+  overflow-y: auto;     /* Дозволяє гортати тільки цей блок */
+  padding-right: 10px;}
 
   .task-meta { display: flex; align-items: center; gap: 8px; margin-top: 3px; }
   .task-time { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
   .task-time svg { width: 12px; height: 12px; }
-
-  /* ── CALENDAR (НОВЕ — тільки це додано) ── */
-  .calendar-section {
-    display: none; /* приховано за замовчуванням */
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    z-index: 50;
-    padding: 28px;
-    gap: 20px;
-  }
-
-  /* показуємо коли nav3 активний */
-  #nav3:checked ~ .calendar-section {
-    display: flex;
-  }
-
-  .cal-main {
-    flex: 1;
-    background: white;
-    border-radius: 24px;
-    padding: 32px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    overflow-y: auto;
-    animation: slideUp 0.4s ease;
-  }
-
-  .cal-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 28px;
-  }
-
-  .cal-month-title {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 22px; font-weight: 900;
-    color: var(--green-dark); letter-spacing: -0.5px;
-  }
-
-  .cal-nav-btn {
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: white;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; color: var(--text-dark);
-    transition: all 0.2s; font-size: 16px;
-  }
-
-  .cal-nav-btn:hover { background: var(--green-dark); color: white; border-color: var(--green-dark); }
-
-  .cal-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-  }
-
-  .cal-day-name {
-    text-align: center; font-size: 11px; font-weight: 700;
-    color: var(--text-muted); letter-spacing: 0.5px;
-    padding: 8px 0; text-transform: uppercase;
-  }
-
-  .cal-day {
-    aspect-ratio: 1;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 600;
-    color: var(--text-dark); cursor: pointer;
-    transition: all 0.2s; position: relative;
-  }
-
-  .cal-day:hover { background: #f0f8f0; }
-  .cal-day.empty { cursor: default; color: #ddd; }
-  .cal-day.selected { background: var(--green-dark); color: white; }
-  .cal-day.selected:hover { background: var(--green-mid); }
-
-  .cal-sidebar {
-    width: 280px; flex-shrink: 0;
-    display: flex; flex-direction: column; gap: 16px;
-    overflow-y: auto;
-  }
-
-  .plan-card {
-    background: white; border-radius: 24px; padding: 24px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    flex: 1; animation: slideUp 0.4s ease 0.1s both;
-    display: flex; flex-direction: column;
-  }
-
-  .plan-title {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 13px; font-weight: 700;
-    color: var(--green-dark); letter-spacing: 0.5px; margin-bottom: 6px;
-  }
-
-  .plan-subtitle {
-    font-size: 11px; color: var(--text-muted);
-    font-weight: 600; letter-spacing: 0.5px;
-    text-transform: uppercase; margin-bottom: 20px;
-  }
-
-  .plan-selected-date {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 28px; font-weight: 900;
-    color: var(--green-dark); line-height: 1; margin-bottom: 4px;
-  }
-
-  .plan-selected-month {
-    font-size: 13px; color: var(--text-muted);
-    font-weight: 600; margin-bottom: 20px;
-    text-transform: uppercase; letter-spacing: 0.5px;
-  }
-
-  .plan-divider { height: 1px; background: var(--border); margin-bottom: 16px; }
-
-  .plan-empty {
-    color: var(--text-muted); font-size: 13px;
-    text-align: center; padding: 30px 0;
-    flex: 1; display: flex; align-items: center; justify-content: center;
-  }
-  /* ── кінець CALENDAR ── */
 
   /* ── MODAL ── */
   .modal-overlay {
@@ -578,28 +320,6 @@
 <input class="nav-radio" type="radio" name="nav" id="nav4">
 <input class="nav-radio" type="radio" name="nav" id="nav5">
 
-<!-- ── CALENDAR SECTION (показується поверх коли nav3 активний) ── -->
-<div class="calendar-section">
-  <div class="cal-main">
-    <div class="cal-header">
-      <button class="cal-nav-btn" onclick="prevMonth()">&#8592;</button>
-      <div class="cal-month-title" id="calMonthTitle"></div>
-      <button class="cal-nav-btn" onclick="nextMonth()">&#8594;</button>
-    </div>
-    <div class="cal-grid" id="calGrid"></div>
-  </div>
-
-  <div class="cal-sidebar">
-    <div class="plan-card">
-      <div class="plan-title">ПЛАНУВАННЯ</div>
-      <div class="plan-subtitle">Оберіть день</div>
-      <div class="plan-selected-date" id="sideDate">—</div>
-      <div class="plan-selected-month" id="sideMonth"></div>
-      <div class="plan-divider"></div>
-      <div class="plan-empty" id="sideEmpty">Натисніть на день щоб обрати</div>
-    </div>
-  </div>
-</div>
 
 <!-- ─────────────── SIDEBAR ─────────────── -->
 <aside class="sidebar">
@@ -608,7 +328,7 @@
     <div class="logo-text">ToDaY</div>
   </div>
 
-  <label class="nav-label" for="nav1">
+  <label class="nav-label chosen">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
       <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
     </svg>
@@ -616,39 +336,38 @@
     <span class="nav-dot"></span>
   </label>
 
-  <label class="nav-label" for="nav2">
+  <a href="{% url 'tasks:task_list' %}" class="nav-label">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
     </svg>
     ЗАГАЛЬНІ
     <span class="nav-dot"></span>
-  </label>
+  </a>
 
-  <label class="nav-label" for="nav3">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-      <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
-      <line x1="3" y1="10" x2="21" y2="10"/>
-    </svg>
-    КАЛЕНДАР
-    <span class="nav-dot"></span>
-  </label>
+  <a href="{% url 'myapp:calendar' %}" class="nav-label" style="text-decoration:none;">
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+    <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+    <line x1="3" y1="10" x2="21" y2="10"/>
+  </svg>
+  КАЛЕНДАР
+</a>
 
-  <label class="nav-label" for="nav4">
+  <a href="{% url 'myapp:interesting' %}" class="nav-label">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
     </svg>
     ЦІКАВЕНЬКО
     <span class="nav-dot"></span>
-  </label>
+  </a>
 
-  <label class="nav-label" for="nav5">
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
-    </svg>
-    РЕЙТИНГ
-    <span class="nav-dot"></span>
-  </label>
+<a href="{% url 'rating:my_rating' %}" class="nav-label" >
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+  </svg>
+  РЕЙТИНГ
+  <span class="nav-dot"></span>
+</a>
 
   <div class="sidebar-spacer"></div>
 
@@ -723,7 +442,7 @@
       <details class="general-details" open>
         <summary class="general-summary">
           <div class="general-title">
-            ТВОЇ СПРАВИ
+            СПИСОК СПРАВ
             <span class="count-badge">{{ other_tasks|length }}</span>
           </div>
           <span class="collapse-icon">
@@ -741,6 +460,10 @@
                 <div class="task-name">{{ task.title }}</div>
                 <div class="task-tag">{{ task.category.name|default:"Загальне" }}</div>
               </div>
+              <a href="{% url 'tasks:move_to_today' task.id %}" class="move-btn" title="Виконати сьогодні">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M13 10V3L4 14h7v7l9-11h-7z"/> </svg>
+              </a>
             </div>
           {% empty %}
             <p style="color: #888; text-align: center; padding: 20px;">Наповни мене</p>
@@ -752,7 +475,7 @@
   </div>
 </main>
 
-<a href="#" class="help-btn">?</a>
+<a href="{% url 'myapp:interesting' %}" class="help-btn">?</a>
 
 <!-- ─────────────── MODAL (без змін) ─────────────── -->
 <div class="modal-overlay" id="addModal">
@@ -769,6 +492,16 @@
           <option value="Хобі">Хобі</option>
           <option value="Відпочинок">Відпочинок</option>
         </select>
+        <input type="number"
+                  name="duration"
+                  class="modal-select"
+                  placeholder="Годин..."
+                  value="0.5"
+                  min="0.5"
+                  max="12"
+                  step="0.5">
+      </div>
+      <div class="modal-row">
         <select name="is_for_today" class="modal-select">
           <option value="true">Виконати сьогодні ⚡</option>
           <option value="false">В загальний список</option>
@@ -781,78 +514,6 @@
     </form>
   </div>
 </div>
-
-<!-- ── CALENDAR JS ── -->
-<script>
-  const MONTHS_UK = ['СІЧЕНЬ','ЛЮТИЙ','БЕРЕЗЕНЬ','КВІТЕНЬ','ТРАВЕНЬ','ЧЕРВЕНЬ',
-                     'ЛИПЕНЬ','СЕРПЕНЬ','ВЕРЕСЕНЬ','ЖОВТЕНЬ','ЛИСТОПАД','ГРУДЕНЬ'];
-  const DAY_NAMES = ['ПН','ВТ','СР','ЧТ','ПТ','СБ','НД'];
-
-  const now = new Date();
-  let currentYear = now.getFullYear();
-  let currentMonth = now.getMonth();
-  let selectedDay = null;
-
-  function renderCalendar() {
-    const grid = document.getElementById('calGrid');
-    const title = document.getElementById('calMonthTitle');
-    title.textContent = MONTHS_UK[currentMonth] + ' ' + currentYear;
-    grid.innerHTML = '';
-
-    DAY_NAMES.forEach(d => {
-      const el = document.createElement('div');
-      el.className = 'cal-day-name';
-      el.textContent = d;
-      grid.appendChild(el);
-    });
-
-    let startOffset = new Date(currentYear, currentMonth, 1).getDay() - 1;
-    if (startOffset < 0) startOffset = 6;
-
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-    for (let i = 0; i < startOffset; i++) {
-      const el = document.createElement('div');
-      el.className = 'cal-day empty';
-      grid.appendChild(el);
-    }
-
-    for (let d = 1; d <= daysInMonth; d++) {
-      const el = document.createElement('div');
-      el.className = 'cal-day';
-      el.textContent = d;
-
-      if (selectedDay && selectedDay.d === d &&
-          selectedDay.m === currentMonth && selectedDay.y === currentYear) {
-        el.classList.add('selected');
-      }
-
-      el.addEventListener('click', () => {
-        selectedDay = { d, m: currentMonth, y: currentYear };
-        document.getElementById('sideDate').textContent = d;
-        document.getElementById('sideMonth').textContent = MONTHS_UK[currentMonth] + ' ' + currentYear;
-        document.getElementById('sideEmpty').textContent = 'Завдань на цей день немає';
-        renderCalendar();
-      });
-
-      grid.appendChild(el);
-    }
-  }
-
-  function prevMonth() {
-    currentMonth--;
-    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
-    renderCalendar();
-  }
-
-  function nextMonth() {
-    currentMonth++;
-    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-    renderCalendar();
-  }
-
-  renderCalendar();
-</script>
 
 </body>
 </html>
