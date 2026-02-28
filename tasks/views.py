@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.utils import timezone
 from .models import Task, SubTask, Category
 from django.views.decorators.http import require_POST
+from django.db import models as db_models
 
 MIN_POINTS = 5
 
@@ -29,11 +30,20 @@ def task_list(request):
 
 @login_required
 def today_tasks(request):
+    today = timezone.localdate()
+
     today_incomplete = Task.objects.filter(
-        user=request.user, is_for_today=True, is_completed=False
+        user=request.user,
+        is_completed=False
+    ).filter(
+        db_models.Q(is_for_today=True) | db_models.Q(planned_date=today)
     ).order_by('order')
+
     other_incomplete = Task.objects.filter(
-        user=request.user, is_for_today=False, is_completed=False
+        user=request.user,
+        is_for_today=False,
+        is_completed=False,
+        planned_date__isnull=True
     ).order_by('order')
 
     categories = Category.objects.filter(user=request.user)
