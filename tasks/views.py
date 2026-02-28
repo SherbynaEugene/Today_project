@@ -52,8 +52,8 @@ def today_tasks(request):
         'today_tasks': today_incomplete,
         'other_tasks': other_incomplete,
         'categories': categories,
+        'today': today,
     })
-
 
 @login_required
 def add_task(request):
@@ -108,12 +108,11 @@ def complete_task(request, task_id):
 
     return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
 
-
 @login_required
 def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     task.delete()
-    return redirect('tasks:task_list')
+    return redirect(request.META.get('HTTP_REFERER', 'tasks:task_list'))
 
 @login_required
 @require_POST

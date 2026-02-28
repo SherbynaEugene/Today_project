@@ -276,6 +276,10 @@
                             <!-- Ще не додано -->
                             <a href="{% url 'tasks:move_to_today' task.id %}" class="lightning-btn not-today" title="Додати на сьогодні">➕</a>
                         {% endif %}
+                        <a href="{% url 'tasks:delete_task' task.id %}"
+                            onclick="return confirm('Видалити завдання?')"
+                            style="color:#ccc; font-size:16px; text-decoration:none; margin-left:4px;"
+                            title="Видалити">✕</a>
                     </div>
                     {% empty %}
                         <p class="empty-msg">Список порожній</p>

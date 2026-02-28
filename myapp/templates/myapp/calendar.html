@@ -346,7 +346,7 @@
             <select name="task_id_select">
               {% for task in all_tasks %}
                 <option value="{{ task.id }}">
-                  {{ task.title }}{% if task.planned_date %} (вже на {{ task.planned_date }}){% endif %}
+                  {{ task.title }}{% if task.planned_date == today %} (вже на сьогодні){% elif task.is_for_today and not task.planned_date %} (вже на сьогодні){% elif task.planned_date %} (вже на {{ task.planned_date }}){% endif %}
                 </option>
               {% endfor %}
             </select>
