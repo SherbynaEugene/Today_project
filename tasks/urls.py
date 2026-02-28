@@ -10,4 +10,5 @@ urlpatterns = [
     path('delete/<int:task_id>/', views.delete_task, name='delete_task'),
     path('move-to-today/<int:task_id>/', views.move_to_today, name='move_to_today'),
     path('assign-to-date/', views.assign_task_to_date, name='assign_to_date'),
+    path('unassign/<int:task_id>/', views.unassign_task, name='unassign_task'),
 ]

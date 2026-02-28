@@ -328,7 +328,17 @@
 
       {% if day_tasks %}
         {% for task in day_tasks %}
-          <div class="task-item">{{ task.title }}</div>
+          <div class="task-item" style="display: flex; align-items: center; justify-content: space-between;">
+            {{ task.title }}
+            {% if task.planned_date %}
+              <a href="{% url 'tasks:unassign_task' task.id %}"
+                 onclick="return confirm('Прибрати дату з «{{ task.title }}»?')"
+                 style="color: #ccc; font-size: 14px; text-decoration: none; padding: 2px 6px; border-radius: 6px;"
+                 onmouseover="this.style.color='#e53e3e'; this.style.background='#fff0f0';"
+                 onmouseout="this.style.color='#ccc'; this.style.background='transparent';"
+                 title="Прибрати дату">✕</a>
+            {% endif %}
+          </div>
         {% endfor %}
       {% else %}
         <div class="plan-empty">Завдань на цей день немає</div>

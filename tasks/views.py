@@ -138,6 +138,13 @@ def assign_task_to_date(request):
     task.save()
     return redirect(redirect_url)
 
+@login_required
+def unassign_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id, user=request.user)
+    task.planned_date = None
+    task.save()
+    return redirect(request.META.get('HTTP_REFERER', '/calendar/'))
+
 
 ## LIMIT OF 3 TASKS PER DAY
 
