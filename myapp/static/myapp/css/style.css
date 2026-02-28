@@ -1,6 +1,5 @@
 /*ЦЕ ВСЕ З PROFILE.HTML*/
 :root {
-    --green-dark: #1f4d2b;
     --green-mid: #2d5a2d;
     --green-accent: #3d7a3d;
     --orange: #e6921a;
@@ -12,104 +11,6 @@
     --text-muted: #888;
     --border: #e8e8e8;
   }
-    /* ── SIDEBAR ── */
-    .sidebar-spacer { flex: 1; }
-    .sidebar {
-        width: 180px;
-        flex-shrink: 0;
-        background: hsl(0, 0%, 100%);
-        border-right: 1px solid var(--border);
-        display: flex;
-        flex-direction: column;
-        padding: 28px 20px;
-        gap: 4px;
-    }
-
-    .logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 0 8px;
-        margin-bottom: 28px;
-    }
-
-    .logo-icon {
-        width: 40px; height: 40px;
-        background: var(--green-dark);
-        border-radius: 10px;
-        display: flex; align-items: center; justify-content: center;
-        color: white;
-        font-family: 'Unbounded', sans-serif;
-        font-weight: 900;
-        font-size: 16px;
-    }
-
-    .logo-text {
-        font-family: 'Unbounded', sans-serif;
-        font-weight: 600;
-        font-size: 20px;
-        color: var(--green-dark);
-        letter-spacing: -0.5px;
-    }
-
-    .menu-label {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        border-radius: 14px;
-        cursor: pointer;
-        color: #888;
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.8px;
-        text-transform: uppercase;
-        transition: all 0.2s;
-        position: relative;
-        user-select: none;
-    }
-
-    .menu-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px;
-        text-decoration: none;
-        color: #aaa; /* Сірий для неактивних */
-        font-weight: bold;
-        font-size: 13px;
-        transition: 0.3s;
-        border-radius: 12px;
-    }
-
-    .menu-item svg {
-        width: 20px;
-        height: 20px;
-    }
-
-    .menu-item:hover {
-        background: #f8f9fa;
-        color: var(--green-dark);
-    }
-
-    .menu-item.active {
-        color: var(--green-dark);
-    }
-
-    .profile-avatar-mini {
-        width: 30px;
-        height: 30px;
-        background: #eee;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
 
 body {
     background: radial-gradient(
@@ -133,9 +34,30 @@ body {
     flex: 1;
     padding: 30px;
     background-color: #fff;
+    overflow-y: auto;
+    min-height: 0;
 }
 
+/* ширина */
+.main-content::-webkit-scrollbar {
+    width: 6px;
+}
 
+/* фон доріжки */
+.main-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* сам повзунок */
+.main-content::-webkit-scrollbar-thumb {
+    background: var(--green-dark);
+    border-radius: 10px;
+}
+
+/* при наведенні */
+.main-content::-webkit-scrollbar-thumb:hover {
+    background: #0e8a43;
+}
 .profile-header {
     display: flex;
     justify-content: space-between;
@@ -167,9 +89,9 @@ h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; marg
     background: white;
     border: 1px solid #eee;
     border-radius: 40px;
-    padding: 10px 40px;    /* Збільшуємо відступи зверху і знизу */
+    padding: 10px 40px;
     text-align: center;
-    min-height: 540px;    /* Встановлюємо велику мінімальну висоту */
+    min-height: 540px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -181,6 +103,10 @@ h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; marg
     width: 275px;
     height: 400px;
     margin: 0 auto;
+    /* Головна вісь для голови та тулуба */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* Малюнок Дябчика */
@@ -197,10 +123,31 @@ h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; marg
     transform-origin: right center; }
 .d-leg-r { width: 110px; height: 5px; left:2px; top: 135px; transform: rotate(65deg); transform-origin: left center; }
 
+#tab-content {
+    overflow-y: auto;
+    padding-right: 15px;
+    padding-top: 10px;
+    overflow-y: visible;
+}
+
+/* Налаштування гарного скролбару (тоненький та зелений) */
+#tab-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+#tab-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#tab-content::-webkit-scrollbar-thumb {
+    background: var(--green-dark);
+    border-radius: 10px;
+}
 .shop-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     gap: 26px;
+    padding-bottom: 20px;
 }
 
 .shop-item {
@@ -337,7 +284,7 @@ h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; marg
     letter-spacing: 1px;
 }
 
-/* Очі - тепер вони видимі */
+/* Очі */
 .d-eyes {
     display: flex;
     justify-content: space-around;
@@ -345,7 +292,7 @@ h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; marg
     left: 50%;
     transform: translateX(-50%);
     top: 30px;
-    background: none; /* Щоб не перекривало голову зеленим фоном */
+    background: none;
 }
 .eye-dot {
     width: 8px; height: 8px;
@@ -359,9 +306,9 @@ h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; marg
     height: 16px;
     background: var(--green-dark);
     border-radius: 50%;
-    /* Позиціонування: */
-    left: -8px;   /* Висуваємо за край лінії руки */
-    top: -6px;    /* Центруємо вертикально відносно товщини руки (5px) */
+
+    right: 100%;
+    top: -6px;
 }
 
 /* Права долоня */
@@ -370,9 +317,9 @@ h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; marg
     height: 16px;
     background: var(--green-dark);
     border-radius: 50%;
-    /* Позиціонування: */
-    left: 100%;   /* Ставимо в самий кінець правої руки */
-    top: -6px;    /* Центруємо вертикально */
+
+    left: 100%;
+    top: -6px;
 }
 
 /* Кофта */
@@ -401,39 +348,260 @@ h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; marg
     background: repeating-linear-gradient(90deg, #1f4d2b, #1f4d2b 8px, #36141e 8px, #14361e 16px);
     left: 50%;
     transform: translateX(-50%);
-    top: 110px;
+    top: 120px;
     border-radius: 2px 2px 8px 8px;
-    z-index: -1;
+    z-index: 2;
 }
 
-/* Черевики (через псевдоелементи для кожної ноги) */
-#part-shooes {
+/*shoes */
+#part-shoes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: none;
+}
+
+/* черевики через псевдоелементи для кожної ноги */
+#part-shoes::before, #part-shoes::after {
     content: '';
     position: absolute;
     width: 25px;
     height: 12px;
     background: #e6921a;
-    bottom: -5px;
     border-radius: 5px 12px 2px 2px;
+    bottom: -5px;
 }
-#part-leg-l::after { left: -15px; transform: rotate(65deg); }
-#part-leg-r::after { right: -15px; transform: rotate(-65deg) scaleX(-1); }
+
+/* Лівий черевик */
+#part-shoes::before {
+    left: -59px;
+    top: 230px;
+    transform: rotate(10deg) scaleX(-1);
+}
+
+/* Правий черевик */
+#part-shoes::after {
+    left: 40px;
+    top: 230px;
+    transform: rotate(-10deg);
+}
 
 /* Волосся та Вуха */
-#part-hair-short { color: #4b2c20; font-weight: bold; text-align: center; }
+/* Контейнер для короткого волосся */
+#part-hair-short {
+    width: 4px;             /* Ширина центральної волосинки */
+    height: 15px;           /* Довжина волосся */
+    background: var(--green-dark);
+    position: absolute;
+    top: -12px;             /* Виносимо за межі голови (підбери під коло) */
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+/* Ліва волосинка */
+#part-hair-short::before {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 15px;
+    background: var(--green-dark);
+    left: -8px;             /* Відступ вліво */
+    top: 2px;
+    transform: rotate(-30deg); /* Нахил вліво */
+    border-radius: 2px;
+}
+
+/* Права волосинка */
+#part-hair-short::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 15px;
+    background: var(--green-dark);
+    right: -8px;            /* Відступ вправо */
+    top: 2px;
+    transform: rotate(30deg);  /* Нахил вправо */
+    border-radius: 2px;
+}
 #part-hair-long {
-    width: 100px; height: 60px; border-radius: 40px 40px 0 0;
+    width: 100px; height: 150px; border-radius: 50px 50px 0 0;
     border: 4px solid #4b2c20; border-bottom: 0;
-    top: 15px; left: -5px; background: none;
+    top: -3px; left: -10px; background: none;
+}
+.fox-ears {
+    position: absolute;
+    width: 96px; /* Ширина між вухами */
+    height: 40px;
+    top: -30px; /* Регулюй висоту посадки */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+    z-index: -1;
+}
+
+.fox-ears::before,
+.fox-ears::after {
+    content: "";
+    width: 0;
+    height: 0;
+    /* Магія трикутника: */
+    border-left: 18px solid transparent;  /* Ліва сторона */
+    border-right: 18px solid transparent; /* Права сторона */
+    border-bottom: 35px solid #ff7809;    /* Основа і колір вуха */
+    display: block;
+}
+
+/* Нахиляємо ліве вухо до центру */
+.fox-ears::before {
+    transform: rotate(-15deg);
+}
+
+/* Нахиляємо праве вухо до центру */
+.fox-ears::after {
+    transform: rotate(15deg);
+}
+
+/* Контейнер кігтів */
+/* Контейнер кігтів всередині долоні */
+.d-claws {
+    position: absolute;
+    width: 24px;
+    height: 20px;
+    top: -5px; /* Трохи вище долоні */
+    display: flex;
+    justify-content: space-around;
+    pointer-events: none;
+}
+
+/* Самі кігтики */
+.claw {
+    width: 4px;
+    height: 12px;
+    background: linear-gradient(to bottom, #4b2c20, #2d5a2d); /* Темний градієнт */
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%); /* Гострий трикутник */
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+}
+
+/* Для лівої руки розгортаємо, якщо треба */
+.d-arm-l .d-claws {
+    left: -5px;
+    transform: rotate(-20deg);
+}
+
+/* Для правої руки */
+.d-arm-r .d-claws {
+    right: -5px;
+    transform: rotate(20deg);
+}
+
+/* Ефект сяйва, якщо хочеться "магічних" вовчих кігтів */
+.shop-item.equipped[data-slug="wolf"] .claw {
+    animation: claw-glow 2s infinite alternate;
+}
+
+@keyframes claw-glow {
+    from { filter: drop-shadow(0 0 1px #3d7a3d); }
+    to { filter: drop-shadow(0 0 5px #ff9a1f); }
+}
+
+/* Контейнер для обох брів */
+.brows-container {
+    position: absolute;
+    top: 15px; /* Трохи вище очей */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px; /* Ширина між крайніми точками брів */
+    height: 20px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 5;
+    background: transparent;
+}
+
+/* Загальний стиль для однієї брови */
+.brow {
+    width: 25px;
+    height: 8px;
+    border-top: 3px solid #4b2c20; /* Колір брів (темно-коричневий) */
+    border-radius: 15px 15px 0 0; /* Вигин вгору */
+    background: transparent;
+}
+
+/* Ліва брова (трохи нахилена) */
+.brow-l {
+    transform: rotate(-10deg);
+}
+
+/* Права брова (віддзеркалена) */
+.brow-r {
+    transform: rotate(10deg);
+}
+
+
+/* Оновлений пірсинг (тепер кріпиться відносно КОНТЕЙНЕРА БРІВ) */
+.brow-piercing {
+    position: absolute;
+    top: -5px;   /* Регулюємо, щоб кульки "обхоплювали" лінію брови */
+    left: 3px;
+    width: 4px;
+    height: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brow-piercing::before,
+.brow-piercing::after {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: radial-gradient(circle at 30% 30%, #ffffff, #888, #444);
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+/* Контейнер для вух */
+.ears-container {
+    position: absolute;
+    top: 35px; /* Рівень очей/середина голови */
+    width: 110px; /* Трохи ширше за голову (голова 90px + вуха по 10px) */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: -1; /* Вуха мають бути ЗА головою */
+}
+
+/* Загальний стиль вуха */
+.ear {
+    width: 12px;
+    height: 20px;
+    background: white; /* Колір фону голови */
+    border: 4px solid var(--green-dark); /* Контур як у голови */
+}
+
+/* Ліве вухо */
+.ear-l {
+    border-radius: 15px 0 0 15px; /* Заокруглення назовні */
+    border-right: none; /* Щоб не було лінії стику з головою */
+}
+
+/* Праве вухо */
+.ear-r {
+    border-radius: 0 15px 15px 0; /* Заокруглення назовні */
+    border-left: none; /* Щоб не було лінії стику з головою */
 }
 
 /* Навушники */
 #part-headphones::before {
     content: '🎧';
     position: absolute;
-    font-size: 50px;
+    font-size: 110px;
     top: -20px;
-    left: 50%;
+    left: 137px;
     transform: translateX(-50%);
 }
 
@@ -598,7 +766,7 @@ h1 { color: var(--green-dark); text-transform: uppercase; font-weight: 900; marg
 .price-value {
     font-size: 14px;
     font-weight: bold;
-    color: #d4a017; /* Золотистий колір для монет */
+    color: #d4a017;
 }
 
 
