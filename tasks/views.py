@@ -60,15 +60,18 @@ def add_task(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         estimated_hours = request.POST.get('duration', 1)
-        planned_date = request.POST.get('planned_date') or None
+        planned_date = request.POST.get('planned_date')
+        if not planned_date:
+            planned_date = timezone.localdate()
         is_for_today = request.POST.get('is_for_today') == 'true'
         category_name = request.POST.get('category') or None
-        deadline_time = request.POST.get('deadline_time', '12:00')
+        deadline_time = request.POST.get('deadline_time', '23:00')
 
         category_id = None
         if category_name:
             # get_or_create шукає категорію, а якщо її немає створює
             category_id, created = Category.objects.get_or_create(
+            user=request.user,
             name=category_name,
             defaults={'color': '#1f4d2b'} # Колір для нової категорії, якщо вона не знайдена
         )

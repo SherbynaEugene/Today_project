@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
+
 
 User = settings.AUTH_USER_MODEL
 
@@ -16,9 +18,13 @@ class Task(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
-    planned_date = models.DateField(null=True, blank=True)
+    planned_date = models.DateField(
+        default=timezone.localdate,
+        null=True,
+        blank=True
+    )
     is_for_today = models.BooleanField(default=False)
-    deadline_time = models.TimeField(default="16:00")
+    deadline_time = models.TimeField(default="23:59") # Непотрібен
     estimated_hours = models.FloatField(default=1)
     is_completed = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
@@ -28,7 +34,7 @@ class Task(models.Model):
     def __str__(self):
         return self.title
 
-    def get_progress(self):  # i moved it here from myapp/models.py. if all agreed i`ll delete it there later
+    def get_progress(self):  # i moved it here from myapp/models.py. if all agreed i`ll delete it there later (Eugene: I agree)
         total = self.subtasks.count()
         completed = self.subtasks.filter(is_completed=True).count()
         if total == 0:
