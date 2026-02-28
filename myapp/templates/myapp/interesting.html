@@ -17,11 +17,148 @@
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+  /* ── TIPS PAGE ── */
+  .tips-wrap {
+    flex: 1;
+    padding: 32px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 100%;
+  }
+
+  .tips-heading {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: #1a3a1a;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    animation: slideUp 0.4s ease;
+  }
+
+  .tips-sub {
+    font-size: 13px;
+    color: #888;
+    font-weight: 600;
+    margin-bottom: 20px;
+    animation: slideUp 0.4s ease 0.05s both;
+  }
+
+  .tip-item {
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    overflow: hidden;
+    animation: slideUp 0.4s ease both;
+  }
+
+  .tip-item:nth-child(3) { animation-delay: 0.1s; }
+  .tip-item:nth-child(4) { animation-delay: 0.15s; }
+  .tip-item:nth-child(5) { animation-delay: 0.2s; }
+  .tip-item:nth-child(6) { animation-delay: 0.25s; }
+
+  .tip-item details { border-radius: 18px; }
+
+  .tip-summary {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 22px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition: background 0.2s;
+  }
+
+  .tip-summary::-webkit-details-marker { display: none; }
+  .tip-summary:hover { background: #f8faf8; }
+
+  .tip-icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .tip-icon.green { background: #e8f5e8; }
+  .tip-icon.orange { background: #fff3e0; }
+  .tip-icon.blue { background: #e8f0ff; }
+  .tip-icon.purple { background: #f3e8ff; }
+
+  .tip-label {
+    flex: 1;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a3a1a;
+    letter-spacing: 0.3px;
+  }
+
+  .tip-arrow {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: #f0f0f0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    color: #888;
+    transition: transform 0.25s, background 0.2s;
+    flex-shrink: 0;
+  }
+
+  details[open] .tip-arrow {
+    transform: rotate(180deg);
+    background: #1a3a1a;
+    color: white;
+  }
+
+  .tip-body {
+    padding: 0 22px 22px 78px;
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tip-step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .tip-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #1a3a1a;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .tip-text {
+    font-size: 13px;
+    color: #444;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  .tip-text b { color: #1a3a1a; }
+
+  .tip-divider {
+    height: 1px;
+    background: #f0f0f0;
+    margin: 0 22px;
+  }
 </style>
 </head>
 <body>
 
-<!-- radio inputs винесені ДО sidebar щоб CSS ~ селектор працював -->
 <input class="nav-radio" type="radio" name="nav" id="nav1" checked>
 <input class="nav-radio" type="radio" name="nav" id="nav2">
 <input class="nav-radio" type="radio" name="nav" id="nav3">
@@ -61,7 +198,7 @@
     <span class="nav-dot"></span>
   </a>
 
-  <label class="nav-label  chosen">
+  <label class="nav-label chosen">
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
     </svg>
@@ -69,13 +206,13 @@
     <span class="nav-dot"></span>
   </label>
 
-<a href="{% url 'rating:my_rating' %}" class="nav-label">
-  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-    <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
-  </svg>
-  РЕЙТИНГ
-  <span class="nav-dot"></span>
-</a>
+  <a href="{% url 'rating:my_rating' %}" class="nav-label">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
+    </svg>
+    РЕЙТИНГ
+    <span class="nav-dot"></span>
+  </a>
 
   <div class="sidebar-spacer"></div>
 
@@ -100,10 +237,122 @@
 </aside>
 
 <!-- ─────────────── MAIN ─────────────── -->
-<main class="main">
-  <div><p>
-    Так, тут пусто
-  </p><p>
-  </p>
-    womp womp
+<main class="main" style="overflow-y: auto;">
+<div class="tips-wrap">
+
+  <div class="tips-heading">ЦІКАВЕНЬКО 🌟</div>
+  <div class="tips-sub">Поради та підказки як користуватися ToDaY</div>
+
+  <!-- 1 -->
+  <div class="tip-item">
+    <details>
+      <summary class="tip-summary">
+        <div class="tip-icon green">⚡</div>
+        <div class="tip-label">ЯК ПОЧИНАТИ ДЕНЬ</div>
+        <div class="tip-arrow">▼</div>
+      </summary>
+      <div class="tip-divider"></div>
+      <div class="tip-body">
+        <div class="tip-step">
+          <div class="tip-num">1</div>
+          <div class="tip-text">Відкрий розділ <b>СЬОГОДНІ</b> — тут відображаються всі завдання, заплановані на поточний день.</div>
+        </div>
+        <div class="tip-step">
+          <div class="tip-num">2</div>
+          <div class="tip-text">Перегляни список і почни з найважливішого завдання. Не тягни 😉</div>
+        </div>
+        <div class="tip-step">
+          <div class="tip-num">3</div>
+          <div class="tip-text">Коли завдання виконане — натисни на <b>кружечок</b> зліва, щоб позначити його як завершене і отримати бали.</div>
+        </div>
+      </div>
+    </details>
   </div>
+
+  <!-- 2 -->
+  <div class="tip-item">
+    <details>
+      <summary class="tip-summary">
+        <div class="tip-icon orange">➕</div>
+        <div class="tip-label">ЯК ДОДАВАТИ ЗАВДАННЯ</div>
+        <div class="tip-arrow">▼</div>
+      </summary>
+      <div class="tip-divider"></div>
+      <div class="tip-body">
+        <div class="tip-step">
+          <div class="tip-num">1</div>
+          <div class="tip-text">Натисни кнопку <b>ПЛЮС</b> у правій панелі на головній сторінці.</div>
+        </div>
+        <div class="tip-step">
+          <div class="tip-num">2</div>
+          <div class="tip-text">Введи назву завдання, обери <b>категорію</b> (Робота, Хобі, Відпочинок, Соціалізація) та вкажи скільки <b>годин</b> плануєш витратити.</div>
+        </div>
+        <div class="tip-step">
+          <div class="tip-num">3</div>
+          <div class="tip-text">Обери — виконати <b>сьогодні ⚡</b> або додати до <b>загального списку</b>. Потім натисни OK.</div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- 3 -->
+  <div class="tip-item">
+    <details>
+      <summary class="tip-summary">
+        <div class="tip-icon blue">🏆</div>
+        <div class="tip-label">ЯК ПРАЦЮЄ РЕЙТИНГ</div>
+        <div class="tip-arrow">▼</div>
+      </summary>
+      <div class="tip-divider"></div>
+      <div class="tip-body">
+        <div class="tip-step">
+          <div class="tip-num">1</div>
+          <div class="tip-text">За кожне виконане завдання ти отримуєш <b>бали</b>. Чим швидше виконуєш — тим вищий множник.</div>
+        </div>
+        <div class="tip-step">
+          <div class="tip-num">2</div>
+          <div class="tip-text">Якщо виконав завдання <b>вчасно</b> — множник вищий. Якщо прострочив — множник знижується.</div>
+        </div>
+        <div class="tip-step">
+          <div class="tip-num">3</div>
+          <div class="tip-text">Переглянь свій рейтинг та порівняй з іншими у розділі <b>РЕЙТИНГ → Таблиця лідерів</b>.</div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- 4 -->
+  <div class="tip-item">
+    <details>
+      <summary class="tip-summary">
+        <div class="tip-icon purple">📅</div>
+        <div class="tip-label">ЯК КОРИСТУВАТИСЯ КАЛЕНДАРЕМ</div>
+        <div class="tip-arrow">▼</div>
+      </summary>
+      <div class="tip-divider"></div>
+      <div class="tip-body">
+        <div class="tip-step">
+          <div class="tip-num">1</div>
+          <div class="tip-text">Відкрий розділ <b>КАЛЕНДАР</b> у сайдбарі — побачиш поточний місяць.</div>
+        </div>
+        <div class="tip-step">
+          <div class="tip-num">2</div>
+          <div class="tip-text">Натискай стрілки <b>← →</b> щоб переходити між місяцями і планувати наперед.</div>
+        </div>
+        <div class="tip-step">
+          <div class="tip-num">3</div>
+          <div class="tip-text">Натисни на будь-який <b>день</b> — у правій панелі відобразиться інформація про обраний день.</div>
+        </div>
+        <div class="tip-step">
+          <div class="tip-num">4</div>
+          <div class="tip-text">Щоб переходити по сторінках зліва є вкладка <b>меню</b>.</div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+</div>
+</main>
+
+</body>
+</html>
