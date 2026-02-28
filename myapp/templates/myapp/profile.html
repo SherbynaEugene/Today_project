@@ -16,6 +16,14 @@
         #f9f6ff 40%,
         #ffffff 100%
     );
+    .page-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--green-dark);
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
 }</style>
 </head>
 <body>
@@ -40,7 +48,7 @@
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
         </svg>
-        ЗАГАЛЬНІ
+        УСІ СПРАВИ
         <span class="nav-dot"></span>
     </a>
 
@@ -103,7 +111,7 @@
             </div>
         {% endif %}
         <div class="profile-header">
-            <h1>Профіль</h1>
+            <h1 class="page-title">Профіль</h1>
             <div class="tabs-menuigation" style="display: flex; gap: 10px;">
                 <button id="btn-person" onclick="showTab('person')" class="tab-btn active">ПЕРСОНАЖ</button>
                 <button id="btn-shop" onclick="showTab('shop')" class="tab-btn">КРАМНИЦЯ</button>
@@ -217,30 +225,19 @@
                     <div class="stats-details">
                         <h3 style="text-align: left; margin-bottom: 30px;">ГОДИНИ ЗА СФЕРАМИ</h3>
 
-                        <div class="sphere-item">
-                            <div class="sphere-info"><div class="sphere-dot dot-work"></div> РОБОТА</div>
-                            <div class="sphere-value">0 год</div>
-                        </div>
-
-                        <div class="sphere-item">
-                            <div class="sphere-info"><div class="sphere-dot dot-rest"></div> ВІДПОЧИНОК</div>
-                            <div class="sphere-value">0.5 год</div>
-                        </div>
-
-                        <div class="sphere-item">
-                            <div class="sphere-info"><div class="sphere-dot dot-soc"></div> СОЦІАЛІЗАЦІЯ</div>
-                            <div class="sphere-value">0 год</div>
-                        </div>
-
-                        <div class="sphere-item">
-                            <div class="sphere-info"><div class="sphere-dot dot-hobby"></div> ХОБІ</div>
-                            <div class="sphere-value">0 год</div>
-                        </div>
-
-                        <div class="sphere-item" style="background: none; border: 2px dashed #eee;">
-                            <div class="sphere-info" style="color: #aaa;"><div class="sphere-dot dot-other"></div> ІНШЕ (БЕЗ КАТЕГОРІЇ)</div>
-                            <div class="sphere-value" style="color: #aaa;">0 год</div>
-                        </div>
+                        {% for label, value, color in stats_summary %}
+                            <div class="sphere-item">
+                                <div class="sphere-info">
+                                    <div class="sphere-dot" style="background-color: {{ color }};"></div>
+                                    {{ label|upper }}
+                                </div>
+                                <div class="sphere-value">{{ value|floatformat:1 }} год</div>
+                            </div>
+                            {% empty %}
+                            <div class="sphere-item" style="border: 2px dashed #eee;">
+                                <div class="sphere-info" style="color: #aaa;">Немає даних за категоріями</div>
+                            </div>
+                            {% endfor %}
                     </div>
 
                 </div>
@@ -269,10 +266,26 @@
                 <div style="display: flex; align-items: center; gap: 8px;">
                     <span>🔒</span> ДАНІ ВХОДУ
                 </div>
-                <div id="toggle-password" onclick="togglePasswordVisibility()" style="cursor: pointer; font-size: 16px;">👁️</div>
             </div>
             <div class="login-field"><span>Логін:</span>{{ user.email }}</div>
-            <div class="login-field"><span>Пароль:</span> <span id="password-text">••••••••</span></div>
+            <div class="login-field" style="display: flex; gap: 70px; align-items: center;">
+                <!-- Змінити пароль -->
+                <a href="{% url 'profile_app:password_reset' %}"
+                style="font-size: 12px; font-weight: 500; color: #1f4d2b; text-decoration: none; transition: all 0.2s;"
+                onmouseover="this.style.color='#4b1434'; this.style.transform='translateY(-2px)';"
+                onmouseout="this.style.color='#1f4d2b'; this.style.transform='translateY(0)';">
+                    Змінити пароль
+                </a>
+
+                <!-- Вихід із акаунту -->
+                <a href="{% url 'users:sign_out' %}"
+                    style="font-size: 12px; font-weight: 500; color: #e6921a; text-decoration: none; transition: all 0.2s;"
+                    onmouseover="this.style.color='#4b1434'; this.style.transform='translateY(-2px)';"
+                    onmouseout="this.style.color='#e6921a'; this.style.transform='translateY(0)';">
+                        Вийти
+                </a>
+            </div>
+
         </div>
 
         <div class="wallet-card-new">
@@ -297,39 +310,39 @@
         if(tabName === 'stats') { initChart(); }
     }
 
-    // 4. Пароль та Графік
-    function togglePasswordVisibility() {
-        const passwordSpan = document.getElementById('password-text');
-        const eyeIcon = document.getElementById('toggle-password');
-        const realPassword = "my_secret_pass";
-        const hiddenPassword = "••••••••";
-
-        if (passwordSpan.innerText === hiddenPassword) {
-            passwordSpan.innerText = realPassword;
-            eyeIcon.innerText = "🔒";
-        } else {
-            passwordSpan.innerText = hiddenPassword;
-            eyeIcon.innerText = "👁️";
-        }
-    }
+    // 4. Графік
 
     function initChart() {
-        const ctx = document.getElementById('mainStatsChart').getContext('2d');
-        if (window.myChart) { window.myChart.destroy(); }
-        window.myChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Робота', 'Відпочинок', 'Соціалізація', 'Хобі', 'Інше'],
-                datasets: [{
-                    data: [0, 0.5, 0, 0, 5],
-                    backgroundColor: ['#1f4d2b', '#e6921a', '#4b1434', '#a855f7', '#f0f0f0'],
-                    borderWidth: 0,
-                    cutout: '70%'
-                }]
-            },
-            options: { plugins: { legend: { display: false } } }
-        });
-    }
+    const ctx = document.getElementById('mainStatsChart').getContext('2d');
+
+    // Дані з Django context
+    const labels = {{ chart_labels|safe|default:"[]" }};
+    const dataValues = {{ chart_data|safe|default:"[]" }};
+    const colors = {{ chart_colors|safe|default:"[]" }};
+
+    if (window.myChart) { window.myChart.destroy(); }
+
+    // Якщо даних немає, можна вивести "порожнє" коло
+    const finalData = dataValues.length > 0 ? dataValues : [1];
+    const finalColors = colors.length > 0 ? colors : ['#f0f0f0'];
+
+    window.myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: finalData,
+                backgroundColor: finalColors,
+                borderWidth: 0,
+                cutout: '70%'
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            maintainAspectRatio: false
+        }
+    });
+}
 </script>
 
 </body>

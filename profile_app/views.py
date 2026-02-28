@@ -2,6 +2,46 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Item, UserInventory
 from django.contrib import messages
+from django.db.models import Sum
+from tasks.models import Task, Category
+
+# @login_required
+# def profile_stats(request):
+#     # Отримуємо ВСІ завдання користувача для тесту
+#     user_tasks = Task.objects.filter(user=request.user)
+#     print(f"DEBUG: Знайдено завдань: {user_tasks.count()}")
+
+#     stats_query = user_tasks.values(
+#         'category__name', 'category__color'
+#     ).annotate(
+#         total_hours=Sum('estimated_hours')
+#     ).order_by('-total_hours')
+
+#     chart_labels = []
+#     chart_data = []
+#     chart_colors = []
+
+#     for entry in stats_query:
+#         # Логіка для завдань без категорії
+#         name = entry['category__name'] if entry['category__name'] else "Без категорії"
+#         color = entry['category__color'] if entry['category__color'] else "#cccccc"
+#         hours = float(entry['total_hours'] or 0)
+
+#         if hours > 0: # Додаємо в графік тільки те, де є час
+#             chart_labels.append(name)
+#             chart_data.append(hours)
+#             chart_colors.append(color)
+
+#     print(f"DEBUG: Дані для графіка: {chart_labels} - {chart_data}")
+
+#     context = {
+#         'user': request.user,
+#         'chart_labels': chart_labels,
+#         'chart_data': chart_data,
+#         'chart_colors': chart_colors,
+#         'stats_summary': zip(chart_labels, chart_data, chart_colors)
+#     }
+#     return render(request, 'profile_app/profile.html', context)
 
 @login_required
 def profile_view(request):
@@ -16,22 +56,48 @@ def profile_view(request):
 
     # Твій ручний список для крамниці
     all_items = Item.objects.all()
-    # all_items = [
-    #     {'slug': 'head', 'name': 'ГОЛОВА', 'price': 200, 'icon': '○'},
-    #     {'slug': 'arm-l', 'name': 'ЛІВА РУКА', 'price': 10, 'icon': '/'},
-    #     {'slug': 'arm-r', 'name': 'ПРАВА РУКА', 'price': 10, 'icon': '\\'},
-    #     {'slug': 'eye-l', 'name': 'ЛІВЕ ОКО', 'price': 10, 'icon': '👀'},
-    #     {'slug': 'hat', 'name': 'КАПЕЛЮХ', 'price': 500, 'icon': '🎩'},
-    #     {'slug': 'shirt-red-black', 'name': 'КОФТА', 'price': 10, 'icon': '👕'},
 
-    #     # Додавай сюди інші предмети, головне щоб slug збігався з адмінкою
-    # ]
+    # --- ДОДАЄМО БЛОК СТАТИСТИКИ ---
+    stats_query = Task.objects.filter(user=request.user).values(
+        'category__name', 'category__color'
+    ).annotate(
+        total_hours=Sum('estimated_hours')
+    ).order_by('-total_hours')
 
+    chart_labels = []
+    chart_data = []
+    chart_colors = []
+
+    for entry in stats_query:
+        name = entry['category__name']
+        color = entry['category__color']
+        hours = float(entry['total_hours'] or 0)
+
+        if hours > 0:
+            # Якщо ім'я порожнє (завдання без категорії)
+            if not name:
+                chart_labels.append("Інше")
+                chart_colors.append("#f0f0f0") # Світло-сірий для "Іншого"
+            else:
+                chart_labels.append(name)
+                # Якщо колір в базі чорний або відсутній, дамо випадковий або стандартний
+                if not color or color == "#000000":
+                    chart_colors.append("#1f4d2b") # Наприклад, ваш зелений за замовчуванням
+                else:
+                    chart_colors.append(color)
+
+            chart_data.append(hours)
+
+    # --- ФОРМУЄМО КОНТЕКСТ ---
     context = {
         'all_items': all_items,
         'owned_slugs': owned_slugs,
         'equipped_slugs': equipped_slugs,
         'user': user, # тут будуть монети: {{ user.coins }}
+        'chart_labels': chart_labels,
+        'chart_data': chart_data,
+        'chart_colors': chart_colors,
+        'stats_summary': list(zip(chart_labels, chart_data, chart_colors)),
     }
     return render(request, 'myapp/profile.html', context)
 

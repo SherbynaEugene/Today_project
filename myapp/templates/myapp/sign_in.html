@@ -205,23 +205,11 @@
 
         <div class="content-area">
             <a href="{% url 'myapp:index' %}" class="close-btn" style="text-decoration: none;">✕</a>
-            <!-- <button class="close-btn">✕</button> -->
 
             <div class="sparkle-icon">✦♥✦</div>
 
             <h2>З поверненням</h2>
 
-            <!-- <form method="POST"♥ action="{% url 'myapp:user_desktop' %}">
-                {% csrf_token %}
-                <input type="email" placeholder="Електронна пошта" required>
-
-                <div style="position: relative; width: 100%;">
-                    <input type="password" id="pass1" placeholder="Пароль" required>
-                    <span onclick="togglePass('pass1')" style="position: absolute; right: 15px; top: 10px; cursor: pointer; font-size: 12px; color: #aaa;">👁️</span>
-                </div>
-
-                <button type="submit" class="btn-submit">Увійти</button>
-            </form> -->
             <form method="POST" action="{% url 'users:sign_in' %}">
                 {% csrf_token %}
                 {% if messages %}
@@ -241,9 +229,13 @@
                 <button type="submit" class="btn-submit">Увійти</button>
             </form>
 
-
-            <!-- <a href="{% url 'myapp:register' %}" class="btn btn-primary" style="text-decoration: none;">Зареєструватися</a> -->
             <a href="{% url 'myapp:register' %}" class="switch-link">Реєстрація</a>
+            <a href="{% url 'profile_app:password_reset' %}"
+                class="switch-link"
+                style="margin-top: 10px; display: block; text-align: center; font-size: 7px;">
+                або
+                Забули пароль?
+            </a>
         </div>
     </div>
 <script>

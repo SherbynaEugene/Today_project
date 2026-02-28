@@ -95,7 +95,7 @@
 
         /* Стилі для блискавки переносу */
         .lightning-btn { color: #888; transition: 0.2s; }
-        .lightning-btn:hover { color: #f07c00; }
+        .lightning-btn:hover { color: var(--purple); }
 
         /* Прибираємо стандартні стилі кнопки заголовка */
         .accordion-header {
@@ -149,6 +149,30 @@
         }
 
         .empty-msg { color: #ccc; padding: 20px; font-size: 14px; }
+
+        .lightning-btn {
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.lightning-btn.not-today {
+    color: #a855f7; /* фіолетовий */
+}
+
+.lightning-btn.not-today:hover {
+    color: #7e22ce; /* темніший фіолетовий при наведенні */
+    transform: translateY(-2px);
+}
+
+.lightning-btn.today {
+    color: #22c55e; /* зелений для уже Today */
+}
+
+.lightning-btn.today:hover {
+    transform: translateY(-2px);
+}
     </style>
 </head>
 <body>
@@ -172,7 +196,7 @@
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
         </svg>
-        ЗАГАЛЬНІ
+        УСІ СПРАВИ
         <span class="nav-dot"></span>
     </a>
 
@@ -242,10 +266,16 @@
                             <div class="task-name">{{ task.title }}</div>
                             <div class="task-meta-row">
                                 <span class="time-info">🕒 {{ task.estimated_hours }} год</span>
-                                <span class="cat-tag">{{ task.category.name|upper|default:"ЗАГАЛЬНЕ" }}</span>
+                                <span class="cat-tag">{{ task.category.name|upper|default:"" }}</span>
                             </div>
                         </div>
-                        <a href="{% url 'tasks:move_to_today' task.id %}" class="lightning-btn" title="На сьогодні">⚡</a>
+                        {% if task.is_for_today %}
+                            <!-- Завдання вже на Today -->
+                            <a href="{% url 'tasks:move_to_today' task.id %}" class="lightning-btn today" title="Вже на сьогодні">✔</a>
+                        {% else %}
+                            <!-- Ще не додано -->
+                            <a href="{% url 'tasks:move_to_today' task.id %}" class="lightning-btn not-today" title="Додати на сьогодні">➕</a>
+                        {% endif %}
                         <a href="{% url 'tasks:delete_task' task.id %}"
                             onclick="return confirm('Видалити завдання?')"
                             style="color:#ccc; font-size:16px; text-decoration:none; margin-left:4px;"

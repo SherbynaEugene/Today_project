@@ -6,7 +6,8 @@ User = settings.AUTH_USER_MODEL
 class Category(models.Model):
     name = models.CharField(max_length=100)
     color = models.CharField(max_length=7, default='#000000')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # null=True дозволяє категорії бути спільною
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
