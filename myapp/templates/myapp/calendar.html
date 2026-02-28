@@ -80,11 +80,16 @@
   .cal-day {
     aspect-ratio: 1;
     border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     font-size: 14px; font-weight: 600;
     color: var(--text-dark); cursor: pointer;
     transition: all 0.2s;
     text-decoration: none;
+    position: relative;
+    gap: 3px;
   }
 
   .cal-day:hover { background: #f0f8f0; }
@@ -92,11 +97,19 @@
   .cal-day.selected { background: var(--green-dark); color: white; }
   .cal-day.selected:hover { background: var(--green-mid); }
   .cal-day.today { border: 2px solid var(--green-dark); }
+  .cal-day.selected.today { border-color: white; }
+
+  /* Dot if there is assignment */
+  .day-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--green-dark);
+  }
+  .cal-day.selected .day-dot { background: white; }
 
   .cal-sidebar {
     width: 280px; flex-shrink: 0;
     display: flex; flex-direction: column;
-    gap: 12px;
   }
 
   .plan-card {
@@ -134,8 +147,8 @@
 
   .plan-empty {
     color: var(--text-muted); font-size: 13px;
-    text-align: center; padding: 30px 0;
-    flex: 1; display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 20px 0;
+    display: flex; align-items: center; justify-content: center;
   }
 
   .task-item {
@@ -149,9 +162,15 @@
   }
 
   .assign-form {
-    margin-top: 16px;
+    margin-top: auto;
     border-top: 1px solid var(--border);
     padding-top: 16px;
+  }
+
+  .assign-label {
+    font-size: 11px; font-weight: 700;
+    color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 8px;
   }
 
   .assign-form select {
@@ -208,14 +227,13 @@
         {% if day == 0 %}
           <div class="cal-day empty"></div>
         {% else %}
-          {% with day_str=year|stringformat:"d" %}
           <a href="?year={{ year }}&month={{ month }}&date={{ year }}-{{ month|stringformat:'02d' }}-{{ day|stringformat:'02d' }}"
              class="cal-day
              {% if selected_date and selected_date.day == day and selected_date.month == month and selected_date.year == year %}selected{% endif %}
              {% if today.day == day and today.month == month and today.year == year %}today{% endif %}">
             {{ day }}
+            {% if day in busy_dates %}<span class="day-dot"></span>{% endif %}
           </a>
-          {% endwith %}
         {% endif %}
       {% endfor %}
     {% endfor %}
@@ -241,13 +259,18 @@
 
       {% if all_tasks %}
         <div class="assign-form">
+          <div class="assign-label">Додати завдання</div>
           <form method="POST" action="{% url 'tasks:assign_to_date' %}">
             {% csrf_token %}
             <input type="hidden" name="date" value="{{ selected_date_str }}">
             <input type="hidden" name="redirect" value="/calendar/?year={{ year }}&month={{ month }}&date={{ selected_date_str }}">
+            <input type="hidden" name="year" value="{{ year }}">
+            <input type="hidden" name="month" value="{{ month }}">
             <select name="task_id_select">
               {% for task in all_tasks %}
-                <option value="{{ task.id }}">{{ task.title }}</option>
+                <option value="{{ task.id }}">
+                  {{ task.title }}{% if task.planned_date %} (вже на {{ task.planned_date }}){% endif %}
+                </option>
               {% endfor %}
             </select>
             <button type="submit" class="assign-btn">Призначити на цей день</button>

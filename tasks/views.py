@@ -109,13 +109,25 @@ def delete_task(request, task_id):
 @require_POST
 def assign_task_to_date(request):
     task_id = request.POST.get('task_id_select')
-    task = get_object_or_404(Task, id=task_id, user=request.user)
     date_str = request.POST.get('date')
     redirect_url = request.POST.get('redirect', '/calendar/')
+    confirm = request.POST.get('confirm')
+
+    task = get_object_or_404(Task, id=task_id, user=request.user)
+
+    # show confirmation if asignment has date
+    if task.planned_date and str(task.planned_date) != date_str and not confirm:
+        return render(request, 'myapp/confirm_reassign.html', {
+            'task': task,
+            'new_date': date_str,
+            'redirect_url': redirect_url,
+            'year': request.POST.get('year'),
+            'month': request.POST.get('month'),
+        })
+
     task.planned_date = date_str or None
     task.save()
     return redirect(redirect_url)
-
 
 
 ## LIMIT OF 3 TASKS PER DAY

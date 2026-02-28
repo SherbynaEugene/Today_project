@@ -49,25 +49,45 @@ def calendar(request):
             pass
 
     cal_matrix = cal.monthcalendar(year, month)
-    all_tasks = Task.objects.filter(user=request.user, is_completed=False) #all uncomplete tasks for sidebar
+
+    # exclude assigned tasks
+    all_tasks = Task.objects.filter(
+        user=request.user,
+        is_completed=False
+    ).exclude(planned_date=selected_date) if selected_date else Task.objects.filter(
+        user=request.user,
+        is_completed=False
+    )
+
+    # dots for days with assignment
+    busy_dates = set(
+        Task.objects.filter(
+            user=request.user,
+            is_completed=False,
+            planned_date__year=year,
+            planned_date__month=month,
+            planned_date__isnull=False
+        ).values_list('planned_date__day', flat=True)
+    )
 
     prev_month = month - 1 if month > 1 else 12
     prev_year = year if month > 1 else year - 1
     next_month = month + 1 if month < 12 else 1
     next_year = year if month < 12 else year + 1
 
-    MONTHS = ['','СІЧЕНЬ','ЛЮТИЙ','БЕРЕЗЕНЬ','КВІТЕНЬ','ТРАВЕНЬ','ЧЕРВЕНЬ',
+    MONTHS_UK = ['','СІЧЕНЬ','ЛЮТИЙ','БЕРЕЗЕНЬ','КВІТЕНЬ','ТРАВЕНЬ','ЧЕРВЕНЬ',
                  'ЛИПЕНЬ','СЕРПЕНЬ','ВЕРЕСЕНЬ','ЖОВТЕНЬ','ЛИСТОПАД','ГРУДЕНЬ']
 
     return render(request, 'myapp/calendar.html', {
         'cal_matrix': cal_matrix,
         'year': year,
         'month': month,
-        'month_name': MONTHS[month],
+        'month_name': MONTHS_UK[month],
         'selected_date': selected_date,
         'selected_date_str': selected_date_str,
         'day_tasks': day_tasks,
         'all_tasks': all_tasks,
+        'busy_dates': busy_dates,
         'prev_month': prev_month,
         'prev_year': prev_year,
         'next_month': next_month,
