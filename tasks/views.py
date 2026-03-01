@@ -5,7 +5,7 @@ from django.utils import timezone
 from .models import Task, SubTask, Category
 from django.views.decorators.http import require_POST
 from django.db import models as db_models
-
+from datetime import datetime
 
 MIN_POINTS = 5
 
@@ -70,13 +70,18 @@ def add_task(request):
         category_name = request.POST.get('category') or None
         deadline_time = request.POST.get('deadline_time', '23:00')
 
+
+        # Перевірка: якщо завдання на сьогодні після 12:00
+        now = timezone.localtime()
+        if planned_date == timezone.localdate() and now.hour >= 12:
+            messages.error(request, "Після 12:00 завдання на сьогодні створювати не можна.")
+            return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
         category_id = None
         if category_name:
-            # get_or_create шукає категорію, а якщо її немає створює
             category_id, created = Category.objects.get_or_create(
             user=request.user,
             name=category_name,
-            defaults={'color': '#1f4d2b'} # Колір для нової категорії, якщо вона не знайдена
+            defaults={'color': '#1f4d2b'}
         )
 
         task = Task.objects.create(
@@ -93,10 +98,22 @@ def add_task(request):
     categories = Category.objects.filter(user=request.user)
     return render(request, 'tasks/add_task.html', {'categories': categories})
 
+
+@login_required
 def move_to_today(request, task_id):
-    task = get_object_or_404(Task, id=task_id)
+    task = get_object_or_404(Task, id=task_id, user=request.user)
+
+    now = timezone.localtime()
+
+    if now.hour >= 12:
+        messages.error(request, "Після 12:00 не можна переносити завдання на сьогодні.")
+        return redirect(request.META.get('HTTP_REFERER', 'tasks:today_tasks'))
+
     task.is_for_today = True
+    task.planned_date = timezone.localdate()
     task.save()
+
+    messages.success(request, "Завдання успішно перенесено на сьогодні.")
     return redirect('tasks:today_tasks')
 
 
@@ -106,10 +123,6 @@ def complete_task(request, task_id):
 
     current_time = timezone.localtime().time()
 
-    # ❌ Забороняємо виконання після 20:00
-    if current_time.hour >= 20:
-        messages.error(request, "Після 20:00 завдання не можна відмічати виконаними.")
-        return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
 
     if not task.is_completed:
         task.is_completed = True
@@ -129,6 +142,7 @@ def delete_task(request, task_id):
     task.delete()
     return redirect(request.META.get('HTTP_REFERER', 'tasks:task_list'))
 
+
 @login_required
 @require_POST
 def assign_task_to_date(request):
@@ -139,7 +153,15 @@ def assign_task_to_date(request):
 
     task = get_object_or_404(Task, id=task_id, user=request.user)
 
-    # show confirmation if asignment has date
+    if date_str:
+        selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+        now = timezone.localtime()
+
+        if selected_date == timezone.localdate() and now.hour >= 12:
+            messages.error(request, "Після 12:00 не можна додавати завдання на сьогодні.")
+            return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
+
+    # show confirmation if assignment has date
     if task.planned_date and str(task.planned_date) != date_str and not confirm:
         return render(request, 'myapp/confirm_reassign.html', {
             'task': task,
@@ -159,35 +181,3 @@ def unassign_task(request, task_id):
     task.planned_date = None
     task.save()
     return redirect(request.META.get('HTTP_REFERER', '/calendar/'))
-
-
-## LIMIT OF 3 TASKS PER DAY
-
-# from django.utils import timezone
-# from django.shortcuts import get_object_or_404, redirect
-# from rating.services import reward_for_task_completion
-
-# def complete_task(request, task_id):
-#     task = get_object_or_404(Task, id=task_id, user=request.user)
-
-#     if task.is_completed:
-#         return redirect("tasks:today_tasks")
-
-#     today = timezone.localdate()
-
-#     completed_today = Task.objects.filter(
-#         user=request.user,
-#         is_completed=True,
-#         completed_at__date=today
-#     ).count()
-
-#     if completed_today >= 3:
-#         return redirect("tasks:today_tasks")  # або можна показати повідомлення
-
-#     task.is_completed = True
-#     task.completed_at = timezone.now()
-#     task.save()
-
-#     reward_for_task_completion(task)
-
-#     return redirect("tasks:today_tasks")
