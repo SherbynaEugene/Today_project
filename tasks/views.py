@@ -44,7 +44,6 @@ def today_tasks(request):
         user=request.user,
         is_for_today=False,
         is_completed=False,
-        planned_date__isnull=True
     ).order_by('order')
 
     categories = Category.objects.filter(user=request.user)
@@ -153,6 +152,13 @@ def assign_task_to_date(request):
     task.planned_date = date_str or None
     task.save()
     return redirect(redirect_url)
+
+@login_required
+def unassign_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id, user=request.user)
+    task.planned_date = None
+    task.save()
+    return redirect(request.META.get('HTTP_REFERER', '/calendar/'))
 
 
 ## LIMIT OF 3 TASKS PER DAY

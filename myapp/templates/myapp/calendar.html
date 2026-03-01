@@ -65,7 +65,7 @@
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; color: var(--text-dark);
     transition: all 0.2s; font-size: 16px;
-    /* text-decoration: none; */
+    text-decoration: none;
   }
 
   .cal-nav-btn:hover { background: var(--green-dark); color: white; border-color: var(--green-dark); }
@@ -328,7 +328,17 @@
 
       {% if day_tasks %}
         {% for task in day_tasks %}
-          <div class="task-item">{{ task.title }}</div>
+          <div class="task-item" style="display: flex; align-items: center; justify-content: space-between;">
+            {{ task.title }}
+            {% if task.planned_date %}
+              <a href="{% url 'tasks:unassign_task' task.id %}"
+                 onclick="return confirm('Прибрати дату з «{{ task.title }}»?')"
+                 style="color: #ccc; font-size: 14px; text-decoration: none; padding: 2px 6px; border-radius: 6px;"
+                 onmouseover="this.style.color='#e53e3e'; this.style.background='#fff0f0';"
+                 onmouseout="this.style.color='#ccc'; this.style.background='transparent';"
+                 title="Прибрати дату">✕</a>
+            {% endif %}
+          </div>
         {% endfor %}
       {% else %}
         <div class="plan-empty">Завдань на цей день немає</div>
@@ -346,7 +356,7 @@
             <select name="task_id_select">
               {% for task in all_tasks %}
                 <option value="{{ task.id }}">
-                  {{ task.title }}{% if task.is_for_today and not task.planned_date %} (вже на сьогодні){% elif task.planned_date %} (вже на {{ task.planned_date }}){% endif %}
+                  {{ task.title }}{% if task.planned_date == today %} (вже на сьогодні){% elif task.is_for_today and not task.planned_date %} (вже на сьогодні){% elif task.planned_date %} (вже на {{ task.planned_date }}){% endif %}
                 </option>
               {% endfor %}
             </select>

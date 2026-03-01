@@ -45,44 +45,51 @@ def calendar(request):
     month = int(request.GET.get('month', today.month))
 
     selected_date_str = request.GET.get('date')
+
+    # redirct on today
+    if not selected_date_str:
+        return redirect(f'/calendar/?year={today.year}&month={today.month}&date={today}')
     selected_date = None
     day_tasks = []
 
-    if selected_date_str:
-        try:
-            selected_date = date.fromisoformat(selected_date_str)
-            today = date_type.today()
-
-            if selected_date == today:
-                # if today show is_for_today AND planned_date=today
-                day_tasks = Task.objects.filter(
-                    user=request.user,
-                    is_completed=False
-                ).filter(
-                    Q(is_for_today=True) | Q(planned_date=selected_date)
-                )
-            else:
-                # only planned_date for other days
-                day_tasks = Task.objects.filter(
-                    user=request.user,
-                    planned_date=selected_date,
-                    is_completed=False
-                )
-        except ValueError:
-            pass
+    try:
+        selected_date = date.fromisoformat(selected_date_str)
+        if selected_date == today:
+            day_tasks = Task.objects.filter(
+                user=request.user,
+                is_completed=False
+            ).filter(
+                Q(is_for_today=True) | Q(planned_date=selected_date)
+            )
+        else:
+            day_tasks = Task.objects.filter(
+                user=request.user,
+                planned_date=selected_date,
+                is_completed=False
+            )
+    except ValueError:
+        pass
 
     cal_matrix = cal.monthcalendar(year, month)
 
-    # exclude assigned tasks
-    all_tasks = Task.objects.filter(
-        user=request.user,
-        is_completed=False
-    ).exclude(planned_date=selected_date) if selected_date else Task.objects.filter(
-        user=request.user,
-        is_completed=False
-    )
+    # tasks to drop down
+    if selected_date:
+        if selected_date == today:
+            all_tasks = Task.objects.filter(
+                user=request.user,
+                is_completed=False
+            ).exclude(
+                Q(is_for_today=True) | Q(planned_date=selected_date)
+            )
+        else:
+            all_tasks = Task.objects.filter(
+                user=request.user,
+                is_completed=False
+            ).exclude(planned_date=selected_date)
+    else:
+        all_tasks = Task.objects.filter(user=request.user, is_completed=False)
 
-    # dots for days with assignment
+    # dots for days
     busy_dates = set(
         Task.objects.filter(
             user=request.user,
@@ -93,14 +100,15 @@ def calendar(request):
         ).values_list('planned_date__day', flat=True)
     )
 
+    # add today if is_for_today= True
     if year == today.year and month == today.month:
         has_today_tasks = Task.objects.filter(
             user=request.user,
             is_completed=False,
             is_for_today=True
         ).exists()
-    if has_today_tasks:
-        busy_dates.add(today.day)
+        if has_today_tasks:
+            busy_dates.add(today.day)
 
     prev_month = month - 1 if month > 1 else 12
     prev_year = year if month > 1 else year - 1
