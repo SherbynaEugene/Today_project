@@ -43,6 +43,8 @@ from tasks.models import Task, Category
 #     }
 #     return render(request, 'profile_app/profile.html', context)
 
+
+
 @login_required
 def profile_view(request):
     user = request.user
@@ -88,6 +90,11 @@ def profile_view(request):
 
             chart_data.append(hours)
 
+    user = request.user
+    user_rating = None
+    # Перевіримо, чи є рейтинг у користувача
+    if hasattr(user, "rating"):
+        user_rating = user.rating
     # --- ФОРМУЄМО КОНТЕКСТ ---
     context = {
         'all_items': all_items,
@@ -98,6 +105,7 @@ def profile_view(request):
         'chart_data': chart_data,
         'chart_colors': chart_colors,
         'stats_summary': list(zip(chart_labels, chart_data, chart_colors)),
+        "user_rating": user_rating,
     }
     return render(request, 'myapp/profile.html', context)
 

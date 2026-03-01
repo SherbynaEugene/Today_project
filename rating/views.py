@@ -35,3 +35,7 @@ def rating_history(request):
     return render(request, "rating/history.html", {
         "history": history
     })
+
+def profile_views(request):
+    user_rating = request.user.rating  # отримуємо рейтинг поточного користувача
+    return render(request, "myapp:profile.html", {"user_rating": user_rating})

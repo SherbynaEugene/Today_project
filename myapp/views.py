@@ -29,6 +29,15 @@ def general_tasks(request):
     return render(request, 'myapp/general_tasks.html')
 
 @login_required
+def profile_view(request):
+    user = request.user
+    user_rating = None
+    # Перевіримо, чи є рейтинг у користувача
+    if hasattr(user, "rating"):
+        user_rating = user.rating
+    return render(request, "profile.html", {"user_rating": user_rating})
+
+@login_required
 def calendar(request):
     today = date.today()
 

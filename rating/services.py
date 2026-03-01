@@ -80,3 +80,5 @@ def reward_for_task_completion(task: Task):
         time_spent_hours=(task.completed_at - task.created_at).total_seconds() / 3600,
         estimated_hours=task.estimated_hours,
     )
+    user_rating = task.user.rating
+    user_rating.update_streak()
