@@ -6,6 +6,7 @@ from .models import Task, SubTask, Category
 from django.views.decorators.http import require_POST
 from django.db import models as db_models
 
+
 MIN_POINTS = 5
 
 def calculate_points(task, user):
@@ -60,10 +61,13 @@ def add_task(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         estimated_hours = request.POST.get('duration', 1)
-        planned_date = request.POST.get('planned_date')
-        if not planned_date:
-            planned_date = timezone.localdate()
         is_for_today = request.POST.get('is_for_today') == 'true'
+
+        planned_date = request.POST.get('planned_date')
+        if is_for_today:
+            planned_date = timezone.localdate()
+        else:
+            planned_date = None
         category_name = request.POST.get('category') or None
         deadline_time = request.POST.get('deadline_time', '23:00')
 
@@ -96,18 +100,27 @@ def move_to_today(request, task_id):
     task.save()
     return redirect('tasks:today_tasks')
 
+
 @login_required
 def complete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
-    task.is_completed = True
-    task.completed_at = timezone.now()
-    task.save()
 
-    # award points and coins
-    points = calculate_points(task, request.user)
-    request.user.total_points += int(points)
-    request.user.coins += int(points)
-    request.user.save()
+    current_time = timezone.localtime().time()
+
+    # ❌ Забороняємо виконання після 20:00
+    if current_time.hour >= 20:
+        messages.error(request, "Після 20:00 завдання не можна відмічати виконаними.")
+        return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
+
+    if not task.is_completed:
+        task.is_completed = True
+        task.completed_at = timezone.now()
+        task.save()
+
+        points = calculate_points(task, request.user)
+        request.user.total_points += int(points)
+        request.user.coins += int(points)
+        request.user.save()
 
     return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
 

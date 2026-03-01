@@ -447,7 +447,22 @@
           <div class="today-title">СЬОГОДНІ</div>
         </div>
       </div>
-
+{% if messages %}
+  {% for message in messages %}
+    <div style="
+        margin: 16px 28px 0;
+        padding: 14px 18px;
+        border-radius: 14px;
+        background: #fff3f3;
+        color: #c53030;
+        font-weight: 600;
+        font-size: 14px;
+        animation: slideUp 0.3s ease;
+    ">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
       <div class="today-tasks">
         {% for task in today_tasks %}
           <div class="task-label">
