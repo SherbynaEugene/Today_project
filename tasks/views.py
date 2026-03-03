@@ -201,6 +201,12 @@ def complete_task(request, task_id):
 @login_required
 def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
+    now = timezone.localtime()
+
+    #Перевірка: якщо завдання "на сьогодні" і вже після 12 дня
+    if task.is_for_today and now.hour >= 12:
+        messages.error(request, "Після 12:00 завдання на сьогодні видаляти не можна.")
+        return redirect(request.META.get('HTTP_REFERER', 'tasks:task_list'))
     task.delete()
     return redirect(request.META.get('HTTP_REFERER', 'tasks:task_list'))
 
