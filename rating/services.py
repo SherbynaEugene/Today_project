@@ -30,7 +30,7 @@ def reward_for_task_completion(task: Task):
     user_rating, _ = UserRating.objects.select_for_update().get_or_create(user=task.user)
 
 
-    earned_points = BASE_POINTS * task.estimated_hours if is_task_completed_on_time(task) else 0
+    earned_points = BASE_POINTS * task.estimated_hours * user_rating.current_streak if is_task_completed_on_time(task) else 0
 
     if earned_points > 0:
         user_rating.total_points += earned_points

@@ -78,6 +78,18 @@ def add_task(request):
         if planned_date == timezone.localdate() and now.hour >= 12:
             messages.error(request, "Після 12:00 завдання на сьогодні створювати не можна.")
             return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
+
+        if planned_date:
+            tasks_on_date = Task.objects.filter(user=request.user, is_completed = False, planned_date=planned_date)
+            current_hours = sum(float(t.estimated_hours) for t in tasks_on_date)
+            estimated_hours = float(estimated_hours)
+            if current_hours + estimated_hours > 20.0:
+                messages.error(
+                    request,
+                    f"Неможливо додати завдання. Сумарна кількість годин на {planned_date} не повинна перевищувати 20."
+                )
+                return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
+
         category_id = None
         if category_name:
             category_id, created = Category.objects.get_or_create(
@@ -106,6 +118,7 @@ def move_to_today(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
 
     now = timezone.localtime()
+    today = timezone.localdate()
 
     if now.hour >= 12:
         messages.error(request, "Після 12:00 не можна переносити завдання на сьогодні.")
@@ -124,6 +137,15 @@ def move_to_today(request, task_id):
         </script>
         """
         return HttpResponse(html)
+
+    tasks_on_today = Task.objects.filter(user=request.user, is_completed = False, planned_date=today).exclude(id=task.id)
+    current_hours = sum(float(t.estimated_hours) for t in tasks_on_today)
+    if current_hours + float(task.estimated_hours) > 20.0:
+        messages.error(
+            request,
+            f"Неможливо перенести завдання. Сумарна кількість годин на {today} не повинна перевищувати 20."
+        )
+        return redirect(request.META.get('HTTP_REFERER', 'tasks:today_tasks'))
 
     task.is_for_today = True
     task.planned_date = timezone.localdate()
@@ -173,11 +195,23 @@ def assign_task_to_date(request):
         selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
         now = timezone.localtime()
 
+        # Перевірка: якщо дата сьогодні, після 12:00 заборона
         if selected_date == timezone.localdate() and now.hour >= 12:
             messages.error(request, "Після 12:00 не можна додавати завдання на сьогодні.")
             return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
 
-    # show confirmation if assignment has date
+        # Перевірка: сумарні години не більше 20 для будь-якої дати
+        tasks_on_date = Task.objects.filter(user=request.user, is_completed = False, planned_date=selected_date)
+        current_hours = sum(t.estimated_hours for t in tasks_on_date if t.id != task.id)
+        new_task_hours = int(request.POST.get('estimated_hours', task.estimated_hours))
+        if current_hours + new_task_hours > 20.0:
+            messages.error(
+                request,
+                f"Неможливо додати завдання. Сумарна кількість годин на {selected_date} не повинна перевищувати 20."
+            )
+            return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
+
+    # Підтвердження зміни дати
     if task.planned_date and str(task.planned_date) != date_str and not confirm:
         return render(request, 'myapp/confirm_reassign.html', {
             'task': task,
@@ -187,9 +221,12 @@ def assign_task_to_date(request):
             'month': request.POST.get('month'),
         })
 
-    task.planned_date = date_str or None
+    # Призначаємо дату
+    task.planned_date = selected_date if date_str else None
     task.save()
+    messages.success(request, "Завдання успішно призначено на дату.")
     return redirect(redirect_url)
+
 
 @login_required
 def unassign_task(request, task_id):

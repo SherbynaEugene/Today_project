@@ -10,7 +10,7 @@ from datetime import timedelta
 class UserRating(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="rating")
     total_points = models.FloatField(default=0)
-    current_streak = models.IntegerField(default=0)
+    current_streak = models.IntegerField(default=2)
     last_completed_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
@@ -18,8 +18,7 @@ class UserRating(models.Model):
 
     def update_streak(self, completed_date=None):
         """
-        Оновлює streak користувача.
-        `completed_date` - дата виконання завдання, за замовчуванням сьогодні.
+        Sreak system
         """
         if completed_date is None:
             completed_date = timezone.localdate()
