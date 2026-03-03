@@ -19,11 +19,9 @@
             align-items: center;
             min-height: 100vh;
             background-color: #ffffff;
-            /* font-family: 'Inter', -apple-system, sans-serif; */
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        /* Контейнер для візерунків з ефектом маски */
         .floral-wrapper {
             position: relative;
             width: 570px;
@@ -38,7 +36,6 @@
             inset: 0;
             z-index: 0;
             pointer-events: none;
-            /* Ефект розмиття візерунків по колу (той самий maskImage з React) */
             -webkit-mask-image: radial-gradient(circle, black 40%, transparent 72%);
             mask-image: radial-gradient(circle, black 40%, transparent 72%);
         }
@@ -50,37 +47,26 @@
             transform: scaleX(1.15) scaleY(1.1);
         }
 
-        /* Біла картка (Core) */
+
         .content-area {
             position: relative;
             z-index: 10;
             width: 270px;
             height: 270px;
             background: rgb(255, 255, 255);
-            border-radius: 50%; /* Робимо її круглою або дуже закругленою */
+            border-radius: 50%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 30px;
-            /* Тінь, яка створює "світіння" навколо білої зони */
-            /* box-shadow: 0 10px 50px rgba(0,0,0,0.06); */
             box-shadow: 0 0 65px rgba(255, 255, 255, 1);
 
         }
 
-        /* .close-btn {
-            position: absolute;
-            top: 40px;
-            right: 40px;
-            background: none;
-            border: none;
-            color: rgba(26, 58, 52, 0.4);
-            cursor: pointer;
-            font-size: 18px;
-        } */
+
         .close-btn {
-        margin-bottom: 10px; /* <--- Збільш, щоб хрестик був вище */
+        margin-bottom: 10px;
         background: none;
         border: none;
         color: #ccc;
@@ -159,7 +145,7 @@
         }
 
         .switch-link {
-        margin-top: 25px; /* <--- Збільш, щоб напис був нижче */
+        margin-top: 25px;
         background: none;
         border: none;
         color: rgba(26, 58, 52, 0.6);
@@ -169,30 +155,20 @@
         font-weight: 700;
         letter-spacing: 1.2px;
         cursor: pointer;
-        display: inline-block; /* без цього transform не працюватиме на посиланнях */
+        display: inline-block;
         transition: all 0.2s;
     }
 
         .switch-link:hover {
         color: var(--brand-green);
-        transform: translateY(-2px); /* Підстрибне на 2 пікселі вгору */
+        transform: translateY(-2px);
     }
 
         .switch-link:active {
-        transform: translateY(-1px) scale(0.98); /* При кліку кнопка стає трохи меншою */
+        transform: translateY(-1px) scale(0.98);
     }
 
-        /* .switch-link {
-            margin-top: 20px;
-            background: none;
-            border: none;
-            color: rgba(26, 58, 52, 0.6);
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            cursor: pointer;
-        } */
+
 
     </style>
 </head>
