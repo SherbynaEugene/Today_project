@@ -93,11 +93,11 @@
             text-transform: uppercase;
         }
 
-       
+
         .lightning-btn { color: #888; transition: 0.2s; }
         .lightning-btn:hover { color: var(--purple); }
 
-       
+
         .accordion-header {
             width: 100%;
             background: none;
@@ -124,7 +124,7 @@
             transition: transform 0.3s;
         }
 
-      
+
         .accordion-content {
             max-height: 0;
             overflow: hidden;
@@ -132,14 +132,14 @@
             opacity: 0;
         }
 
-      
+
         .accordion-content.open {
             max-height: 2000px; /* Достатня висота для списку */
             opacity: 1;
             overflow-y: auto; /* Дозволяє гортати всередині, якщо дуже багато справ */
         }
 
-    
+
         .accordion-header.active .arrow {
             transform: rotate(0deg);
             color: var(--green-dark);
@@ -158,16 +158,16 @@
 }
 
 .lightning-btn.not-today {
-    color: #a855f7; 
+    color: #a855f7;
 }
 
 .lightning-btn.not-today:hover {
-    color: #7e22ce; 
+    color: #7e22ce;
     transform: translateY(-2px);
 }
 
 .lightning-btn.today {
-    color: #22c55e; 
+    color: #22c55e;
 }
 
 .lightning-btn.today:hover {
@@ -177,7 +177,7 @@
 </head>
 <body>
 
- 
+
     <aside class="sidebar">
     <div class="logo">
         <div class="logo-icon">T</div>
@@ -286,7 +286,7 @@
                         </div>
                         {% if task.is_for_today %}
                             <!-- Завдання вже на Today -->
-                            <a href="{% url 'tasks:move_to_today' task.id %}" class="lightning-btn today" title="Вже на сьогодні">T</a>
+                            <a class="lightning-btn today" title="Вже на сьогодні">T</a>
                         {% else %}
                             <!-- Ще не додано -->
                             <a href="{% url 'tasks:move_to_today' task.id %}" class="lightning-btn not-today" title="Додати на сьогодні">⚡</a>
@@ -332,10 +332,10 @@
 
         content.classList.toggle('open');
 
-      
+
         btn.classList.toggle('active');
 
-   
+
         const arrow = btn.querySelector('.arrow');
         if (content.classList.contains('open')) {
             arrow.innerHTML = '▾';

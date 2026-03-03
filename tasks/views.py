@@ -13,7 +13,7 @@ MIN_POINTS = 5
 
 def calculate_points(task, user):
     base = task.estimated_hours * 10
-    rating_multiplier = 1 + (1 * 0.1) #it should be user ratinf * 0.1 or smth
+    rating_multiplier = 1 + (user.rating.current_streak * 0.1) #it should be user ratinf * 0.1 or smth
     points = base * rating_multiplier
     return max(points, MIN_POINTS)
 
@@ -34,6 +34,26 @@ def task_list(request):
 @login_required
 def today_tasks(request):
     today = timezone.localdate()
+    yesterday = today - timezone.timedelta(days=1)
+    missed_tasks = Task.objects.filter(
+        user=request.user,
+        is_completed=False,
+    ).filter(
+        db_models.Q(planned_date=yesterday)
+    )
+
+    total_penalty = 0
+    for task in missed_tasks:
+        points = calculate_points(task, request.user)
+        total_penalty += int(points)
+
+    if total_penalty > 0:
+        request.user.coins -= total_penalty
+        if request.user.coins < 0:
+            request.user.coins = 0
+        request.user.save()
+        print(f"[PENALTY] Applied {total_penalty} coins for {yesterday}")
+        missed_tasks.update(planned_date=None)
 
     today_incomplete = Task.objects.filter(
         user=request.user,
@@ -41,6 +61,10 @@ def today_tasks(request):
     ).filter(
         db_models.Q(is_for_today=True) | db_models.Q(planned_date=today)
     ).order_by('order')
+
+    today_incomplete.filter(is_for_today=True).update(planned_date=today)
+    today_incomplete.filter(planned_date=today).update(is_for_today=True)
+
 
     other_incomplete = Task.objects.filter(
         user=request.user,
