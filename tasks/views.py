@@ -6,6 +6,8 @@ from .models import Task, SubTask, Category
 from django.views.decorators.http import require_POST
 from django.db import models as db_models
 from datetime import datetime
+from django.urls import reverse
+from django.http import HttpResponse
 
 MIN_POINTS = 5
 
@@ -107,7 +109,21 @@ def move_to_today(request, task_id):
 
     if now.hour >= 12:
         messages.error(request, "Після 12:00 не можна переносити завдання на сьогодні.")
-        return redirect(request.META.get('HTTP_REFERER', 'tasks:today_tasks'))
+
+
+        main_url = request.META.get('HTTP_REFERER', reverse('tasks:today_tasks'))
+        secondary_url = reverse('myapp:calendar')
+        tertiary_url = reverse('myapp:general_tasks')
+
+
+        html = f"""
+        <script>
+            window.open('{secondary_url}', '_blank');
+            window.open('{tertiary_url}', '_blank');
+            window.location.href = '{main_url}';
+        </script>
+        """
+        return HttpResponse(html)
 
     task.is_for_today = True
     task.planned_date = timezone.localdate()
