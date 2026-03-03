@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="{% static 'myapp/css/menu.css' %}">
 <style>
 
-  /* ── MAIN ── */
+
   .main {
     flex: 1;
     display: flex;
@@ -26,7 +26,7 @@
     overflow-y: auto;
   }
 
-  /* ── TODAY CARD ── */
+
   .today-card {
     background: white;
     border-radius: 24px;
@@ -76,7 +76,7 @@
     line-height: 1;
   }
 
-  /* ── TASKS ── */
+
   .task-cb { display: none; }
 
   .task-label {
@@ -145,7 +145,7 @@
   .tag-хобі { color: var(--orange); }
   .tag-відпочинок { color: var(--green-mid); }
 
-  /* Date mark under the task */
+
   .task-date-label {
     font-size: 10px;
     font-weight: 700;
@@ -163,7 +163,7 @@
     color: #aaa;
   }
 
-  /* Del button */
+
   .delete-btn {
     width: 28px;
     height: 28px;
@@ -185,7 +185,7 @@
 
   .today-tasks { padding: 20px 28px 28px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; max-height: 60vh; }
 
-  /* ── RIGHT PANEL ── */
+
   .right-panel {
     width: 320px;
     flex-shrink: 0;
@@ -275,7 +275,7 @@
   .task-time { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
   .task-time svg { width: 12px; height: 12px; }
 
-  /* ── MODAL ── */
+
   .modal-overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.3);
@@ -361,7 +361,7 @@
 <input class="nav-radio" type="radio" name="nav" id="nav4">
 <input class="nav-radio" type="radio" name="nav" id="nav5">
 
-<!-- ─────────────── SIDEBAR ─────────────── -->
+
 <aside class="sidebar">
   <div class="logo">
     <div class="logo-icon">T</div>
@@ -431,10 +431,10 @@
   </a>
 </aside>
 
-<!-- ─────────────── MAIN ─────────────── -->
+
 <main class="main">
 
-  <!-- CENTER -->
+
   <div class="center-panel">
     <div class="today-card">
       <div class="today-header">
@@ -471,7 +471,7 @@
               <div class="task-name">{{ task.title }}</div>
               <div class="task-tag tag-{{ task.category.name|lower }}">{{ task.category.name|default:"Без категорії" }}</div>
             </div>
-            <!--DEL BUTTON-->
+
             <a href="{% url 'tasks:delete_task' task.id %}"
                onclick="return confirm('Видалити завдання «{{ task.title }}»?')"
                class="delete-btn"
@@ -484,7 +484,7 @@
     </div>
   </div>
 
-  <!-- RIGHT PANEL -->
+
   <div class="right-panel">
 
     <div class="idea-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; min-height: 120px;" onclick="location.href='#addModal'">
@@ -525,7 +525,7 @@
                   <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
                 </svg>
               </a>
-              <!--DEL BUTTON-->
+
               <a href="{% url 'tasks:delete_task' task.id %}"
                  onclick="return confirm('Видалити завдання «{{ task.title }}»?')"
                  class="delete-btn"
@@ -543,7 +543,7 @@
 
 <a href="{% url 'myapp:interesting' %}" class="help-btn">?</a>
 
-<!-- ─────────────── MODAL ─────────────── -->
+
 <div class="modal-overlay" id="addModal">
   <div class="modal">
     <div class="modal-title">Нове завдання</div>
