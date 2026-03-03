@@ -29,7 +29,7 @@
 <body>
 
 <div class="dashboard">
-    <!-- ─────────────── SIDEBAR ─────────────── -->
+
     <aside class="sidebar">
     <div class="logo">
         <div class="logo-icon">T</div>
@@ -269,7 +269,7 @@
             </div>
             <div class="login-field"><span>Логін:</span>{{ user.email }}</div>
             <div class="login-field" style="display: flex; gap: 70px; align-items: center;">
-                <!-- Змінити пароль -->
+
                 <a href="{% url 'profile_app:password_reset' %}"
                 style="font-size: 12px; font-weight: 500; color: #1f4d2b; text-decoration: none; transition: all 0.2s;"
                 onmouseover="this.style.color='#4b1434'; this.style.transform='translateY(-2px)';"
@@ -277,7 +277,7 @@
                     Змінити пароль
                 </a>
 
-                <!-- Вихід із акаунту -->
+
                 <a href="{% url 'users:sign_out' %}"
                     style="font-size: 12px; font-weight: 500; color: #e6921a; text-decoration: none; transition: all 0.2s;"
                     onmouseover="this.style.color='#4b1434'; this.style.transform='translateY(-2px)';"
@@ -299,7 +299,7 @@
 </div>
 
 <script>
-        // 2. Функція перемикання вкладок
+
     function showTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -310,19 +310,19 @@
         if(tabName === 'stats') { initChart(); }
     }
 
-    // 4. Графік
+
 
     function initChart() {
     const ctx = document.getElementById('mainStatsChart').getContext('2d');
 
-    // Дані з Django context
+
     const labels = {{ chart_labels|safe|default:"[]" }};
     const dataValues = {{ chart_data|safe|default:"[]" }};
     const colors = {{ chart_colors|safe|default:"[]" }};
 
     if (window.myChart) { window.myChart.destroy(); }
 
-    // Якщо даних немає, можна вивести "порожнє" коло
+
     const finalData = dataValues.length > 0 ? dataValues : [1];
     const finalColors = colors.length > 0 ? colors : ['#f0f0f0'];
 

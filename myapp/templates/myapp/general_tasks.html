@@ -11,7 +11,7 @@
             padding: 40px;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Важливо: щоб картка не розтягувалася на весь екран примусово */
+            align-items: flex-start;
             min-height: 100vh;
             overflow-y: auto;
         }
@@ -23,9 +23,9 @@
             max-width: 900px;
             padding: 50px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-            height: auto;       /* Картка підлаштовується під кількість справ */
+            height: auto;
             min-height: min-content;
-            display: block;      /* Переконуємось, що це блочний елемент */
+            display: block;
             margin-bottom: 50px;
         }
 
@@ -134,9 +134,9 @@
 
 
         .accordion-content.open {
-            max-height: 2000px; /* Достатня висота для списку */
+            max-height: 2000px;
             opacity: 1;
-            overflow-y: auto; /* Дозволяє гортати всередині, якщо дуже багато справ */
+            overflow-y: auto;
         }
 
 

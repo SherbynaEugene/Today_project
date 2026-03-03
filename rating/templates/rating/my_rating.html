@@ -69,7 +69,6 @@
     align-items: start;
   }
 
-  /* ── POINTS CARD ── */
   .points-card {
     background: var(--green-dark);
     border-radius: 24px;
@@ -123,10 +122,8 @@
   }
 
   .leaderboard-btn:hover { background: rgba(255,255,255,0.18); }
-
   .leaderboard-btn span { font-size: 18px; }
 
-  /* ── HISTORY CARD ── */
   .history-card {
     background: white;
     border-radius: 24px;
@@ -147,16 +144,6 @@
     gap: 10px;
   }
 
-  .history-count {
-    width: 24px; height: 24px;
-    background: var(--green-dark);
-    color: white;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-  }
-
   .history-row {
     display: flex;
     align-items: center;
@@ -170,7 +157,6 @@
   }
 
   .history-row:hover { border-color: var(--green-accent); background: #f0f8f0; }
-
   .history-row:last-child { margin-bottom: 0; }
 
   .history-icon {
@@ -181,7 +167,7 @@
     flex-shrink: 0;
     font-size: 16px;
     color: white;
-}
+  }
 
   .history-info { flex: 1; min-width: 0; }
 
@@ -199,6 +185,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    align-items: center;
   }
 
   .history-meta span {
@@ -206,16 +193,6 @@
     color: var(--text-muted);
     font-weight: 600;
   }
-
-  .history-badge {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 6px;
-  }
-
-  .badge-ok { background: #e8f5e8; color: var(--green-mid); }
-  .badge-late { background: #fff0f0; color: #c53030; }
 
   .history-pts {
     font-family: 'Unbounded', sans-serif;
@@ -250,7 +227,6 @@
 
 <div class="layout">
 
-  <!-- POINTS -->
   <div class="points-card">
     <div class="points-label">Загальний рахунок</div>
     <div class="points-value">{{ rating.total_points|floatformat:0 }}</div>
@@ -261,11 +237,8 @@
     </a>
   </div>
 
-  <!-- HISTORY -->
   <div class="history-card">
-    <div class="history-title">
-      ІСТОРІЯ НАРАХУВАНЬ
-    </div>
+    <div class="history-title">ІСТОРІЯ НАРАХУВАНЬ</div>
 
     {% for item in history %}
       <div class="history-row">
@@ -273,14 +246,8 @@
         <div class="history-info">
           <div class="history-name">{{ item.task.title }}</div>
           <div class="history-meta">
-            <span>⏱ {{ item.time_spent_formatted }}</span>
-            <span>📋 {{ item.estimated_hours|floatformat:2 }} год</span>
+            <span>⏱ {{ item.estimated_hours|floatformat:2 }} год</span>
             <span>📊 x{{ item.multiplier|floatformat:2 }}</span>
-            {% if item.multiplier < 0.5 %}
-              <span class="history-badge badge-late">Прострочено</span>
-            {% else %}
-              <span class="history-badge badge-ok">Вчасно</span>
-            {% endif %}
             <span>{{ item.task.completed_at|date:"d.m.Y H:i" }}</span>
           </div>
         </div>

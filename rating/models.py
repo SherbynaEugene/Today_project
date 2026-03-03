@@ -1,25 +1,23 @@
 from django.db import models
 from django.conf import settings
-
-User = settings.AUTH_USER_MODEL
-
-
 from django.utils import timezone
 from datetime import timedelta
+
+User = settings.AUTH_USER_MODEL
 
 class UserRating(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="rating")
     total_points = models.FloatField(default=0)
-    current_streak = models.IntegerField(default=0)
+    current_streak = models.IntegerField(default=1)
     last_completed_date = models.DateField(null=True, blank=True)
+    last_penalty_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username} | {self.total_points} pts"
 
     def update_streak(self, completed_date=None):
         """
-        Оновлює streak користувача.
-        `completed_date` - дата виконання завдання, за замовчуванням сьогодні.
+        Sreak system
         """
         if completed_date is None:
             completed_date = timezone.localdate()
@@ -58,6 +56,4 @@ class RatingHistory(models.Model):
 
     class Meta:
         unique_together = ("user", "task")
-
-
 
