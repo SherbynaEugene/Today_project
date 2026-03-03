@@ -252,7 +252,22 @@
     <main class="general-container">
         <div class="white-card">
             <h1 class="page-title">УСІ СПРАВИ</h1>
-
+            {% if messages %}
+  {% for message in messages %}
+    <div style="
+        margin: 16px 28px 0;
+        padding: 14px 18px;
+        border-radius: 14px;
+        background: #fff3f3;
+        color: #c53030;
+        font-weight: 600;
+        font-size: 14px;
+        animation: slideUp 0.3s ease;
+    ">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
             <div class="accordion-section">
                 <button class="accordion-header active" onclick="toggleAccordion('incomplete-list', this)">
                     <span class="label-text">НЕВИКОНАНІ</span>
@@ -271,10 +286,10 @@
                         </div>
                         {% if task.is_for_today %}
                             <!-- Завдання вже на Today -->
-                            <a href="{% url 'tasks:move_to_today' task.id %}" class="lightning-btn today" title="Вже на сьогодні">✔</a>
+                            <a href="{% url 'tasks:move_to_today' task.id %}" class="lightning-btn today" title="Вже на сьогодні">T</a>
                         {% else %}
                             <!-- Ще не додано -->
-                            <a href="{% url 'tasks:move_to_today' task.id %}" class="lightning-btn not-today" title="Додати на сьогодні">➕</a>
+                            <a href="{% url 'tasks:move_to_today' task.id %}" class="lightning-btn not-today" title="Додати на сьогодні">⚡</a>
                         {% endif %}
                         <a href="{% url 'tasks:delete_task' task.id %}"
                             onclick="return confirm('Видалити завдання?')"

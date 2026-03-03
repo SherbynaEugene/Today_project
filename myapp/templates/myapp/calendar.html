@@ -288,6 +288,22 @@
 
 
 <div class="cal-main">
+  {% if messages %}
+  {% for message in messages %}
+    <div style="
+        margin: 16px 28px 0;
+        padding: 14px 18px;
+        border-radius: 14px;
+        background: #fff3f3;
+        color: #c53030;
+        font-weight: 600;
+        font-size: 14px;
+        animation: slideUp 0.3s ease;
+    ">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
   <div class="cal-header">
     <a href="?year={{ prev_year }}&month={{ prev_month }}{% if selected_date_str %}&date={{ selected_date_str }}{% endif %}" class="cal-nav-btn">←</a>
     <div class="cal-month-title">{{ month_name }} {{ year }}</div>
