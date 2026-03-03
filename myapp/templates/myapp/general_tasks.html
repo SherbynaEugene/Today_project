@@ -11,7 +11,7 @@
             padding: 40px;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Важливо: щоб картка не розтягувалася на весь екран примусово */
+            align-items: flex-start;
             min-height: 100vh;
             overflow-y: auto;
         }
@@ -23,9 +23,9 @@
             max-width: 900px;
             padding: 50px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-            height: auto;       /* Картка підлаштовується під кількість справ */
+            height: auto;
             min-height: min-content;
-            display: block;      /* Переконуємось, що це блочний елемент */
+            display: block;
             margin-bottom: 50px;
         }
 
@@ -93,11 +93,11 @@
             text-transform: uppercase;
         }
 
-       
+
         .lightning-btn { color: #888; transition: 0.2s; }
         .lightning-btn:hover { color: var(--purple); }
 
-       
+
         .accordion-header {
             width: 100%;
             background: none;
@@ -124,7 +124,7 @@
             transition: transform 0.3s;
         }
 
-      
+
         .accordion-content {
             max-height: 0;
             overflow: hidden;
@@ -132,14 +132,14 @@
             opacity: 0;
         }
 
-      
+
         .accordion-content.open {
-            max-height: 2000px; /* Достатня висота для списку */
+            max-height: 2000px;
             opacity: 1;
-            overflow-y: auto; /* Дозволяє гортати всередині, якщо дуже багато справ */
+            overflow-y: auto;
         }
 
-    
+
         .accordion-header.active .arrow {
             transform: rotate(0deg);
             color: var(--green-dark);
@@ -158,16 +158,16 @@
 }
 
 .lightning-btn.not-today {
-    color: #a855f7; 
+    color: #a855f7;
 }
 
 .lightning-btn.not-today:hover {
-    color: #7e22ce; 
+    color: #7e22ce;
     transform: translateY(-2px);
 }
 
 .lightning-btn.today {
-    color: #22c55e; 
+    color: #22c55e;
 }
 
 .lightning-btn.today:hover {
@@ -177,7 +177,7 @@
 </head>
 <body>
 
- 
+
     <aside class="sidebar">
     <div class="logo">
         <div class="logo-icon">T</div>
@@ -332,10 +332,10 @@
 
         content.classList.toggle('open');
 
-      
+
         btn.classList.toggle('active');
 
-   
+
         const arrow = btn.querySelector('.arrow');
         if (content.classList.contains('open')) {
             arrow.innerHTML = '▾';
