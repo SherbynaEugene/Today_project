@@ -93,11 +93,11 @@
             text-transform: uppercase;
         }
 
-        /* Стилі для блискавки переносу */
+       
         .lightning-btn { color: #888; transition: 0.2s; }
         .lightning-btn:hover { color: var(--purple); }
 
-        /* Прибираємо стандартні стилі кнопки заголовка */
+       
         .accordion-header {
             width: 100%;
             background: none;
@@ -124,7 +124,7 @@
             transition: transform 0.3s;
         }
 
-        /* Контент, який згортається */
+      
         .accordion-content {
             max-height: 0;
             overflow: hidden;
@@ -132,14 +132,14 @@
             opacity: 0;
         }
 
-        /* Клас для розгорнутого стану */
+      
         .accordion-content.open {
             max-height: 2000px; /* Достатня висота для списку */
             opacity: 1;
             overflow-y: auto; /* Дозволяє гортати всередині, якщо дуже багато справ */
         }
 
-        /* Поворот стрілочки */
+    
         .accordion-header.active .arrow {
             transform: rotate(0deg);
             color: var(--green-dark);
@@ -158,16 +158,16 @@
 }
 
 .lightning-btn.not-today {
-    color: #a855f7; /* фіолетовий */
+    color: #a855f7; 
 }
 
 .lightning-btn.not-today:hover {
-    color: #7e22ce; /* темніший фіолетовий при наведенні */
+    color: #7e22ce; 
     transform: translateY(-2px);
 }
 
 .lightning-btn.today {
-    color: #22c55e; /* зелений для уже Today */
+    color: #22c55e; 
 }
 
 .lightning-btn.today:hover {
@@ -177,7 +177,7 @@
 </head>
 <body>
 
-    <!-- ─────────────── SIDEBAR ─────────────── -->
+ 
     <aside class="sidebar">
     <div class="logo">
         <div class="logo-icon">T</div>
@@ -329,13 +329,13 @@
     function toggleAccordion(id, btn) {
         const content = document.getElementById(id);
 
-        // Перемикаємо клас open
+
         content.classList.toggle('open');
 
-        // Перемикаємо активний стан кнопки для повороту стрілки
+      
         btn.classList.toggle('active');
 
-        // Оновлюємо стрілочку (текстом або символом)
+   
         const arrow = btn.querySelector('.arrow');
         if (content.classList.contains('open')) {
             arrow.innerHTML = '▾';
