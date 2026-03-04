@@ -225,13 +225,11 @@ def assign_task_to_date(request):
         selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
         now = timezone.localtime()
 
-        # Перевірка: якщо дата сьогодні, після 12:00 заборона
         if selected_date == timezone.localdate() and now.hour >= 12:
             messages.error(request, "Після 12:00 не можна додавати завдання на сьогодні.")
             return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
 
-        # Перевірка: сумарні години не більше 20 для будь-якої дати
-        tasks_on_date = Task.objects.filter(user=request.user, is_completed = False, planned_date=selected_date)
+        tasks_on_date = Task.objects.filter(user=request.user, is_completed=False, planned_date=selected_date)
         current_hours = sum(t.estimated_hours for t in tasks_on_date if t.id != task.id)
         new_task_hours = int(request.POST.get('estimated_hours', task.estimated_hours))
         if current_hours + new_task_hours > 20.0:
@@ -241,7 +239,6 @@ def assign_task_to_date(request):
             )
             return redirect(request.META.get('HTTP_REFERER', 'myapp:user_desktop'))
 
-    # Підтвердження зміни дати
     if task.planned_date and str(task.planned_date) != date_str and not confirm:
         return render(request, 'myapp/confirm_reassign.html', {
             'task': task,
@@ -251,8 +248,14 @@ def assign_task_to_date(request):
             'month': request.POST.get('month'),
         })
 
-    # Призначаємо дату
     task.planned_date = selected_date if date_str else None
+
+    if date_str:
+        if selected_date == timezone.localdate():
+            task.is_for_today = True
+        else:
+            task.is_for_today = False
+
     task.save()
     messages.success(request, "Завдання успішно призначено на дату.")
     return redirect(redirect_url)
@@ -262,5 +265,6 @@ def assign_task_to_date(request):
 def unassign_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     task.planned_date = None
+    task.is_for_today = False
     task.save()
     return redirect(request.META.get('HTTP_REFERER', '/calendar/'))
